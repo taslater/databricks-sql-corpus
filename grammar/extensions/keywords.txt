@@ -1,0 +1,132 @@
+# Keywords Databricks SQL needs that OSS Spark's lexer does not define.
+#
+# ONE entry here produces THREE things in the patched grammar:
+#   1. a lexer token          OPTIMIZE: 'OPTIMIZE';
+#   2. an ansiNonReserved entry
+#   3. a nonReserved entry
+#
+# (2) and (3) are the important part. Defining a lexer token makes that word
+# stop matching IDENTIFIER, so `SELECT optimize FROM t` or a column named
+# `tag` would become a syntax error -- a recall regression that would block
+# perfectly good merge requests. Listing every new keyword as non-reserved
+# keeps it usable as an identifier, which is also what Databricks does.
+#
+# Deriving all three from one list makes it impossible to add a token and
+# forget the other two.
+
+# OPTIMIZE / ZORDER
+OPTIMIZE
+ZORDER
+
+# VACUUM
+VACUUM
+RETAIN
+DRY
+RUN
+
+# COPY INTO
+COPY
+VALIDATE
+FILES
+PATTERN
+FORMAT_OPTIONS
+COPY_OPTIONS
+
+# Streaming tables and materialized views
+STREAMING
+MATERIALIZED
+PRIVATE
+SCHEDULE
+
+# Unity Catalog objects
+VOLUME
+SHARE
+
+# Delta table management
+RESTORE
+CLONE
+SHALLOW
+DEEP
+
+# Tags
+TAGS
+
+# Constraints
+KEY
+RELY
+NORELY
+ENFORCED
+
+# Query clauses
+QUALIFY
+
+# --- Unity Catalog governance objects ---
+OWNER
+CONNECTION
+CONNECTIONS
+URL
+CREDENTIAL
+STORAGE
+RECIPIENT
+RECIPIENTS
+PROVIDER
+PROVIDERS
+SHARES
+VOLUMES
+
+# Row filters and column masks
+MASK
+
+# Predictive optimization / liquid clustering
+PREDICTIVE
+OPTIMIZATION
+AUTO
+ENABLE
+DISABLE
+INHERIT
+
+# Privileges and misc
+READ
+WRITE
+ID
+
+# Delta Sharing share contents
+REMOVE
+MODEL
+
+# --- Delta table utilities ---
+CONVERT
+FSCK
+GENERATE
+REORG
+APPLY
+FEATURE
+LITE
+HISTORY
+UNIFORM
+UPGRADE
+
+# --- Lakeflow / declarative pipelines ---
+CHANGES
+SEQUENCE
+SCD
+FLOW
+TRACK
+
+# --- Principals ---
+GROUPS
+USERS
+DENY
+
+# --- Privileges ---
+MODIFY
+USAGE
+BROWSE
+MANAGE
+TAG
+PRIVILEGES
+DELTA
+UPDATES
+
+# --- Semi-structured types ---
+OBJECT

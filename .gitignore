@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ANTLR tool jar is fetched, not committed (large binary)
+tools/*.jar
+
+# Corpus artifacts. The cache is reproducible from a Spark tag, so it is not
+# committed; the baseline report IS, so accuracy regressions show up in diffs.
+corpus/cache/
+# Note: `corpus/reports/*`, not `corpus/reports/` -- git does not descend into
+# an excluded directory, so a negation under one never takes effect.
+corpus/reports/*
+!corpus/reports/baseline.json
+
+# macOS
+.DS_Store

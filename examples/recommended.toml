@@ -1,0 +1,29 @@
+# A broadly sensible starting point that still takes no position on naming.
+# Everything here is about reproducibility and documentation, which teams tend
+# to agree on more readily than what to call a boolean.
+
+[rules.drop-requires-if-exists]
+severity = "error"
+
+[rules.insert-requires-column-list]
+severity = "warning"
+
+[rules.no-select-star]
+severity = "warning"
+# `t.*` is narrower than a bare `*`; allow it if your team uses it in joins.
+allow_qualified = false
+
+[rules.require-comment]
+severity = "warning"
+tables = true
+columns = false
+
+[rules.identifier-case]
+severity = "warning"
+case = "snake"
+columns = true
+tables = true
+
+[rules.identifier-length]
+severity = "warning"
+max_length = 128

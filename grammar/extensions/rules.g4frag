@@ -1,0 +1,166 @@
+// Supporting rules for the Databricks statements, appended to the parser
+// grammar.
+
+// `ZORDER BY (a, b)` and `ZORDER BY a, b` are both seen in the wild. The
+// parenthesised form is listed first so ANTLR prefers it; otherwise
+// `ZORDER BY (a)` would parse as a single parenthesised expression.
+zorderColumnList
+    : LEFT_PAREN expression (COMMA expression)* RIGHT_PAREN
+    | expression (COMMA expression)*
+    ;
+
+// COPY INTO reads either a location or a subquery that projects from one.
+copyIntoSource
+    : path=stringLit
+    | LEFT_PAREN query RIGHT_PAREN
+    ;
+
+stringLitList
+    : LEFT_PAREN stringLit (COMMA stringLit)* RIGHT_PAREN
+    ;
+
+// CRON is not a keyword in Databricks either -- it lexes as an identifier,
+// so it is matched as one rather than promoted to a reserved word.
+scheduleSpec
+    : REFRESH? cron=identifier schedule=stringLit (AT TIME ZONE tz=stringLit)?
+    ;
+
+// Tags attach to several object kinds, not only tables.
+tagTarget
+    : TABLE
+    | VIEW
+    | CATALOG
+    | SCHEMA
+    | DATABASE
+    | VOLUME
+    ;
+
+constraintDefinition
+    : CHECK LEFT_PAREN booleanExpression RIGHT_PAREN
+        (errorCapturingNot? ENFORCED)? (RELY | NORELY)?                #checkConstraint
+    | PRIMARY KEY LEFT_PAREN multipartIdentifierList RIGHT_PAREN
+        (RELY | NORELY)?                                               #primaryKeyConstraint
+    | FOREIGN KEY LEFT_PAREN multipartIdentifierList RIGHT_PAREN
+        REFERENCES identifierReference
+        (LEFT_PAREN multipartIdentifierList RIGHT_PAREN)?
+        (RELY | NORELY)?                                               #foreignKeyConstraint
+    ;
+
+// QUALIFY filters on window-function results, after HAVING.
+qualifyClause
+    : QUALIFY booleanExpression
+    ;
+
+// Object kinds that can be reassigned with OWNER TO. Databricks allows this on
+// most securables, so the list is broad rather than table-only.
+ownerTarget
+    : TABLE
+    | VIEW
+    | CATALOG
+    | SCHEMA
+    | DATABASE
+    | VOLUME
+    | SHARE
+    | RECIPIENT
+    | PROVIDER
+    | CONNECTION
+    | FUNCTION
+    | EXTERNAL LOCATION
+    | STORAGE CREDENTIAL
+    ;
+
+// Predictive optimization is set per table, schema or catalog.
+predictiveTarget
+    : TABLE
+    | SCHEMA
+    | DATABASE
+    | CATALOG
+    ;
+
+// What a Delta Sharing share can contain.
+shareObject
+    : TABLE
+    | VIEW
+    | SCHEMA
+    | VOLUME
+    | MODEL
+    ;
+
+// Cloud-specific credential forms. Matched loosely: the property names differ
+// per cloud and are not worth enumerating, since a typo in one is a runtime
+// error rather than something a static parser can catch.
+credentialSpec
+    : identifier stringLit
+    | identifier propertyList
+    | propertyList
+    ;
+
+// REORG rewrites files; PURGE materialises soft deletes, UPGRADE UNIFORM
+// rewrites metadata for Iceberg/Hudi compatibility.
+reorgAction
+    : PURGE
+    | UPGRADE UNIFORM LEFT_PAREN propertyList? RIGHT_PAREN
+    | UPGRADE UNIFORM propertyList
+    ;
+
+// APPLY CHANGES takes either an explicit column list or `* EXCEPT (...)`.
+applyChangesColumns
+    : LEFT_PAREN multipartIdentifierList RIGHT_PAREN
+    | ASTERISK EXCEPT LEFT_PAREN multipartIdentifierList RIGHT_PAREN
+    | multipartIdentifierList
+    ;
+
+// Databricks privileges. Spelled out rather than matched as `identifier+`,
+// because in non-ANSI keyword mode `identifier` also matches ON -- a loose
+// rule would swallow the ON that ends the privilege list.
+privilegeList
+    : privilege (COMMA privilege)*
+    ;
+
+privilege
+    : ALL PRIVILEGES
+    | CREATE (TABLE | SCHEMA | FUNCTION | VOLUME | CATALOG | CONNECTION
+             | MODEL | MATERIALIZED VIEW)?
+    | SELECT
+    | MODIFY
+    | USAGE
+    | EXECUTE
+    | REFRESH
+    | BROWSE
+    | MANAGE
+    | READ (VOLUME | FILES)?
+    | WRITE (VOLUME | FILES)?
+    | USE (CATALOG | SCHEMA)?
+    | APPLY TAG
+    ;
+
+securableObject
+    : EXTERNAL LOCATION identifierReference
+    | STORAGE CREDENTIAL identifierReference
+    | securableKind? identifierReference
+    ;
+
+securableKind
+    : CATALOG
+    | SCHEMA
+    | DATABASE
+    | TABLE
+    | VIEW
+    | VOLUME
+    | FUNCTION
+    | CONNECTION
+    | SHARE
+    | RECIPIENT
+    | PROVIDER
+    | MODEL
+    ;
+
+// VARIANT colon paths: `payload:user.id`, `payload:['odd key']`, `payload:a[0]`.
+variantPath
+    : variantPathSegment+
+    ;
+
+variantPathSegment
+    : DOT? identifier
+    | LEFT_BRACKET (stringLit | INTEGER_VALUE) RIGHT_BRACKET
+    ;

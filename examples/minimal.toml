@@ -1,0 +1,10 @@
+# Minimal: syntax checking plus the two anti-patterns that are hard to argue
+# with. No naming opinions at all.
+#
+# Copy to .dbsqlparse.toml in your repo root.
+
+[rules.drop-requires-if-exists]
+severity = "error"
+
+[rules.insert-requires-column-list]
+severity = "warning"
