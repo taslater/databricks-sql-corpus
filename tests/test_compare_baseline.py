@@ -126,3 +126,47 @@ def test_real_sql_is_not_mistaken_for_json():
     assert not looks_like_json("SELECT 1")
     assert not looks_like_json("-- a comment\nSELECT * FROM t")
     assert not looks_like_json("-- Databricks notebook source\nCREATE TABLE t (a INT)")
+
+
+# --- mutation tiering -------------------------------------------------------
+# A mutation is only GUARANTEED if no keyword rule can rescue it. Getting this
+# wrong reports the parser being correct as a false negative.
+def test_trailing_boolean_operator_is_weak_not_guaranteed():
+    """`SELECT a OR` is `SELECT a AS OR` in Spark's default keyword mode -- a
+    column aliased to the word OR, which is valid."""
+    import random
+
+    from dbsqlparse.corpus.mutate import GUARANTEED, WEAK, mutate
+    from dbsqlparse.parser import parse_text
+
+    assert parse_text("SELECT a OR").ok  # the reading that makes it weak
+
+    kinds = {m.kind: m.tier for m in mutate("SELECT a OR b FROM t", "x", random.Random(0))}
+    assert kinds.get("dangling-boolean-operator") == WEAK
+    assert kinds.get("dangling-operator", GUARANTEED) == GUARANTEED
+
+
+def test_equals_inside_a_set_statement_is_not_mutated():
+    """`SET key =` with an empty value is a valid config assignment, so
+    truncating there produces valid SQL, not a rejection failure."""
+    import random
+
+    from dbsqlparse.corpus.mutate import mutate
+    from dbsqlparse.parser import parse_text
+
+    assert parse_text("SET spark.sql.foo =").ok
+
+    mutants = mutate("SET spark.sql.foo = 5", "x", random.Random(0))
+    assert not [m for m in mutants if m.kind == "dangling-operator"]
+
+
+def test_equals_outside_a_set_statement_is_still_guaranteed():
+    import random
+
+    from dbsqlparse.corpus.mutate import GUARANTEED, mutate
+    from dbsqlparse.parser import parse_text
+
+    mutants = [m for m in mutate("SELECT a = 1 FROM t", "x", random.Random(0))
+               if m.kind == "dangling-operator"]
+    assert mutants and all(m.tier == GUARANTEED for m in mutants)
+    assert all(not parse_text(m.sql).ok for m in mutants)

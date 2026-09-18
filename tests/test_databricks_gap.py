@@ -310,7 +310,35 @@ def test_spark_statements_are_not_shadowed(sql):
     assert parse_statement(sql).ok, sql
 
 # Still unsupported. Empty for now -- entries go here as they are discovered.
-GAPS: dict[str, str] = {}
+# Found by the public Databricks corpus after it was widened to ~125 files.
+# Each is real Databricks syntax this parser does not yet accept, so each is a
+# false positive waiting to block someone's merge request. Strict xfail: the
+# suite goes red the moment one starts passing, which forces it up into
+# EXTENSIONS rather than quietly disappearing.
+GAPS: dict[str, str] = {
+    # Notebook widget DDL. Appears at the top of most parameterised notebooks,
+    # so a miss here fails the whole file.
+    "create-widget-text": 'CREATE WIDGET TEXT catalog DEFAULT "main"',
+    "create-widget-dropdown": (
+        'CREATE WIDGET DROPDOWN d DEFAULT "a" CHOICES SELECT * FROM t'
+    ),
+    "remove-widget": "REMOVE WIDGET catalog",
+    # `@` time travel. temporalClause covers VERSION AS OF; this is the short
+    # spelling, and it works on a path as well as a name.
+    "at-version-syntax": "SELECT * FROM cdf_demo@v0",
+    "at-version-on-path": "SELECT count(*) FROM delta.`/mnt/p`@v524",
+    # A command used as a relation.
+    "describe-history-as-relation": "SELECT * FROM (DESCRIBE HISTORY my_students)",
+    # Spark's showGrants expects a narrower object list than Databricks allows.
+    "show-grants-on-object": "SHOW GRANTS ON demo_catalog.demo_schema.names",
+    # Unity Catalog storage root for a catalog or schema.
+    "managed-location": "CREATE CATALOG c MANAGED LOCATION 's3://bucket/prefix'",
+    # The VIEW counterpart of STREAMING LIVE TABLE.
+    "streaming-live-view": "CREATE TEMPORARY STREAMING LIVE VIEW v AS SELECT 1",
+    # Tags on a column; the table-level forms are already supported.
+    "column-set-tags": "ALTER TABLE t ALTER COLUMN c SET TAGS ('k' = 'v')",
+    "column-unset-tags": "ALTER TABLE t ALTER COLUMN c UNSET TAGS ('k')",
+}
 
 
 @pytest.mark.parametrize("sql", SPARK_NATIVE.values(), ids=list(SPARK_NATIVE))

@@ -101,9 +101,15 @@ SPARK_SOURCES = (
     ),
 )
 
-# Public Databricks SQL, pinned. These are small on purpose: most published
-# Databricks notebooks are .py files carrying SQL in `# MAGIC %sql` cells, and
-# this tool lints .sql files, so only genuine .sql notebook exports qualify.
+# Public Databricks SQL, pinned. Only genuine .sql notebook exports qualify:
+# most published Databricks notebooks are .py files carrying SQL in
+# `# MAGIC %sql` cells, and this tool lints .sql files.
+#
+# Chosen for licence and for syntactic range rather than raw file count. A
+# search of public code finds ~12k `.sql` files carrying the notebook header,
+# but most sit in small personal repos that repeat the same few statements;
+# these four between them cover declarative pipelines, administration, Unity
+# Catalog, widget DDL and everyday analytics.
 DATABRICKS_SOURCES = (
     Source(
         name="dbx-dlt-notebooks",
@@ -118,6 +124,27 @@ DATABRICKS_SOURCES = (
         expectation="valid",
         repo="databricks/devrel",
         ref="edf902c419eee5bb891805ee75b5a52c5a8534bf",
+    ),
+    Source(
+        name="dbx-learn-databricks",
+        description="Jacek Laskowski's Databricks course notebooks (Apache-2.0)",
+        expectation="valid",
+        repo="jaceklaskowski/learn-databricks",
+        ref="5ede8a53f642e23fadb70a3fffe73977858a6632",
+    ),
+    Source(
+        name="dbx-packt-cookbook",
+        description="Data Engineering with Databricks Cookbook, Packt (MIT)",
+        expectation="valid",
+        repo="PacktPublishing/Data-Engineering-with-Databricks-Cookbook",
+        ref="fa1657c3808c0d520ea19a49f967df510b4f627d",
+    ),
+    Source(
+        name="dbx-descomplicando-sql",
+        description="Databricks SQL course notebooks, pt-BR (Unlicense)",
+        expectation="valid",
+        repo="TeoMeWhy/descomplicando-sql",
+        ref="0ce1ea5ecc64dc80e16560259fad2103b7c43b63",
     ),
 )
 

@@ -178,10 +178,15 @@ default keyword mode legitimately re-parses them as valid
 diffs; `corpus/cache/` is not, since every source is pinned to an exact
 revision and the cache is reproducible from `sources.py` alone.
 
-Current baseline: 100% on the TPC-DS/TPC-H/SSB suites and on
-`dbx-dlt-notebooks`, 80% on `dbx-devrel` (one file holds `OPTIMIZE <table>`, a
-documentation placeholder), ~94% on `spark-sql-tests` (a mixed valid/invalid
-source), 100% rejection on 1215 guaranteed mutations.
+Current baseline: 100% on the TPC-DS/TPC-H/SSB suites, on
+`dbx-dlt-notebooks` and on `dbx-descomplicando-sql`; 87% on
+`dbx-learn-databricks`, 80% on `dbx-devrel`, 60% on `dbx-packt-cookbook`, ~94%
+on `spark-sql-tests` (a mixed valid/invalid source). 100% rejection on 1320
+guaranteed mutations.
+
+The `dbx-*` shortfalls are the 11 entries in `GAPS` (widget DDL, `@v0` time
+travel, `MANAGED LOCATION`, `STREAMING LIVE VIEW`, column-level tags and the
+rest), plus two files that are not SQL at all.
 
 Do not regenerate the baseline to make a regression disappear — investigate the
 diff first. Adding a source that exposes a gap is not a regression, and

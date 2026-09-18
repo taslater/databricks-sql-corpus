@@ -207,53 +207,167 @@
           ]
         }
       ]
+    },
+    {
+      "name": "dbx-learn-databricks",
+      "expectation": "valid",
+      "total": 46,
+      "passed": 40,
+      "skipped_dialect": 0,
+      "rate": 86.95652173913044,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/Change Data Feed.sql",
+          "errors": [
+            "mismatched input '@' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/DESCRIBE HISTORY.sql",
+          "errors": [
+            "extraneous input 'my_students' expecting ')'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Deep Dive into DLTs.sql",
+          "errors": [
+            "mismatched input '@' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Full Refresh.sql",
+          "errors": [
+            "extraneous input 'my_streaming_table' expecting ')'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Unity Catalog/Unity Catalog.sql",
+          "errors": [
+            "missing 'FUNCTIONS' at 'ON'",
+            "mismatched input 'demo_catalog' expecting {<EOF>, ';'}",
+            "missing 'FUNCTIONS' at 'ON'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/workshops/Databricks Workshop Day 2.sql",
+          "errors": [
+            "no viable alternative at input 'CREATE WIDGET'"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dbx-packt-cookbook",
+      "expectation": "valid",
+      "total": 15,
+      "passed": 9,
+      "skipped_dialect": 0,
+      "rate": 60.0,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Clean Up.sql",
+          "errors": [
+            "no viable alternative at input 'CREATE WIDGET'",
+            "no viable alternative at input 'CREATE WIDGET'",
+            "mismatched input 'USE' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Download Inventory Data.sql",
+          "errors": [
+            "no viable alternative at input 'CREATE WIDGET'",
+            "no viable alternative at input 'CREATE WIDGET'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Setup.sql",
+          "errors": [
+            "no viable alternative at input 'CREATE WIDGET'",
+            "no viable alternative at input 'CREATE WIDGET'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter09/9.7 apply-changes_into-dlt.sql",
+          "errors": [
+            "missing 'TABLE' at 'VIEW'",
+            "mismatched input 'movie_and_show_titles' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter10/10.2 uc_object_hierarchy.sql",
+          "errors": [
+            "mismatched input 'MANAGED' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter10/10.4 tags_comments_metadata.sql",
+          "errors": [
+            "no viable alternative at input 'ALTER TABLE\\n  de_book.credit_card.transactions_table\\nALTER COLUMN\\n  Transaction_ID\\nSET\\n  TAGS'",
+            "mismatched input 'UNSET' expecting {<EOF>, ';'}"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dbx-descomplicando-sql",
+      "expectation": "valid",
+      "total": 39,
+      "passed": 39,
+      "skipped_dialect": 0,
+      "rate": 100.0,
+      "failures": []
     }
   ],
   "mutation": {
     "by_kind": {
       "delete-close-paren": {
-        "total": 214,
-        "rejected": 214,
+        "total": 232,
+        "rejected": 232,
         "tier": "guaranteed"
       },
       "insert-open-paren": {
-        "total": 214,
-        "rejected": 214,
+        "total": 231,
+        "rejected": 231,
         "tier": "guaranteed"
       },
       "unterminated-string": {
-        "total": 149,
-        "rejected": 149,
+        "total": 158,
+        "rejected": 158,
         "tier": "guaranteed"
       },
       "double-comma": {
-        "total": 212,
-        "rejected": 212,
+        "total": 227,
+        "rejected": 227,
         "tier": "guaranteed"
       },
       "dangling-operator": {
-        "total": 212,
-        "rejected": 212,
+        "total": 215,
+        "rejected": 215,
         "tier": "guaranteed"
       },
+      "dangling-boolean-operator": {
+        "total": 221,
+        "rejected": 220,
+        "tier": "weak"
+      },
       "unclosed-comment": {
-        "total": 214,
-        "rejected": 214,
+        "total": 257,
+        "rejected": 257,
         "tier": "guaranteed"
       },
       "delete-keyword": {
-        "total": 213,
-        "rejected": 204,
+        "total": 232,
+        "rejected": 213,
         "tier": "weak"
       },
       "delete-comma": {
-        "total": 212,
-        "rejected": 108,
+        "total": 227,
+        "rejected": 131,
         "tier": "weak"
       }
     },
-    "guaranteed_total": 1215,
-    "guaranteed_rejected": 1215,
+    "guaranteed_total": 1320,
+    "guaranteed_rejected": 1320,
     "rejection_rate": 100.0,
     "escapes": []
   }

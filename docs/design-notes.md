@@ -199,3 +199,49 @@ with a `.sql` extension; it is now reported as a skip, on the same footing as
 the existing T-SQL check — wrong dialect, not wrong parser. The other contains
 `OPTIMIZE <table>`, a documentation placeholder for the reader to fill in. It
 is not valid SQL and a parser that accepted it would be worse.
+
+## Widening the corpus again, and what it cost
+
+A code search finds ~12,000 public `.sql` files carrying the Databricks
+notebook header, so the limit is not supply — it is picking sources that are
+clearly licensed and that exercise different syntax rather than repeating the
+same few statements. Three were added, taking the Databricks corpus from 25
+files to 125:
+
+| source | licence | what it adds |
+| --- | --- | --- |
+| `dbx-learn-databricks` | Apache-2.0 | administration, Unity Catalog, time travel |
+| `dbx-packt-cookbook` | MIT | widget DDL, volumes, published-book SQL |
+| `dbx-descomplicando-sql` | Unlicense | everyday analytics, 100% on arrival |
+
+They found **11 more gaps**, now recorded in `GAPS` as strict xfails: widget
+DDL (`CREATE WIDGET TEXT|DROPDOWN`, `REMOVE WIDGET`), `@v0` time travel on both
+names and paths, `DESCRIBE HISTORY` used as a relation, `SHOW GRANTS ON` an
+arbitrary object, `MANAGED LOCATION`, `STREAMING LIVE VIEW`, and column-level
+`SET`/`UNSET TAGS`.
+
+`dbx-descomplicando-sql` passing 39/39 on arrival is worth as much as the
+failures: it is the everyday-analytics case, and it says the gaps are
+concentrated in Databricks-specific DDL rather than spread through ordinary
+SQL.
+
+### The mutation harness was scoring two things wrong
+
+Widening the corpus dropped rejection from 100% to 99.9%, and investigating it
+rather than regenerating the baseline found the mutator at fault, not the
+parser. Two mutations were tiered GUARANTEED when they are not guaranteed at
+all:
+
+- **Truncating after `AND`/`OR`.** Both are non-reserved in Spark's default
+  keyword mode, so `SELECT a OR` reads as `SELECT a AS OR` — a column aliased
+  to the word OR, which is valid. It depends on position (`WHERE x AND` has no
+  such reading), so it cannot be predicted at generation time. This is the same
+  phenomenon already documented for `delete-comma`, and it now has its own WEAK
+  kind.
+- **Truncating after `=` inside `SET`.** `SET spark.sql.some.key =` with no
+  value is a legitimate config assignment. Everywhere else a trailing `=` is a
+  syntax error, so the mutator now skips an `EQ` whose statement opens with
+  `SET` rather than dropping the mutation everywhere.
+
+Both were scoring correct parser behaviour as a false negative. Rejection is
+back to 100%, now on 1320 guaranteed mutations.

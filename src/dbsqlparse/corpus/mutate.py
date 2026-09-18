@@ -24,7 +24,7 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass
 
-from antlr4 import CommonTokenStream
+from antlr4 import CommonTokenStream, Token
 
 from ..generated.SqlBaseLexer import SqlBaseLexer
 from ..parser import UpperCaseInputStream
@@ -51,6 +51,24 @@ def _tokens(sql: str):
 
 def _of_type(tokens, type_) -> list:
     return [t for t in tokens if t.type == type_]
+
+
+def _in_set_statement(tokens: list, index: int) -> bool:
+    """True when tokens[index] sits in a statement opening with SET.
+
+    `SET spark.sql.some.key =` with nothing after the `=` is a legitimate Spark
+    config assignment, so truncating there does NOT produce invalid SQL. Every
+    other context makes a trailing `=` a syntax error. Without this check the
+    mutation is mis-tiered and the corpus reports a false negative that is
+    really the parser being correct.
+    """
+    i = index
+    while i > 0 and tokens[i - 1].type != SqlBaseLexer.SEMICOLON:
+        i -= 1
+    for token in tokens[i:index + 1]:
+        if token.channel == Token.DEFAULT_CHANNEL:
+            return token.type == SqlBaseLexer.SET
+    return False
 
 
 def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
@@ -98,17 +116,38 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
             kind="double-comma", tier=GUARANTEED, origin=origin,
         ))
 
-    # --- GUARANTEED: truncate after a dangling binary operator ------------
-    operators = [
-        t for t in tokens
-        if t.type in (SqlBaseLexer.PLUS, SqlBaseLexer.EQ, SqlBaseLexer.AND, SqlBaseLexer.OR)
+    # --- truncate after a dangling binary operator ------------------------
+    # Arithmetic and comparison operators are guaranteed -- nothing can follow
+    # `a +` or `a =` at the end of input and still parse -- with one exception:
+    # `SET key =` is a valid config assignment with an empty value, so an EQ
+    # inside a SET statement is skipped.
+    #
+    # AND and OR are NOT, and it took a real corpus to notice. In Spark's
+    # default keyword mode they are non-reserved, so truncating `SELECT a OR`
+    # leaves `SELECT a AS OR` -- a column aliased to the word OR, which is
+    # valid. It depends on position (`WHERE x AND` has no such reading), so it
+    # cannot be predicted here, which is exactly what WEAK is for. Scoring
+    # these would count correct behaviour as a miss.
+    arithmetic = [
+        t for i, t in enumerate(tokens)
+        if t.type == SqlBaseLexer.PLUS
+        or (t.type == SqlBaseLexer.EQ and not _in_set_statement(tokens, i))
     ]
-    if operators:
-        victim = rng.choice(operators)
+    if arithmetic:
+        victim = rng.choice(arithmetic)
         truncated = sql[: victim.stop + 1].rstrip()
         if truncated:
             out.append(Mutant(
                 truncated, kind="dangling-operator", tier=GUARANTEED, origin=origin,
+            ))
+
+    boolean = [t for t in tokens if t.type in (SqlBaseLexer.AND, SqlBaseLexer.OR)]
+    if boolean:
+        victim = rng.choice(boolean)
+        truncated = sql[: victim.stop + 1].rstrip()
+        if truncated:
+            out.append(Mutant(
+                truncated, kind="dangling-boolean-operator", tier=WEAK, origin=origin,
             ))
 
     # --- GUARANTEED: unclosed bracketed comment ---------------------------
