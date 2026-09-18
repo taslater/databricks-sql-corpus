@@ -2663,6 +2663,24 @@ class SqlBaseParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by SqlBaseParser#streamTableName.
+    def enterStreamTableName(self, ctx:SqlBaseParser.StreamTableNameContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#streamTableName.
+    def exitStreamTableName(self, ctx:SqlBaseParser.StreamTableNameContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#streamTableValuedFunction.
+    def enterStreamTableValuedFunction(self, ctx:SqlBaseParser.StreamTableValuedFunctionContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#streamTableValuedFunction.
+    def exitStreamTableValuedFunction(self, ctx:SqlBaseParser.StreamTableValuedFunctionContext):
+        pass
+
+
     # Enter a parse tree produced by SqlBaseParser#pathRelation.
     def enterPathRelation(self, ctx:SqlBaseParser.PathRelationContext):
         pass
@@ -4352,6 +4370,33 @@ class SqlBaseParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by SqlBaseParser#variantPathSegment.
     def exitVariantPathSegment(self, ctx:SqlBaseParser.VariantPathSegmentContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#colDefinitionItem.
+    def enterColDefinitionItem(self, ctx:SqlBaseParser.ColDefinitionItemContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#colDefinitionItem.
+    def exitColDefinitionItem(self, ctx:SqlBaseParser.ColDefinitionItemContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#tableLevelConstraint.
+    def enterTableLevelConstraint(self, ctx:SqlBaseParser.TableLevelConstraintContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#tableLevelConstraint.
+    def exitTableLevelConstraint(self, ctx:SqlBaseParser.TableLevelConstraintContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#dltExpectation.
+    def enterDltExpectation(self, ctx:SqlBaseParser.DltExpectationContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#dltExpectation.
+    def exitDltExpectation(self, ctx:SqlBaseParser.DltExpectationContext):
         pass
 
 

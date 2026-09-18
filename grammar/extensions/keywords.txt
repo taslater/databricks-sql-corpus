@@ -130,3 +130,16 @@ UPDATES
 
 # --- Semi-structured types ---
 OBJECT
+
+# --- DLT / declarative pipeline surface ---
+# LIVE is the older DLT spelling (CREATE LIVE TABLE, LIVE.tbl) that still
+# appears throughout published pipelines. STREAM prefixes a relation
+# (FROM STREAM read_files(...)); without it read_files(...) is misparsed as a
+# table alias followed by a column list. EXPECT/VIOLATION carry DLT
+# expectations. All four are plausible column names, which is exactly why they
+# go here rather than straight into the lexer.
+LIVE
+STREAM
+EXPECT
+VIOLATION
+FAIL

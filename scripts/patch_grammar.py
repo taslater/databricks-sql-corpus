@@ -297,6 +297,124 @@ def add_path_relation(text: str) -> str:
     return text.replace(anchor, anchor + addition, 1)
 
 
+def add_stream_relation(text: str) -> str:
+    """Allow `STREAM` in front of a relation.
+
+    Declarative pipelines read a streaming source by prefixing the relation:
+
+        SELECT * FROM STREAM read_files('/vol/landing', format => 'json')
+        SELECT * FROM STREAM orders_bronze
+
+    Spark has no STREAM, so without this the word lexes as an identifier and
+    `STREAM read_files(...)` parses as a table named STREAM aliased to
+    `read_files`, at which point the argument list is read as a column alias
+    list and the first string argument fails. The error therefore lands on the
+    path, several tokens away from the real cause -- which is what made this
+    look like a string-literal bug rather than a missing keyword.
+
+    Both alternatives are spelled out rather than wrapping relationPrimary,
+    so `STREAM` cannot stack on itself or on an inline table.
+    """
+    anchor = (
+        "relationPrimary\n"
+        "    : identifierReference temporalClause?\n"
+        "      optionsClause? sample? tableAlias                     #tableName"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find relationPrimary to add STREAM "
+            "relations to; the relation rules have changed shape."
+        )
+    addition = (
+        "\n    | STREAM identifierReference temporalClause?\n"
+        "      optionsClause? sample? tableAlias                     #streamTableName"
+        "\n    | STREAM functionTable                                  "
+        "#streamTableValuedFunction"
+    )
+    return text.replace(anchor, anchor + addition, 1)
+
+
+def add_column_constraints(text: str) -> str:
+    """Allow constraints and DLT expectations inside a column list.
+
+    Spark's colDefinitionList holds column definitions only, so every one of
+    these is a syntax error against the vendored grammar:
+
+        CREATE TABLE t (k BIGINT NOT NULL PRIMARY KEY)
+        CREATE TABLE t (k BIGINT, CONSTRAINT pk PRIMARY KEY (k))
+        CREATE OR REFRESH STREAMING TABLE t
+            (CONSTRAINT valid EXPECT (id IS NOT NULL) ON VIOLATION DROP ROW)
+
+    The first two are ordinary Databricks DDL; the third is how a declarative
+    pipeline states a data-quality expectation. They share a shape -- an entry
+    in the column list that is not a column -- so one widening covers all
+    three. colDefinitionItem and the rules it needs are appended from
+    grammar/extensions/rules.g4frag.
+    """
+    anchor = (
+        "colDefinitionList\n"
+        "    : colDefinition (COMMA colDefinition)*\n"
+        "    ;"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find colDefinitionList to add "
+            "constraints to; the column definition rules have changed shape."
+        )
+    replacement = (
+        "colDefinitionList\n"
+        "    : colDefinitionItem (COMMA colDefinitionItem)*\n"
+        "    ;"
+    )
+    return text.replace(anchor, replacement, 1)
+
+
+def add_inline_column_constraints(text: str) -> str:
+    """Allow PRIMARY KEY / REFERENCES directly on a column definition.
+
+    Databricks declares a key on the column rather than as a separate entry:
+
+        key BIGINT NOT NULL PRIMARY KEY
+        customer_key BIGINT NOT NULL FOREIGN KEY REFERENCES customers_dim
+        order_date_key BIGINT CONSTRAINT order_date_fk
+            FOREIGN KEY REFERENCES date_dim
+
+    Spark's colDefinitionOption has no alternative for any of them. The
+    CONSTRAINT name is optional here and required in tableLevelConstraint,
+    which is what keeps the two apart: an entry starting with CONSTRAINT is a
+    table-level constraint, and one starting with an identifier and a type is a
+    column that may carry a named key.
+    """
+    anchor = (
+        "colDefinitionOption\n"
+        "    : errorCapturingNot NULL\n"
+        "    | defaultExpression\n"
+        "    | generationExpression\n"
+        "    | commentSpec\n"
+        "    ;"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find colDefinitionOption to add "
+            "inline constraints to; the column definition rules have changed."
+        )
+    replacement = (
+        "colDefinitionOption\n"
+        "    : errorCapturingNot NULL\n"
+        "    | defaultExpression\n"
+        "    | generationExpression\n"
+        "    | commentSpec\n"
+        "    | (CONSTRAINT constraintName=errorCapturingIdentifier)?\n"
+        "        PRIMARY KEY (RELY | NORELY)?\n"
+        "    | (CONSTRAINT constraintName=errorCapturingIdentifier)?\n"
+        "        FOREIGN? KEY? REFERENCES identifierReference\n"
+        "        (LEFT_PAREN multipartIdentifierList RIGHT_PAREN)?\n"
+        "        (RELY | NORELY)?\n"
+        "    ;"
+    )
+    return text.replace(anchor, replacement, 1)
+
+
 def add_variant_path(text: str) -> str:
     """Add `v:field` variant extraction to the expression grammar.
 
@@ -396,6 +514,9 @@ def patch_parser(text: str) -> str:
     text = add_statements(text)
     text = add_qualify_clause(text)
     text = add_path_relation(text)
+    text = add_stream_relation(text)
+    text = add_column_constraints(text)
+    text = add_inline_column_constraints(text)
     text = add_cluster_by_auto(text)
     text = add_variant_path(text)
     text = add_object_data_type(text)

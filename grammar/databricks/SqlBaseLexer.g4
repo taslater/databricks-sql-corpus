@@ -500,6 +500,11 @@ PRIVILEGES: 'PRIVILEGES';
 DELTA: 'DELTA';
 UPDATES: 'UPDATES';
 OBJECT: 'OBJECT' {self.incComplexTypeLevelCounter()};
+LIVE: 'LIVE';
+STREAM: 'STREAM';
+EXPECT: 'EXPECT';
+VIOLATION: 'VIOLATION';
+FAIL: 'FAIL';
 
 //--SPARK-KEYWORD-LIST-END
 //============================

@@ -349,14 +349,14 @@ statement
         (PATTERN EQ pattern=stringLit)?
         (FORMAT_OPTIONS formatOptions=propertyList)?
         (COPY_OPTIONS copyOptions=propertyList)?                       #copyInto
-    | CREATE (OR REFRESH)? PRIVATE? STREAMING TABLE
+    | CREATE (OR REFRESH)? TEMPORARY? PRIVATE? (STREAMING LIVE? | LIVE) TABLE
         (IF errorCapturingNot EXISTS)? identifierReference
         (LEFT_PAREN colDefinitionList RIGHT_PAREN)?
         tableProvider?
         createTableClauses
         (SCHEDULE schedule=scheduleSpec)?
         (AS? query)?                                                   #createStreamingTable
-    | CREATE (OR REPLACE)? MATERIALIZED VIEW
+    | CREATE (OR (REPLACE | REFRESH))? MATERIALIZED VIEW
         (IF errorCapturingNot EXISTS)? identifierReference
         (LEFT_PAREN colDefinitionList RIGHT_PAREN)?
         tableProvider?
@@ -1110,6 +1110,9 @@ identifierComment
 relationPrimary
     : identifierReference temporalClause?
       optionsClause? sample? tableAlias                     #tableName
+    | STREAM identifierReference temporalClause?
+      optionsClause? sample? tableAlias                     #streamTableName
+    | STREAM functionTable                                  #streamTableValuedFunction
     | path=stringLit temporalClause?
       optionsClause? sample? tableAlias                     #pathRelation
     | LEFT_PAREN query RIGHT_PAREN sample? tableAlias       #aliasedQuery
@@ -1484,7 +1487,7 @@ colType
     ;
 
 colDefinitionList
-    : colDefinition (COMMA colDefinition)*
+    : colDefinitionItem (COMMA colDefinitionItem)*
     ;
 
 colDefinition
@@ -1496,6 +1499,12 @@ colDefinitionOption
     | defaultExpression
     | generationExpression
     | commentSpec
+    | (CONSTRAINT constraintName=errorCapturingIdentifier)?
+        PRIMARY KEY (RELY | NORELY)?
+    | (CONSTRAINT constraintName=errorCapturingIdentifier)?
+        FOREIGN? KEY? REFERENCES identifierReference
+        (LEFT_PAREN multipartIdentifierList RIGHT_PAREN)?
+        (RELY | NORELY)?
     ;
 
 generationExpression
@@ -2123,6 +2132,11 @@ ansiNonReserved
     | DELTA
     | UPDATES
     | OBJECT
+    | LIVE
+    | STREAM
+    | EXPECT
+    | VIOLATION
+    | FAIL
 
 //--ANSI-NON-RESERVED-END
     ;
@@ -2602,6 +2616,11 @@ nonReserved
     | DELTA
     | UPDATES
     | OBJECT
+    | LIVE
+    | STREAM
+    | EXPECT
+    | VIOLATION
+    | FAIL
 
 //--DEFAULT-NON-RESERVED-END
     ;
@@ -2771,4 +2790,25 @@ variantPath
 variantPathSegment
     : DOT? identifier
     | LEFT_BRACKET (stringLit | INTEGER_VALUE) RIGHT_BRACKET
+    ;
+
+// An entry in a column list that is not a column. Databricks puts table-level
+// constraints here, and declarative pipelines put data-quality expectations
+// here, so one rule serves both.
+colDefinitionItem
+    : colDefinition
+    | tableLevelConstraint
+    ;
+
+tableLevelConstraint
+    : CONSTRAINT name=errorCapturingIdentifier dltExpectation
+    | CONSTRAINT name=errorCapturingIdentifier constraintDefinition
+    | constraintDefinition
+    ;
+
+// A DLT expectation. ON VIOLATION is optional: omitted, the pipeline records
+// the violation and keeps the row.
+dltExpectation
+    : EXPECT LEFT_PAREN booleanExpression RIGHT_PAREN
+        (ON VIOLATION (DROP ROW | FAIL UPDATE))?
     ;

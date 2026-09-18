@@ -96,6 +96,42 @@ EXTENSIONS = {
     ),
     "refresh-materialized-view": "REFRESH MATERIALIZED VIEW mv",
     "refresh-streaming-table": "REFRESH STREAMING TABLE t FULL",
+    # The LIVE spelling, which every published DLT pipeline still uses.
+    "create-live-table": "CREATE LIVE TABLE t AS SELECT 1",
+    "create-or-refresh-live-table": "CREATE OR REFRESH LIVE TABLE t AS SELECT 1",
+    "create-streaming-live-table": "CREATE STREAMING LIVE TABLE t",
+    "create-or-refresh-materialized-view": (
+        "CREATE OR REFRESH MATERIALIZED VIEW mv AS SELECT 1"
+    ),
+    "create-temporary-streaming-table": (
+        "CREATE OR REFRESH TEMPORARY STREAMING TABLE t AS SELECT 1"
+    ),
+    # STREAM prefixing a relation, the form DLT sources are written in.
+    "stream-relation": "SELECT * FROM STREAM orders_bronze",
+    "stream-table-valued-function": (
+        "SELECT * FROM STREAM read_files('/vol/x', format => 'json')"
+    ),
+    # DLT expectations, with and without an ON VIOLATION action.
+    "expectation-drop-row": (
+        "CREATE STREAMING TABLE t "
+        "(CONSTRAINT valid EXPECT (id IS NOT NULL) ON VIOLATION DROP ROW)"
+    ),
+    "expectation-fail-update": (
+        "CREATE STREAMING TABLE t "
+        "(CONSTRAINT valid EXPECT (n > 0) ON VIOLATION FAIL UPDATE)"
+    ),
+    "expectation-bare": "CREATE STREAMING TABLE t (CONSTRAINT valid EXPECT (n > 0))",
+    # Constraints inside a column list, inline and table-level.
+    "inline-primary-key": "CREATE TABLE t (k BIGINT NOT NULL PRIMARY KEY)",
+    "inline-foreign-key": (
+        "CREATE TABLE t (k BIGINT NOT NULL FOREIGN KEY REFERENCES other.dim)"
+    ),
+    "inline-named-foreign-key": (
+        "CREATE TABLE t (k BIGINT CONSTRAINT k_fk FOREIGN KEY REFERENCES other.dim)"
+    ),
+    "table-level-primary-key": (
+        "CREATE TABLE t (k BIGINT, CONSTRAINT pk PRIMARY KEY (k))"
+    ),
     # Unity Catalog objects
     "create-volume": "CREATE VOLUME main.raw.v",
     "create-external-volume": (

@@ -61,6 +61,21 @@ PARSER_INJECTIONS = [
     ),
     ("variant-path", lambda t: pg.add_variant_path(t), "#dereference"),
     ("object-type", lambda t: pg.add_object_data_type(t), "complex=STRUCT"),
+    (
+        "stream-relation",
+        lambda t: pg.add_stream_relation(t),
+        "      optionsClause? sample? tableAlias                     #tableName",
+    ),
+    (
+        "column-constraints",
+        lambda t: pg.add_column_constraints(t),
+        "    : colDefinition (COMMA colDefinition)*",
+    ),
+    (
+        "inline-column-constraints",
+        lambda t: pg.add_inline_column_constraints(t),
+        "    | generationExpression\n    | commentSpec",
+    ),
 ]
 
 

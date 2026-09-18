@@ -25,14 +25,14 @@
         (PATTERN EQ pattern=stringLit)?
         (FORMAT_OPTIONS formatOptions=propertyList)?
         (COPY_OPTIONS copyOptions=propertyList)?                       #copyInto
-    | CREATE (OR REFRESH)? PRIVATE? STREAMING TABLE
+    | CREATE (OR REFRESH)? TEMPORARY? PRIVATE? (STREAMING LIVE? | LIVE) TABLE
         (IF errorCapturingNot EXISTS)? identifierReference
         (LEFT_PAREN colDefinitionList RIGHT_PAREN)?
         tableProvider?
         createTableClauses
         (SCHEDULE schedule=scheduleSpec)?
         (AS? query)?                                                   #createStreamingTable
-    | CREATE (OR REPLACE)? MATERIALIZED VIEW
+    | CREATE (OR (REPLACE | REFRESH))? MATERIALIZED VIEW
         (IF errorCapturingNot EXISTS)? identifierReference
         (LEFT_PAREN colDefinitionList RIGHT_PAREN)?
         tableProvider?

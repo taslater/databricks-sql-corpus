@@ -164,3 +164,24 @@ variantPathSegment
     : DOT? identifier
     | LEFT_BRACKET (stringLit | INTEGER_VALUE) RIGHT_BRACKET
     ;
+
+// An entry in a column list that is not a column. Databricks puts table-level
+// constraints here, and declarative pipelines put data-quality expectations
+// here, so one rule serves both.
+colDefinitionItem
+    : colDefinition
+    | tableLevelConstraint
+    ;
+
+tableLevelConstraint
+    : CONSTRAINT name=errorCapturingIdentifier dltExpectation
+    | CONSTRAINT name=errorCapturingIdentifier constraintDefinition
+    | constraintDefinition
+    ;
+
+// A DLT expectation. ON VIOLATION is optional: omitted, the pipeline records
+// the violation and keeps the row.
+dltExpectation
+    : EXPECT LEFT_PAREN booleanExpression RIGHT_PAREN
+        (ON VIOLATION (DROP ROW | FAIL UPDATE))?
+    ;

@@ -1484,6 +1484,16 @@ class SqlBaseParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by SqlBaseParser#streamTableName.
+    def visitStreamTableName(self, ctx:SqlBaseParser.StreamTableNameContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#streamTableValuedFunction.
+    def visitStreamTableValuedFunction(self, ctx:SqlBaseParser.StreamTableValuedFunctionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by SqlBaseParser#pathRelation.
     def visitPathRelation(self, ctx:SqlBaseParser.PathRelationContext):
         return self.visitChildren(ctx)
@@ -2421,6 +2431,21 @@ class SqlBaseParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by SqlBaseParser#variantPathSegment.
     def visitVariantPathSegment(self, ctx:SqlBaseParser.VariantPathSegmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#colDefinitionItem.
+    def visitColDefinitionItem(self, ctx:SqlBaseParser.ColDefinitionItemContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#tableLevelConstraint.
+    def visitTableLevelConstraint(self, ctx:SqlBaseParser.TableLevelConstraintContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#dltExpectation.
+    def visitDltExpectation(self, ctx:SqlBaseParser.DltExpectationContext):
         return self.visitChildren(ctx)
 
 
