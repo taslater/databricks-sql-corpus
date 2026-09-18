@@ -1,6 +1,0 @@
-# Vendored from apache/spark @ v4.0.4
-
-SqlBaseLexer.g4  sha256:394615cc6cd3d5f440173545a99d5df02fe8b06c78232f4b104cb16e11a066e4  14326 bytes
-    source: https://raw.githubusercontent.com/apache/spark/v4.0.4/sql/api/src/main/antlr4/org/apache/spark/sql/catalyst/parser/SqlBaseLexer.g4
-SqlBaseParser.g4  sha256:d5b21a649e5afdcc798307996b84ece180e60ac41a7dfad3aed1437659eb05f4  64826 bytes
-    source: https://raw.githubusercontent.com/apache/spark/v4.0.4/sql/api/src/main/antlr4/org/apache/spark/sql/catalyst/parser/SqlBaseParser.g4

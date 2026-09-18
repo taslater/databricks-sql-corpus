@@ -3,16 +3,17 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "databricks-sql-parser"
+name = "databricks-sql-corpus"
 version = "0.1.0"
-description = "Static parser and configurable linter for Databricks SQL, built on Spark's own ANTLR grammar"
+description = "A corpus of published Databricks SQL, and a harness that measures SQLFluff against it"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
-keywords = ["databricks", "spark", "sql", "linter", "parser", "antlr", "delta"]
+keywords = ["databricks", "spark", "sql", "sqlfluff", "corpus", "conformance", "delta"]
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Private :: Do Not Upload",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
     "Programming Language :: SQL",
@@ -21,22 +22,19 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    # Java is needed to REGENERATE the parser, never to run it -- the
-    # generated sources are committed.
-    "antlr4-python3-runtime==4.13.2",
-    # tomllib is stdlib from 3.11; this is the only reason 3.10 needs anything.
-    "tomli>=2.0; python_version < '3.11'",
+    # The subject under test. Deliberately a floor rather than a pin: the
+    # point of this project is to measure whichever SQLFluff is installed.
+    # `pip install -e ../sqlfluff` inside a fork checkout measures an unmerged
+    # branch, which is the main workflow.
+    "sqlfluff>=4.3",
 ]
 
 [project.urls]
-Source = "https://github.com/taslater/databricks-sql-parser"
-Issues = "https://github.com/taslater/databricks-sql-parser/issues"
+Source = "https://github.com/taslater/databricks-sql-corpus"
+Issues = "https://github.com/taslater/databricks-sql-corpus/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
-
-[project.scripts]
-dbsqlparse = "dbsqlparse.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

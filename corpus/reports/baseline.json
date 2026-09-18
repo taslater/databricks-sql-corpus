@@ -4,10 +4,17 @@
       "name": "spark-tpcds",
       "expectation": "valid",
       "total": 103,
-      "passed": 103,
+      "passed": 102,
       "skipped_dialect": 0,
-      "rate": 100.0,
-      "failures": []
+      "rate": 99.02912621359224,
+      "failures": [
+        {
+          "path": "corpus/cache/spark-tpcds/q87.sql",
+          "errors": [
+            "Line 2, Position 1: Found unparsable section: 'FROM ((SELECT DISTINCT\\n  c_last_name,\\n  ...'"
+          ]
+        }
+      ]
     },
     {
       "name": "spark-tpcds-v2.7.0",
@@ -49,134 +56,470 @@
       "name": "spark-sql-tests",
       "expectation": "mixed",
       "total": 304,
-      "passed": 287,
+      "passed": 227,
       "skipped_dialect": 0,
-      "rate": 94.4078947368421,
+      "rate": 74.67105263157895,
       "failures": [
         {
           "path": "corpus/cache/spark-sql-tests/inputs/bitwise.sql",
           "errors": [
-            "extraneous input '>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 485 more}",
-            "extraneous input '<' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 485 more}",
-            "extraneous input '>>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 485 more}"
+            "Line 81, Position 17: Found unparsable section: '>>> 2'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/cast.sql",
           "errors": [
-            "mismatched input '::' expecting {<EOF>, ';'}"
+            "Line 159, Position 17: Found unparsable section: ':: byte'"
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/cte.sql",
+          "path": "corpus/cache/spark-sql-tests/inputs/change-column.sql",
           "errors": [
-            "no viable alternative at input 'WITH t()'"
+            "Line 6, Position 1: Found unparsable section: 'ALTER TABLE test_change CHANGE a;\\nDESC t...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/charvarchar.sql",
+          "errors": [
+            "Line 3, Position 25: Found unparsable section: 'c;\\nshow create table char_tbl;\\n\\ncreate t...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/collations.sql",
+          "errors": [
+            "Line 60, Position 17: Found unparsable section: '(c1 struct<utf8_binary: string collate u...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/comments.sql",
+          "errors": [
+            "Line 37, Position 1: Found unparsable section: \"*/\\nSELECT 'selected content' AS fifth;\\n-...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/comparator.sql",
+          "errors": [
+            "Line 2, Position 14: Found unparsable section: \"< x'0f'\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/cte-command.sql",
+          "errors": [
+            "Line 24, Position 1: Found unparsable section: 'WITH s AS (SELECT 45 AS col)\\nFROM s\\nINSE...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/describe-query.sql",
           "errors": [
-            "mismatched input 'desc_temp1' expecting {<EOF>, ';'}",
-            "mismatched input 'desc_temp1' expecting {<EOF>, ';'}",
-            "mismatched input 'insert' expecting {<EOF>, ';'}"
+            "Line 12, Position 17: Found unparsable section: 'desc_temp1 a SELECT *;\\nDESC WITH s AS (S...'"
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/double-quoted-identifiers.sql",
+          "path": "corpus/cache/spark-sql-tests/inputs/describe.sql",
           "errors": [
-            "no viable alternative at input '\"not_exist\"'",
-            "no viable alternative at input '\"not_exist\"'",
-            "no viable alternative at input '\"not_exist\"'"
+            "Line 9, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW temp_Data_Source_V...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/except-all.sql",
+          "errors": [
+            "Line 76, Position 1: Found unparsable section: 'EXCEPT DISTINCT\\nSELECT * FROM tab4;\\n\\n-- ...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/execute-immediate.sql",
           "errors": [
-            "extraneous input '(' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}",
-            "mismatched input ')' expecting {<EOF>, ';'}"
+            "Line 18, Position 1: Found unparsable section: \"EXECUTE IMMEDIATE 'SET spark.sql.ansi.en...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/explain-cbo.sql",
+          "errors": [
+            "Line 7, Position 48: Found unparsable section: 'FOR ALL COLUMNS;\\nANALYZE TABLE explain_t...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/group-analytics.sql",
+          "errors": [
+            "Line 85, Position 58: Found unparsable section: 'SETS(GROUPING SETS((a, b), (a), ()))'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/group-by-alias.sql",
+          "errors": [
+            "Line 27, Position 16: Found unparsable section: 'BY `1`'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/group-by-all.sql",
+          "errors": [
+            "Line 21, Position 8: Found unparsable section: 'all, city, count(*)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/group-by.sql",
+          "errors": [
+            "Line 263, Position 10: Found unparsable section: 'col1\\nORDER BY col1'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/grouping_set.sql",
+          "errors": [
+            "Line 48, Position 54: Found unparsable section: 'ROLLUP'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/higher-order-functions.sql",
+          "errors": [
+            "Line 48, Position 31: Found unparsable section: ', 0 as n'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/identifier-clause.sql",
           "errors": [
-            "mismatched input ''x.win'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}",
-            "mismatched input '(' expecting ')'",
-            "mismatched input ''a'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}"
+            "Line 7, Position 12: Found unparsable section: \":colname = 'c';\\nSELECT IDENTIFIER(${coln...\""
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/ignored.sql",
           "errors": [
-            "mismatched input 'some' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+            "Line 4, Position 1: Found unparsable section: 'some random not working query that shoul...'"
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/interval.sql",
+          "path": "corpus/cache/spark-sql-tests/inputs/inline-table.sql",
           "errors": [
-            "no viable alternative at input '1 fake_unit'",
-            "extraneous input 'day' expecting {<EOF>, ';'}",
-            "extraneous input 'days' expecting {<EOF>, ';'}"
+            "Line 27, Position 32: Found unparsable section: 'as one'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/join-lateral.sql",
+          "errors": [
+            "Line 193, Position 18: Found unparsable section: 'JOIN LATERAL\\n  (SELECT t2.c2\\n  FROM   t2...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/limit.sql",
+          "errors": [
+            "Line 8, Position 32: Found unparsable section: '+ 1'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/listagg.sql",
+          "errors": [
+            "Line 20, Position 61: Found unparsable section: '(PARTITION BY col2)'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/literals.sql",
           "errors": [
-            "no viable alternative at input 'select .'"
+            "Line 57, Position 8: Found unparsable section: '.e3'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/mask-functions.sql",
+          "errors": [
+            "Line 19, Position 26: Found unparsable section: \"from values ('AbCD123-@$#') as tab(c1)\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/mode.sql",
+          "errors": [
+            "Line 55, Position 48: Found unparsable section: '(WHERE salary > 10000)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/named-function-arguments.sql",
+          "errors": [
+            "Line 32, Position 40: Found unparsable section: ', LATERAL explode(array(3 * t.col, 4 * t...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/non-excludable-rule.sql",
+          "errors": [
+            "Unable to lex characters: '$OptimizeS...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/order-by-all.sql",
+          "errors": [
+            "Line 47, Position 8: Found unparsable section: 'all, (SELECT col2 FROM VALUES (2, 2) ORD...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/parse-query-correctness.sql",
+          "errors": [
+            "Line 254, Position 1: Found unparsable section: \"EXECUTE IMMEDIATE 'SELECT 1 UNION SELECT...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/percentiles.sql",
+          "errors": [
+            "Line 28, Position 58: Found unparsable section: '(WHERE k > 0),\\n  percentile_cont(0.25) W...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/pipe-operators.sql",
           "errors": [
-            "mismatched input 'from' expecting {<EOF>, ';'}",
-            "mismatched input 'group' expecting {<EOF>, ';'}",
-            "mismatched input 'as' expecting {<EOF>, ';'}"
+            "Unable to lex characters: '#######v;'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/boolean.sql",
+          "errors": [
+            "Line 237, Position 10: Found unparsable section: 'UNKNOWN AS isunknown,\\n    b IS NOT UNKNO...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/comments.sql",
+          "errors": [
+            "Line 30, Position 35: Found unparsable section: \"'embedded' AS x2;\\n*/\\n\\nSELECT -- continue...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/create_view.sql",
+          "errors": [
+            "Line 53, Position 4: Found unparsable section: 'SELECT'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/groupingsets.sql",
+          "errors": [
+            "Line 60, Position 21: Found unparsable section: '(id integer, v integer,\\n                ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/join.sql",
+          "errors": [
+            "Line 135, Position 5: Found unparsable section: 'AS tx (ii, jj, tt, ii2, kk)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/limit.sql",
+          "errors": [
+            "Line 17, Position 29: Found unparsable section: 'OFFSET 20'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/select.sql",
+          "errors": [
+            "Line 168, Position 1: Found unparsable section: 'UNION ALL\\nTABLE int8_tbl;\\n\\n--\\n-- Test OR...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/strings.sql",
+          "errors": [
+            "Line 13, Position 2: Found unparsable section: \"' - third line'\\n\\tAS `Three lines to one`...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/union.sql",
+          "errors": [
+            "Line 139, Position 48: Found unparsable section: 'INTERSECT SELECT 4,5,6;\\n(SELECT 1,2,3 UN...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/window_part1.sql",
+          "errors": [
+            "Line 214, Position 32: Found unparsable section: 'between current row and unbounded follow...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/window_part2.sql",
+          "errors": [
+            "Line 254, Position 32: Found unparsable section: \"range between\\n             'inf' precedi...\""
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/window_part3.sql",
           "errors": [
-            "mismatched input 'BY' expecting ')'",
-            "extraneous input 'BY' expecting {')', ', ', 'ORDER', 'RANGE', 'ROWS', ... and 1 more}",
-            "mismatched input 'ten' expecting {<EOF>, ';'}"
+            "Line 392, Position 46: Found unparsable section: 'BY ten'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/with.sql",
+          "errors": [
+            "Line 1182, Position 18: Found unparsable section: '(with baz);  -- fail, WITH is a reserved...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/predicate-functions.sql",
+          "errors": [
+            "Line 115, Position 10: Found unparsable section: '! between 0 and 2'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/selectExcept.sql",
           "errors": [
-            "mismatched input 'name' expecting {<EOF>, ';'}",
-            "mismatched input ')' expecting {'(', 'FROM', 'MAP', 'REDUCE', 'SELECT', 'TABLE', ... and 2 more}",
-            "mismatched input 'name' expecting {<EOF>, ';'}"
+            "Line 42, Position 10: Found unparsable section: 'EXCEPT name FROM tbl_view;\\n-- EXCEPT no ...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/show-tables.sql",
           "errors": [
-            "mismatched input ';' expecting {'FROM', 'IN', 'LIKE'}",
-            "mismatched input 'PARTITION' expecting {'FROM', 'IN', 'LIKE'}"
+            "Line 7, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW show_t3(e int) USI...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/show-views.sql",
+          "errors": [
+            "Line 8, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW view_4(e INT) USIN...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/show_columns.sql",
+          "errors": [
+            "Line 7, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW showColumn3 (col3 ...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/sql-session-variables.sql",
           "errors": [
-            "mismatched input 'EXISTS' expecting {<EOF>, ';'}",
-            "no viable alternative at input 'DROP VARIABLE'",
-            "no viable alternative at input 'DROP VARIABLE'"
+            "Line 10, Position 1: Found unparsable section: 'DROP TEMPORARY VARIABLE var1;\\n\\nSET VARIA...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/sql-udf.sql",
           "errors": [
-            "no viable alternative at input 'TABLE()'",
-            "mismatched input 'DEFAULT' expecting ')'",
-            "mismatched input 'foo3_1b' expecting {<EOF>, ';'}"
+            "Line 64, Position 1: Found unparsable section: 'CREATE OR REPLACE FUNCTION foo1d1(a INT ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/exists-subquery/exists-joins-and-set-ops.sql",
+          "errors": [
+            "Line 295, Position 15: Found unparsable section: '(SELECT *\\n               FROM   dept\\n   ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/exists-subquery/exists-orderby-limit.sql",
+          "errors": [
+            "Line 170, Position 20: Found unparsable section: 'OFFSET 1'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/in-subquery/in-basic.sql",
+          "errors": [
+            "Line 16, Position 19: Found unparsable section: ', b2 as b'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/in-subquery/in-limit.sql",
+          "errors": [
+            "Line 82, Position 1: Found unparsable section: 'OFFSET 1'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/in-subquery/in-set-operations.sql",
+          "errors": [
+            "Line 526, Position 16: Found unparsable section: 'EXCEPT DISTINCT\\n               SELECT t3...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/scalar-subquery/scalar-subquery-set-op.sql",
+          "errors": [
+            "Line 525, Position 28: Found unparsable section: 'FROM\\n  (SELECT t1c as c\\n  FROM   t1\\n  WH...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/subquery-in-from.sql",
+          "errors": [
+            "Line 5, Position 1: Found unparsable section: 'FROM (SELECT * FROM testData WHERE key =...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/subquery-nested-data.sql",
+          "errors": [
+            "Line 16, Position 17: Found unparsable section: 'join lateral (select * from y where xm[1...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/subquery/subquery-offset.sql",
+          "errors": [
+            "Line 10, Position 69: Found unparsable section: 'offset 2'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/table-aliases.sql",
+          "errors": [
+            "Line 31, Position 61: Found unparsable section: 'dst(a, b, c, d)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/table-valued-functions.sql",
+          "errors": [
+            "Line 36, Position 38: Found unparsable section: ', lateral range(0, c2)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/tablesample-negative.sql",
+          "errors": [
+            "Line 7, Position 37: Found unparsable section: '(-1 PERCENT)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/timezone.sql",
+          "errors": [
+            "Line 9, Position 10: Found unparsable section: \"ZONE;\\nSET TIME ZONE 'invalid/zone';\\nSET ...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/to_from_avro.sql",
+          "errors": [
+            "Line 20, Position 1: Found unparsable section: 'drop temporary variable avro_schema;\\ndro...'"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/transform.sql",
           "errors": [
-            "no viable alternative at input 'SELECT TRANSFORM(b AS'",
-            "no viable alternative at input 'SELECT TRANSFORM(b b_1'",
-            "no viable alternative at input 'SELECT TRANSFORM(b, MAX(a) AS'"
+            "Line 88, Position 24: Found unparsable section: '(a), sum(f)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/udaf/udaf-group-analytics.sql",
+          "errors": [
+            "Line 62, Position 57: Found unparsable section: 'SETS(GROUPING SETS((a, b), (a), ()))'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/udaf/udaf-grouping-set.sql",
+          "errors": [
+            "Line 35, Position 53: Found unparsable section: 'ROLLUP'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/udf/postgreSQL/udf-join.sql",
+          "errors": [
+            "Line 127, Position 5: Found unparsable section: 'AS tx (ii, jj, tt, ii2, kk)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/udf/udf-except-all.sql",
+          "errors": [
+            "Line 78, Position 1: Found unparsable section: 'EXCEPT DISTINCT\\nSELECT udf(k), udf(v) FR...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/udf/udf-window.sql",
+          "errors": [
+            "Line 54, Position 1: Found unparsable section: 'RANGE BETWEEN CURRENT ROW AND current_da...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/udtf/udtf.sql",
+          "errors": [
+            "Line 16, Position 17: Found unparsable section: ', LATERAL udtf(c1, c2)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/variant/named-function-arguments.sql",
+          "errors": [
+            "Line 5, Position 105: Found unparsable section: ', LATERAL variant_explode(t.value)'"
+          ]
+        },
+        {
+          "path": "corpus/cache/spark-sql-tests/inputs/window.sql",
+          "errors": [
+            "Line 113, Position 1: Found unparsable section: 'RANGE BETWEEN CURRENT ROW AND current_da...'"
           ]
         }
       ]
@@ -185,25 +528,60 @@
       "name": "dbx-dlt-notebooks",
       "expectation": "valid",
       "total": 19,
-      "passed": 19,
+      "passed": 14,
       "skipped_dialect": 1,
-      "rate": 100.0,
-      "failures": []
+      "rate": 73.68421052631578,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/divvy-bike-demo/dbsql-divvybike-dashboard-sql.sql",
+          "errors": [
+            "Undefined jinja template variable: 'date_and_time'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/financial-services-examples/Personalization/02 - DLT APPLY CHANGES.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC # Running DLT APPLY CHANGES for...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/JHU COVID-19.sql",
+          "errors": [
+            "Line 20, Position 1: Found unparsable section: 'CREATE OR REFRESH MATERIALIZED VIEW jhu_...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/Loan Risk.sql",
+          "errors": [
+            "Line 9, Position 1: Found unparsable section: 'CREATE OR REFRESH MATERIALIZED VIEW lend...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/Wikipedia.sql",
+          "errors": [
+            "Line 11, Position 1: Found unparsable section: 'CREATE OR REFRESH MATERIALIZED VIEW clic...'"
+          ]
+        }
+      ]
     },
     {
       "name": "dbx-devrel",
       "expectation": "valid",
       "total": 5,
-      "passed": 4,
+      "passed": 3,
       "skipped_dialect": 0,
-      "rate": 80.0,
+      "rate": 60.0,
       "failures": [
         {
           "path": "corpus/cache/dbx-devrel/sessions/2020-05-28 | Slowly Changing Dimensions (SCD) Type 2/SCD Type 2 Blog Demo.sql",
           "errors": [
-            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}",
-            "mismatched input '>' expecting {<EOF>, ';'}",
-            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 469 more}"
+            "Unable to lex characters: '$db.custom...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-devrel/sessions/2020-08-25 | Generating Surrogate Keys for your Data Lakehouse with Spark SQL and Delta Lake/Generating Surrogate Keys.sql",
+          "errors": [
+            "Unable to lex characters: '${test.nro...'"
           ]
         }
       ]
@@ -212,25 +590,234 @@
       "name": "dbx-learn-databricks",
       "expectation": "valid",
       "total": 46,
-      "passed": 46,
+      "passed": 13,
       "skipped_dialect": 0,
-      "rate": 100.0,
-      "failures": []
+      "rate": 28.26086956521739,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Administration/Databricks Administration.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC Commands and tricks to manage D...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Apache Spark/Parameterized Queries.sql",
+          "errors": [
+            "Line 75, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE sqlStr USING (limitA A...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Apache Spark/Table-Valued Functions.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC [The Internals of Spark SQL](ht...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Databricks Terraform Provider.sql",
+          "errors": [
+            "Line 7, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC **Terraform** is an *...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Databricks Workflows/Step 1. Load Raw Data.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC This notebook uses an input par...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Databricks Workflows/Step 3. Build Aggregates.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC ...for presentation layer\\n\\n-- C...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/Change Data Feed.sql",
+          "errors": [
+            "Line 18, Position 1: Found unparsable section: '-- MAGIC ja tez mam z tym problem jak to...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/DESCRIBE HISTORY.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC `DESCRIBE HISTORY` command can ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/Delta Lake 3.1.0.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC [DeltaLake 3.1.0 RC3](https://g...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/Generated Columns.sql",
+          "errors": [
+            "Line 3, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC [CREATE TABLE USING](...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/TRUNCATE TABLE in Delta Lake.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC The not-so-obvious ways\\n\\n-- COM...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Agenda.sql",
+          "errors": [
+            "Line 26, Position 1: Found unparsable section: '-- MAGIC [Open Topics / TODOs]($./TODOs)...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Auto Loader and Streaming DLTs.sql",
+          "errors": [
+            "Line 89, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC While working on a de...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Building Delta Live Tables pipelines with SQL.sql",
+          "errors": [
+            "Line 15, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC * Delta Live Tables s...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Delta Live Tables CLI.sql",
+          "errors": [
+            "Line 7, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC [Databricks CLI setup...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Delta Live Tables.sql",
+          "errors": [
+            "Line 79, Position 1: Found unparsable section: '-- MAGIC In [Delta Live Tables quickstar...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Expectations.sql",
+          "errors": [
+            "Line 24, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC [Delta Live Tables SQ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Full Refresh.sql",
+          "errors": [
+            "Line 3, Position 1: Found unparsable section: \"-- MAGIC \\n-- MAGIC Let's deep dive into ...\""
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Materialization.sql",
+          "errors": [
+            "Line 8, Position 1: Found unparsable section: '-- MAGIC 1. https://www.databricks.com/g...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Storage location.sql",
+          "errors": [
+            "Line 40, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC Contains schema evolu...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Distributed Training/LightGBM.sql",
+          "errors": [
+            "Line 194, Position 1: Found unparsable section: '-- MAGIC ...and ways to learn even more ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Generative AI/00 Generative AI.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC Gain more ground in **Generativ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Generative AI/Databricks Mosaic AI.sql",
+          "errors": [
+            "Line 22, Position 1: Found unparsable section: '-- MAGIC [Databricks + MosaicML](https:/...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Generative AI/Vector Databases.sql",
+          "errors": [
+            "Line 53, Position 1: Found unparsable section: '-- MAGIC ## Videos\\n-- MAGIC\\n-- MAGIC [Ve...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/Unity Catalog/Unity Catalog.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC Unified Data Governance on Data...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/demo/delta-live-tables/my_streaming_table.sql",
+          "errors": [
+            "Line 25, Position 1: Found unparsable section: '-- MAGIC %pip within a Python notebook. ...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/meetups/Meetup_2025_01_09.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC \u27a1\ufe0f [Deploying Databricks Workfl...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/meetups/Meetup_2025_01_30.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC \u27a1\ufe0f [Meetup Announcement](https:...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/meetups/Meetup_2025_02_06.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC \u27a1\ufe0f [Meetup Announcement](https:...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/meetups/Meetups.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC This notebook is a list of topi...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/workshops/Databricks Workshop Day 2.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC Duration: 4.5 hours (9:30-14:00...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/workshops/Databricks Workshop Day 3.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC Duration: 4.5 hours (9:30-14:00...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-learn-databricks/workshops/Databricks Workshop Half-Day 5a.sql",
+          "errors": [
+            "Line 4, Position 1: Found unparsable section: '-- MAGIC Duration: 2 hours 15 minutes (9...'"
+          ]
+        }
+      ]
     },
     {
       "name": "dbx-packt-cookbook",
       "expectation": "valid",
       "total": 15,
-      "passed": 14,
+      "passed": 12,
       "skipped_dialect": 0,
-      "rate": 93.33333333333333,
+      "rate": 80.0,
       "failures": [
         {
           "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Clean Up.sql",
           "errors": [
-            "mismatched input 'USE' expecting {<EOF>, ';'}",
-            "mismatched input 'NOT' expecting {<EOF>, ';'}",
-            "mismatched input 'NOT' expecting {<EOF>, ';'}"
+            "Line 8, Position 1: Found unparsable section: 'USE SCHEMA ${schema};\\n\\n-- COMMAND ------...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter09/9.7 apply-changes_into-dlt.sql",
+          "errors": [
+            "Line 2, Position 1: Found unparsable section: 'CREATE TEMPORARY STREAMING LIVE VIEW mov...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-packt-cookbook/Chapter10/10.2 uc_object_hierarchy.sql",
+          "errors": [
+            "Line 2, Position 24: Found unparsable section: \"MANAGED LOCATION 's3://data-lake/de-book...\""
           ]
         }
       ]
@@ -253,32 +840,27 @@
       "rate": 92.5925925925926,
       "failures": [
         {
+          "path": "corpus/cache/dbx-lakeflow-connector/examples/agl_fleet/setup_databricks.sql",
+          "errors": [
+            "Line 283, Position 1: Found unparsable section: 'GRANT READ VOLUME ON VOLUME __CATALOG__....'"
+          ]
+        },
+        {
           "path": "corpus/cache/dbx-lakeflow-connector/onboarding/lakebase/create_raw_tags.sql",
           "errors": [
-            "mismatched input 'PRECISION' expecting ')'"
+            "Line 4, Position 37: Found unparsable section: '(\\n    event_id TEXT PRIMARY KEY,\\n    eve...'"
           ]
         },
         {
-          "path": "corpus/cache/dbx-lakeflow-connector/pipelines/sql/metric_views.sql",
+          "path": "corpus/cache/dbx-lakeflow-connector/pipelines/sdp/transformations/data_blend_summary.sql",
           "errors": [
-            "mismatched input 'METRICS' expecting 'SCHEMA'",
-            "mismatched input '$' expecting {'(', 'FROM', 'MAP', 'REDUCE', 'SELECT', 'TABLE', ... and 2 more}",
-            "mismatched input 'METRICS' expecting 'SCHEMA'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-lakeflow-connector/pipelines/sql/setup_uc_functions.sql",
-          "errors": [
-            "missing 'RETURN' at 'AS'",
-            "mismatched input '$' expecting {<EOF>, ';'}"
+            "Line 15, Position 1: Found unparsable section: 'CREATE OR REFRESH MATERIALIZED VIEW oper...'"
           ]
         },
         {
           "path": "corpus/cache/dbx-lakeflow-connector/workshop/demo_queries.sql",
           "errors": [
-            "mismatched input 'LIMIT' expecting {<EOF>, ';'}",
-            "missing ')' at 'medallion'",
-            "mismatched input '.' expecting {<EOF>, ';'}"
+            "Line 27, Position 1: Found unparsable section: 'FROM (DESCRIBE DETAIL medallion.bronze.r...'"
           ]
         }
       ]
@@ -287,117 +869,74 @@
       "name": "sqlfluff-sparksql",
       "expectation": "valid",
       "total": 134,
-      "passed": 118,
+      "passed": 123,
       "skipped_dialect": 0,
-      "rate": 88.05970149253731,
+      "rate": 91.7910447761194,
       "failures": [
         {
-          "path": "corpus/cache/sqlfluff-sparksql/create_table_datasource.sql",
+          "path": "corpus/cache/sqlfluff-sparksql/alter_database.sql",
           "errors": [
-            "no viable alternative at input 'CLUSTER BY NONE'"
+            "Line 19, Position 1: Found unparsable section: \"ALTER DATABASE inventory SET LOCATION 'f...\""
           ]
         },
         {
-          "path": "corpus/cache/sqlfluff-sparksql/databricks_dlt_constraint.sql",
+          "path": "corpus/cache/sqlfluff-sparksql/alter_table.sql",
           "errors": [
-            "mismatched input 'CONSTRAINT' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input 'CONSTRAINT' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input 'CONSTRAINT' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+            "Line 43, Position 1: Found unparsable section: 'ALTER TABLE Table_Identifier\\nSET SERDEPR...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/alter_view.sql",
+          "errors": [
+            "Line 17, Position 1: Found unparsable section: 'ALTER VIEW view_identifier AS (\\n    SELE...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/create_table_hiveformat.sql",
+          "errors": [
+            "Line 5, Position 1: Found unparsable section: 'PARTITIONED BY ( col_name2 STRING COMMEN...'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/create_view.sql",
+          "errors": [
+            "Line 19, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW pulse_article_sear...'"
           ]
         },
         {
           "path": "corpus/cache/sqlfluff-sparksql/databricks_dlt_create_view.sql",
           "errors": [
-            "mismatched input ''a'' expecting ')'"
+            "Line 3, Position 1: Found unparsable section: 'CREATE TEMPORARY LIVE VIEW filtered_data...'"
           ]
         },
         {
-          "path": "corpus/cache/sqlfluff-sparksql/delta_convert_to.sql",
+          "path": "corpus/cache/sqlfluff-sparksql/delta_update_table_schema.sql",
           "errors": [
-            "mismatched input 'NO' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/delta_describe_detail.sql",
-          "errors": [
-            "extraneous input ''/data/events/'' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/delta_describe_history.sql",
-          "errors": [
-            "extraneous input ''/data/events/'' expecting {<EOF>, ';'}",
-            "mismatched input ''/data/events/'' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/delta_generate_manifest.sql",
-          "errors": [
-            "mismatched input ''/data/events/'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/from_insert_statement.sql",
-          "errors": [
-            "mismatched input 'FROM' expecting {<EOF>, ';'}"
+            "Line 15, Position 1: Found unparsable section: 'ALTER TABLE table_name CHANGE col_name_o...'"
           ]
         },
         {
           "path": "corpus/cache/sqlfluff-sparksql/iceberg_alter_table.sql",
           "errors": [
-            "mismatched input 'COMMENT' expecting {<EOF>, ';'}",
-            "missing '(' at 'FIELD'",
-            "mismatched input 'catalog' expecting {')', ','}"
+            "Line 56, Position 65: Found unparsable section: \"COMMENT 'unit is bytes per second';\\n\\nALT...\""
           ]
         },
         {
-          "path": "corpus/cache/sqlfluff-sparksql/insert_table.sql",
+          "path": "corpus/cache/sqlfluff-sparksql/select_lambda.sql",
           "errors": [
-            "missing 'WHERE' at 'USING'",
-            "missing 'WHERE' at 'USING'",
-            "missing 'WHERE' at 'USING'"
+            "Line 5, Position 18: Found unparsable section: \"(\\n    array('bc', 'ab', 'dc'),\\n    (left...\""
           ]
         },
         {
-          "path": "corpus/cache/sqlfluff-sparksql/merge_into.sql",
+          "path": "corpus/cache/sqlfluff-sparksql/select_nested_join.sql",
           "errors": [
-            "mismatched input 'EXCEPT' expecting {<EOF>, ';'}",
-            "mismatched input 'EXCEPT' expecting {<EOF>, ';'}",
-            "mismatched input 'EXCEPT' expecting {<EOF>, ';'}"
+            "Line 5, Position 1: Found unparsable section: 'left join (b inner join c on true) on tr...'"
           ]
         },
         {
-          "path": "corpus/cache/sqlfluff-sparksql/pivot_clause.sql",
+          "path": "corpus/cache/sqlfluff-sparksql/select_star_in_multiparameter_function.sql",
           "errors": [
-            "mismatched input ',' expecting 'IN'",
-            "mismatched input ',' expecting 'IN'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/select_from_values.sql",
-          "errors": [
-            "no viable alternative at input '(values (1,2), (3,4)) ('",
-            "mismatched input '2' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 470 more}",
-            "no viable alternative at input '(3'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/select_lateral_column_alias.sql",
-          "errors": [
-            "mismatched input ')' expecting ','"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/select_qualify.sql",
-          "errors": [
-            "mismatched input 'QUALIFY' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-sparksql/values_with_alias.sql",
-          "errors": [
-            "mismatched input '(' expecting {<EOF>, ';'}",
-            "mismatched input '(' expecting {<EOF>, ';'}"
+            "Line 1, Position 19: Found unparsable section: '(*, col2)'"
           ]
         }
       ]
@@ -406,177 +945,10 @@
       "name": "sqlfluff-databricks",
       "expectation": "valid",
       "total": 59,
-      "passed": 36,
+      "passed": 59,
       "skipped_dialect": 0,
-      "rate": 61.016949152542374,
-      "failures": [
-        {
-          "path": "corpus/cache/sqlfluff-databricks/alter_table.sql",
-          "errors": [
-            "mismatched input 'NOT' expecting {<EOF>, ';'}",
-            "no viable alternative at input 'ALTER TABLE pets DROP FOREIGN'",
-            "no viable alternative at input 'ALTER TABLE persons DROP PRIMARY'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/alter_view.sql",
-          "errors": [
-            "mismatched input '(' expecting {<EOF>, ';'}",
-            "no viable alternative at input 'ALTER MATERIALIZED'",
-            "no viable alternative at input 'ALTER MATERIALIZED'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/alter_volume.sql",
-          "errors": [
-            "no viable alternative at input 'ALTER VOLUME some_vol RENAME'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/bare_magic_first_line.sql",
-          "errors": [
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/bare_magic_line.sql",
-          "errors": [
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/bare_magic_modulo.sql",
-          "errors": [
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/bare_magic_notebook_start.sql",
-          "errors": [
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/bare_magic_sql.sql",
-          "errors": [
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/bare_magic_sql_notebook_start.sql",
-          "errors": [
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/comment_on.sql",
-          "errors": [
-            "no viable alternative at input 'COMMENT ON CATALOG'",
-            "no viable alternative at input 'COMMENT ON CONNECTION'",
-            "no viable alternative at input 'COMMENT ON SHARE'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/create_flow_auto_cdc_into.sql",
-          "errors": [
-            "mismatched input 'AUTO' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}",
-            "mismatched input 'AUTO' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}",
-            "mismatched input 'AUTO' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/create_function.sql",
-          "errors": [
-            "missing 'RETURN' at 'AS'",
-            "mismatched input '$' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/create_materialized_view.sql",
-          "errors": [
-            "mismatched input '1' expecting {STRING_LITERAL, DOUBLEQUOTED_STRING}",
-            "mismatched input '1' expecting {STRING_LITERAL, DOUBLEQUOTED_STRING}",
-            "mismatched input '2' expecting {STRING_LITERAL, DOUBLEQUOTED_STRING}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/create_table.sql",
-          "errors": [
-            "no viable alternative at input 'CLUSTER BY NONE'",
-            "mismatched input 'ON' expecting ')'",
-            "mismatched input 'ON' expecting ')'"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/create_table_clone.sql",
-          "errors": [
-            "mismatched input 'CLONE' expecting {<EOF>, ';'}",
-            "mismatched input 'CLONE' expecting {<EOF>, ';'}",
-            "mismatched input 'CLONE' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/create_view.sql",
-          "errors": [
-            "mismatched input 'METRICS' expecting 'SCHEMA'",
-            "mismatched input 'LANGUAGE' expecting {'(', 'AS', 'COMMENT', 'DEFAULT', 'PARTITIONED', 'TBLPROPERTIES', ... and 1 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/databricks_dlt_apply_changes_into.sql",
-          "errors": [
-            "mismatched input 'WHERE' expecting {'APPLY', 'SEQUENCE'}",
-            "mismatched input 'WHERE' expecting {'APPLY', 'SEQUENCE'}",
-            "mismatched input 'WHERE' expecting {'APPLY', 'SEQUENCE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/merge_into.sql",
-          "errors": [
-            "mismatched input 'except' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/named_parameters.sql",
-          "errors": [
-            "mismatched input ':' expecting {<EOF>, ';'}",
-            "mismatched input '(' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/select_lateral_column_alias.sql",
-          "errors": [
-            "mismatched input ')' expecting ','"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/set_tags.sql",
-          "errors": [
-            "mismatched input 'UNSET' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input 'UNSET' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
-            "mismatched input 'UNSET' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/try_cast_operator.sql",
-          "errors": [
-            "mismatched input '?' expecting {<EOF>, ';'}",
-            "mismatched input '?' expecting {<EOF>, ';'}",
-            "mismatched input '?' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/sqlfluff-databricks/use_catalog.sql",
-          "errors": [
-            "extraneous input ''hive_metastore'' expecting {<EOF>, ';'}"
-          ]
-        }
-      ]
+      "rate": 100.0,
+      "failures": []
     }
   ],
   "mutation": {
@@ -592,38 +964,38 @@
         "tier": "guaranteed"
       },
       "unterminated-string": {
-        "total": 160,
-        "rejected": 160,
+        "total": 169,
+        "rejected": 169,
         "tier": "guaranteed"
       },
       "double-comma": {
-        "total": 227,
-        "rejected": 227,
+        "total": 229,
+        "rejected": 229,
         "tier": "guaranteed"
       },
       "dangling-operator": {
-        "total": 216,
-        "rejected": 216,
+        "total": 219,
+        "rejected": 219,
         "tier": "guaranteed"
       },
       "dangling-boolean-operator": {
-        "total": 218,
-        "rejected": 217,
+        "total": 219,
+        "rejected": 219,
         "tier": "weak"
       },
       "unclosed-comment": {
-        "total": 255,
-        "rejected": 255,
+        "total": 241,
+        "rejected": 241,
         "tier": "guaranteed"
       },
       "delete-keyword": {
-        "total": 233,
-        "rejected": 215,
+        "total": 231,
+        "rejected": 217,
         "tier": "weak"
       },
       "delete-comma": {
-        "total": 227,
-        "rejected": 131,
+        "total": 228,
+        "rejected": 140,
         "tier": "weak"
       }
     },

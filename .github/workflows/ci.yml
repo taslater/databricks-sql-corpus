@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         # The floor is what pyproject declares; the ceiling is what people run.
-        # 3.10 matters most: it is the only version that pulls in tomli.
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
@@ -31,30 +30,12 @@ jobs:
       - run: make venv
       - run: make test
 
-  generated:
-    # The committed parser is a build artefact of grammar/. If the two drift,
-    # every other job is testing something that is not in the repo.
-    name: generated parser matches grammar
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: "17"
-      - run: make venv
-      - name: Regenerate and diff
-        run: make verify-generated
-
   corpus:
     # Reported, never gating. corpus/reports/baseline.json is committed so that
     # an accuracy change shows up in a reviewable diff -- the judgement about
     # whether a change is a regression belongs to a human, not to a threshold.
     # This job exists so that judgement has fresh numbers attached to the PR.
-    name: corpus accuracy (reported)
+    name: SQLFluff accuracy (reported)
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -77,6 +58,16 @@ jobs:
           .venv/bin/python scripts/compare_baseline.py \
             corpus/reports/baseline.json corpus/reports/pr.json \
             >> "$GITHUB_STEP_SUMMARY"
+      - name: The upstream work queue
+        # Grouped by construct, which is the form the work takes as pull
+        # requests. Reported on every run so the queue stays visible.
+        run: |
+          {
+            echo "### Failing constructs"
+            echo '```'
+            make gaps CORPUS_ARGS="--limit 25"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         if: always()
         with:

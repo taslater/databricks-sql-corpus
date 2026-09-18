@@ -5,6 +5,7 @@
 The file above is the single source of truth for this repo. Nothing
 Claude-specific is kept here — add new guidance to `AGENTS.md`.
 
-Use plan mode for anything touching `grammar/` or `scripts/patch_grammar.py`:
-a change there regenerates `src/dbsqlparse/generated/`, so the diff is large
-and the failure mode (a silently broken parser) is quiet.
+Use plan mode before changing `src/dbsqlparse/corpus/sources.py` or the
+mutation tiers in `corpus/mutate.py`. A wrong source silently reshapes every
+number the harness reports, and a mis-tiered mutation reports correct
+behaviour as a failure — both fail quietly rather than loudly.

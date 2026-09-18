@@ -1,3 +1,9 @@
+> **Historical.** This records the ANTLR parser this project used to ship,
+> which was retired once SQLFluff proved the better parser for Databricks SQL.
+> It is kept for the reasoning, not as a description of the current code.
+> See `README.md` and `docs/gaps.md` for what the project does now.
+
+
 # Design notes
 
 Decisions that are not obvious from the code, and the reasoning behind them.

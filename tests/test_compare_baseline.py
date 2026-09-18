@@ -131,15 +131,31 @@ def test_real_sql_is_not_mistaken_for_json():
 # --- mutation tiering -------------------------------------------------------
 # A mutation is only GUARANTEED if no keyword rule can rescue it. Getting this
 # wrong reports the parser being correct as a false negative.
-def test_trailing_boolean_operator_is_weak_not_guaranteed():
-    """`SELECT a OR` is `SELECT a AS OR` in Spark's default keyword mode -- a
+#
+# These assertions used to check the tiering against this project's own
+# parser. That parser is retired, so they check it against the parser actually
+# under test.
+import random
+
+from dbsqlparse.corpus.mutate import GUARANTEED, WEAK, mutate
+from dbsqlparse.corpus.runners import SqlFluffRunner
+
+
+@pytest.fixture(scope="module")
+def parses():
+    runner = SqlFluffRunner()
+    return lambda sql: runner.check(sql, "<test>").ok
+
+
+def test_the_probe_itself_rejects_broken_sql(parses):
+    """Without this, every assertion below could pass on a broken checker."""
+    assert not parses("SELECT a FROM ((t;")
+
+
+def test_trailing_boolean_operator_is_weak_not_guaranteed(parses):
+    """`SELECT a OR` is `SELECT a AS OR` in the default keyword mode -- a
     column aliased to the word OR, which is valid."""
-    import random
-
-    from dbsqlparse.corpus.mutate import GUARANTEED, WEAK, mutate
-    from dbsqlparse.parser import parse_text
-
-    assert parse_text("SELECT a OR").ok  # the reading that makes it weak
+    assert parses("SELECT a OR")  # the reading that makes it weak
 
     kinds = {m.kind: m.tier for m in mutate("SELECT a OR b FROM t", "x", random.Random(0))}
     assert kinds.get("dangling-boolean-operator") == WEAK
@@ -147,26 +163,43 @@ def test_trailing_boolean_operator_is_weak_not_guaranteed():
 
 
 def test_equals_inside_a_set_statement_is_not_mutated():
-    """`SET key =` with an empty value is a valid config assignment, so
-    truncating there produces valid SQL, not a rejection failure."""
-    import random
+    """An EQ inside a SET statement is never truncated into a mutant.
 
-    from dbsqlparse.corpus.mutate import mutate
-    from dbsqlparse.parser import parse_text
+    The guard exists because Spark accepts `SET key =` as a config assignment
+    with an empty value, which makes the truncation valid SQL rather than the
+    rejection failure the GUARANTEED tier promises.
 
-    assert parse_text("SET spark.sql.foo =").ok
-
+    SQLFluff currently rejects that form -- see docs/gaps.md -- so the guard is
+    not strictly required against today's SQLFluff. It is kept because it is
+    the conservative direction: if SQLFluff later matches Spark here, a
+    mutation generated without the guard would silently start reporting a
+    false negative. This deliberately does not assert SQLFluff's behaviour,
+    since the form is undocumented and either reading may be right.
+    """
     mutants = mutate("SET spark.sql.foo = 5", "x", random.Random(0))
     assert not [m for m in mutants if m.kind == "dangling-operator"]
 
 
-def test_equals_outside_a_set_statement_is_still_guaranteed():
-    import random
+def test_set_after_a_cell_separator_is_still_a_set_statement():
+    """Notebooks separate statements with cells, not semicolons. Walking back
+    only to a semicolon is how this escaped the first time."""
+    notebook = "SELECT 1\n\n-- COMMAND ----------\n\nSET k = 2"
+    mutants = mutate(notebook, "x", random.Random(0))
+    assert not [m for m in mutants if m.kind == "dangling-operator"]
 
-    from dbsqlparse.corpus.mutate import GUARANTEED, mutate
-    from dbsqlparse.parser import parse_text
 
+def test_equals_outside_a_set_statement_is_still_guaranteed(parses):
     mutants = [m for m in mutate("SELECT a = 1 FROM t", "x", random.Random(0))
                if m.kind == "dangling-operator"]
     assert mutants and all(m.tier == GUARANTEED for m in mutants)
-    assert all(not parse_text(m.sql).ok for m in mutants)
+    assert all(not parses(m.sql) for m in mutants)
+
+
+def test_token_offsets_reconstruct_the_input():
+    """Mutations splice by character offset, so the offsets must be exact."""
+    from dbsqlparse.corpus.mutate import _tokens
+
+    sql = "SELECT a + 1, 'str' FROM (t) WHERE a = 1 AND b;"
+    toks = _tokens(sql)
+    assert "".join(t.raw for t in toks) == sql
+    assert all(sql[t.start : t.stop + 1] == t.raw for t in toks)

@@ -18,20 +18,39 @@ So mutations are split into two tiers:
                   scored.
     WEAK       -- plausible typos that MIGHT still parse. Generated and
                   reported for inspection, never scored.
+
+Tokenising uses SQLFluff's lexer rather than a regex, for the same reason it
+always did: splitting on punctuation with a regex breaks inside string
+literals and comments. It used to use this project's own ANTLR lexer; that
+parser has been retired, and since SQLFluff is now the subject under test its
+lexer is also the one that decides where tokens begin and end.
 """
 from __future__ import annotations
 
 import random
 from dataclasses import dataclass
+from functools import lru_cache
 
-from antlr4 import CommonTokenStream, Token
-
-from ..generated.SqlBaseLexer import SqlBaseLexer
-from ..parser import UpperCaseInputStream
 from ..preprocess import CELL_SEPARATOR_RE
 
 GUARANTEED = "guaranteed"
 WEAK = "weak"
+
+# SQLFluff token types, in place of the ANTLR token ids this used to use.
+OPEN_PAREN = "start_bracket"
+CLOSE_PAREN = "end_bracket"
+COMMA = "comma"
+SEMICOLON = "semicolon"
+PLUS = "plus"
+EQUALS = "equals"
+WORD = "word"
+STRINGS = ("single_quote", "double_quote")
+COMMENTS = ("inline_comment", "block_comment")
+# SQLFluff's databricks dialect lexes `-- COMMAND ----------` as its own token
+# type rather than a comment, because the cell separator is a statement
+# delimiter there. Other dialects see a plain comment, so both are handled.
+SEPARATORS = ("command",)
+IGNORED = ("whitespace", "newline")
 
 
 @dataclass(frozen=True)
@@ -42,19 +61,57 @@ class Mutant:
     origin: str  # description of the source statement
 
 
-def _tokens(sql: str):
-    lexer = SqlBaseLexer(UpperCaseInputStream(sql))
-    lexer.removeErrorListeners()
-    stream = CommonTokenStream(lexer)
-    stream.fill()
-    return [t for t in stream.tokens if t.type != -1]  # drop EOF
+@dataclass(frozen=True)
+class Tok:
+    """A token with absolute character offsets into the original string.
+
+    SQLFluff reports line/position, not offsets, but `lex` returns every token
+    in order including whitespace, so offsets accumulate exactly.
+    """
+
+    type: str
+    raw: str
+    start: int
+
+    @property
+    def stop(self) -> int:
+        """Index of the token's LAST character, inclusive (as ANTLR reported)."""
+        return self.start + len(self.raw) - 1
+
+    @property
+    def upper(self) -> str:
+        return self.raw.upper()
 
 
-def _of_type(tokens, type_) -> list:
-    return [t for t in tokens if t.type == type_]
+@lru_cache(maxsize=1)
+def _lexer():
+    from sqlfluff.core import FluffConfig
+    from sqlfluff.core.parser import Lexer
+
+    return Lexer(config=FluffConfig(overrides={"dialect": "databricks"}))
 
 
-def _in_set_statement(tokens: list, index: int) -> bool:
+def _tokens(sql: str) -> list[Tok]:
+    elements, _ = _lexer().lex(sql)
+    out: list[Tok] = []
+    offset = 0
+    for el in elements:
+        raw = el.raw
+        if raw:
+            out.append(Tok(el.get_type(), raw, offset))
+        offset += len(raw)
+    return out
+
+
+def _of_type(tokens: list[Tok], *types: str) -> list[Tok]:
+    return [t for t in tokens if t.type in types]
+
+
+def _words(tokens: list[Tok], *words: str) -> list[Tok]:
+    return [t for t in tokens if t.type == WORD and t.upper in words]
+
+
+def _in_set_statement(tokens: list[Tok], index: int) -> bool:
     """True when tokens[index] sits in a statement opening with SET.
 
     `SET spark.sql.some.key =` with nothing after the `=` is a legitimate Spark
@@ -71,16 +128,18 @@ def _in_set_statement(tokens: list, index: int) -> bool:
     i = index
     while i > 0:
         previous = tokens[i - 1]
-        if previous.type == SqlBaseLexer.SEMICOLON:
+        if previous.type == SEMICOLON:
             break
-        if previous.channel != Token.DEFAULT_CHANNEL and CELL_SEPARATOR_RE.match(
-            previous.text.strip()
+        if previous.type in SEPARATORS or (
+            previous.type in COMMENTS
+            and CELL_SEPARATOR_RE.match(previous.raw.strip())
         ):
             break
         i -= 1
-    for token in tokens[i:index + 1]:
-        if token.channel == Token.DEFAULT_CHANNEL:
-            return token.type == SqlBaseLexer.SET
+    for token in tokens[i : index + 1]:
+        if token.type in COMMENTS or token.type in IGNORED:
+            continue
+        return token.type == WORD and token.upper == "SET"
     return False
 
 
@@ -95,7 +154,7 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
         return out
 
     # --- GUARANTEED: unbalanced parentheses -------------------------------
-    closers = _of_type(tokens, SqlBaseLexer.RIGHT_PAREN)
+    closers = _of_type(tokens, CLOSE_PAREN)
     if closers:
         victim = rng.choice(closers)
         out.append(Mutant(
@@ -103,7 +162,7 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
             kind="delete-close-paren", tier=GUARANTEED, origin=origin,
         ))
 
-    openers = _of_type(tokens, SqlBaseLexer.LEFT_PAREN)
+    openers = _of_type(tokens, OPEN_PAREN)
     if openers:
         victim = rng.choice(openers)
         out.append(Mutant(
@@ -112,7 +171,7 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
         ))
 
     # --- GUARANTEED: unterminated string literal --------------------------
-    strings = _of_type(tokens, SqlBaseLexer.STRING_LITERAL)
+    strings = _of_type(tokens, *STRINGS)
     if strings:
         victim = rng.choice(strings)
         out.append(Mutant(
@@ -121,7 +180,7 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
         ))
 
     # --- GUARANTEED: doubled comma ----------------------------------------
-    commas = _of_type(tokens, SqlBaseLexer.COMMA)
+    commas = _of_type(tokens, COMMA)
     if commas:
         victim = rng.choice(commas)
         out.append(Mutant(
@@ -143,8 +202,8 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
     # these would count correct behaviour as a miss.
     arithmetic = [
         t for i, t in enumerate(tokens)
-        if t.type == SqlBaseLexer.PLUS
-        or (t.type == SqlBaseLexer.EQ and not _in_set_statement(tokens, i))
+        if t.type == PLUS
+        or (t.type == EQUALS and not _in_set_statement(tokens, i))
     ]
     if arithmetic:
         victim = rng.choice(arithmetic)
@@ -154,7 +213,7 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
                 truncated, kind="dangling-operator", tier=GUARANTEED, origin=origin,
             ))
 
-    boolean = [t for t in tokens if t.type in (SqlBaseLexer.AND, SqlBaseLexer.OR)]
+    boolean = _words(tokens, "AND", "OR")
     if boolean:
         victim = rng.choice(boolean)
         truncated = sql[: victim.stop + 1].rstrip()
@@ -169,10 +228,7 @@ def mutate(sql: str, origin: str, rng: random.Random) -> list[Mutant]:
     ))
 
     # --- WEAK: plausible typos that may legitimately still parse -----------
-    keywords = [
-        t for t in tokens
-        if t.type in (SqlBaseLexer.FROM, SqlBaseLexer.WHERE, SqlBaseLexer.SELECT)
-    ]
+    keywords = _words(tokens, "FROM", "WHERE", "SELECT")
     if keywords:
         victim = rng.choice(keywords)
         out.append(Mutant(

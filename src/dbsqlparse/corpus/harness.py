@@ -1,4 +1,4 @@
-"""Measure parser accuracy against the corpus.
+"""Measure SQLFluff against the corpus.
 
 Reports two numbers that mean different things:
 
@@ -18,8 +18,8 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..parser import ParseOptions, parse_text
 from .mutate import GUARANTEED, mutate_corpus
+from .runners import Runner
 from .sources import REMOTE_SOURCES, Source
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -48,7 +48,9 @@ def looks_like_tsql(text: str) -> bool:
 
 # A notebook header and `--` comments are the only things that legitimately
 # precede the first statement in one of these files.
-_LEADING_NOISE = re.compile(r"\A(?:\s*(?:--[^\n]*\n|/\*.*?\*/))*\s*", re.S)
+_LEADING_NOISE = re.compile(
+    r"\A(?:\s*(?:--[^\n]*(?:\n|\Z)|/\*.*?\*/))*\s*", re.S
+)
 
 
 def looks_like_json(text: str) -> bool:
@@ -72,6 +74,7 @@ class FileResult:
     ok: bool
     statements: int
     errors: list[str] = field(default_factory=list)
+    line: int | None = None
     skipped_dialect: bool = False
     seconds: float = 0.0
 
@@ -109,7 +112,7 @@ def iter_sql_files(root: pathlib.Path) -> list[pathlib.Path]:
 def run_source(
     source: Source,
     root: pathlib.Path,
-    options: ParseOptions,
+    runner: Runner,
     skip_foreign_dialects: bool = True,
 ) -> SourceReport:
     report = SourceReport(source=source)
@@ -126,15 +129,16 @@ def run_source(
             )
             continue
         t0 = time.perf_counter()
-        result = parse_text(text, options=options, path=str(path))
+        result = runner.check(text, str(path))
         elapsed = time.perf_counter() - t0
         report.files.append(
             FileResult(
                 path=str(path),
                 source=source.name,
                 ok=result.ok,
-                statements=result.statement_count,
-                errors=[d.message for d in result.diagnostics],
+                statements=0,
+                errors=[result.message] if result.message else [],
+                line=result.line,
                 seconds=elapsed,
             )
         )
@@ -142,7 +146,7 @@ def run_source(
 
 
 def run_valid_corpus(
-    options: ParseOptions, local_dirs: list[str] | None = None
+    runner: Runner, local_dirs: list[str] | None = None
 ) -> list[SourceReport]:
     from .sources import local_sources
 
@@ -151,16 +155,16 @@ def run_valid_corpus(
         root = CACHE_DIR / source.name
         if not root.exists():
             continue
-        reports.append(run_source(source, root, options))
+        reports.append(run_source(source, root, runner))
     for source in local_sources(local_dirs or []):
         root = pathlib.Path(source.local_paths[0])
         if root.exists():
-            reports.append(run_source(source, root, options))
+            reports.append(run_source(source, root, runner))
     return reports
 
 
 def run_mutation_corpus(
-    reports: list[SourceReport], options: ParseOptions, seed: int = 0, limit: int = 2000
+    reports: list[SourceReport], runner: Runner, seed: int = 0, limit: int = 2000
 ) -> dict:
     """Mutate SQL we successfully parsed, then check we now reject it."""
     seeds: list[tuple[str, str]] = []
@@ -180,7 +184,7 @@ def run_mutation_corpus(
     escapes: list[dict] = []
 
     for m in mutants:
-        result = parse_text(m.sql, options=options)
+        result = runner.check(m.sql, "<mutant>")
         entry = by_kind[m.kind]
         entry["tier"] = m.tier
         entry["total"] += 1
