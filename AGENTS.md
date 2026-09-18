@@ -178,15 +178,14 @@ default keyword mode legitimately re-parses them as valid
 diffs; `corpus/cache/` is not, since every source is pinned to an exact
 revision and the cache is reproducible from `sources.py` alone.
 
-Current baseline: 100% on the TPC-DS/TPC-H/SSB suites, ~78% on
-`spark-sql-tests` (a mixed valid/invalid source), 20% on `dbx-dlt-notebooks`
-and 60% on `dbx-devrel`, 100% rejection on 1124 guaranteed mutations.
+Current baseline: 100% on the TPC-DS/TPC-H/SSB suites and on
+`dbx-dlt-notebooks`, 80% on `dbx-devrel` (one file holds `OPTIMIZE <table>`, a
+documentation placeholder), ~94% on `spark-sql-tests` (a mixed valid/invalid
+source), 100% rejection on 1215 guaranteed mutations.
 
-The two `dbx-*` numbers are low because of one open gap, not many: Delta Live
-Tables `LIVE` syntax is unsupported. Do not regenerate the baseline to make a
-regression disappear — investigate the diff first. Adding a source that exposes
-a gap is not a regression, and `scripts/compare_baseline.py` is written to tell
-the two apart.
+Do not regenerate the baseline to make a regression disappear — investigate the
+diff first. Adding a source that exposes a gap is not a regression, and
+`scripts/compare_baseline.py` is written to tell the two apart.
 
 ## Conventions
 

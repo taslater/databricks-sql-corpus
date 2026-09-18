@@ -139,63 +139,63 @@ Spark does not really parse them. They fall into
 *accepted* but nothing about them is validated. `DENY` has a real rule because
 it had no catch-all to fall into.
 
-## Known gap: Delta Live Tables LIVE syntax
+## What the Databricks corpus found, and what it cost to close
 
-Adding the public Databricks corpus dropped `dbx-dlt-notebooks` to 20% recall
-(4 of 20 files) and `dbx-devrel` to 60% (3 of 5). Those numbers are a genuine
-gap in this parser, not noise in the corpus, and they are recorded in
-`baseline.json` rather than smoothed away. The 18 failures come from five
-causes, not eighteen:
+Adding 25 real Databricks files dropped `dbx-dlt-notebooks` to 20% recall and
+`dbx-devrel` to 60%. Both are now 100% and 80%. The interesting part is that
+only about half the work was Databricks syntax at all.
 
-**1. DLT `LIVE` and `MATERIALIZED` (8 files).** The extensions cover
-`CREATE OR REFRESH STREAMING TABLE`, but the `OR REFRESH` path accepts only
-`STREAMING` and `PRIVATE`:
+**The biggest single win was not a Databricks feature.** `split_statements`
+handed any trailing `-- comment` after the last semicolon to the parser as if
+it were a statement. A comment is not SQL, so the parser reported a syntax
+error at EOF and marked the file broken. That one bug was suppressing **51
+files of Spark's own golden-file tests**: fixing it moved `spark-sql-tests`
+from 77.6% to 94.4%, on a suite that had been in the corpus from the start.
+A corpus of 495 files had never caught it, because Spark's test resources
+rarely end on a comment and real notebooks almost always do. Comments arrive on
+the lexer's hidden channel, so the splitter now keeps a chunk only when it has
+seen a default-channel token.
 
-```sql
-CREATE OR REFRESH LIVE TABLE t AS SELECT ...       -- 'LIVE' unexpected
-CREATE OR REFRESH MATERIALIZED VIEW v AS SELECT ...-- 'MATERIALIZED' unexpected
-CREATE LIVE TABLE t AS SELECT ...                  -- no viable alternative
-APPLY CHANGES INTO LIVE.target FROM ...            -- 'LIVE' unexpected
-```
+The exception is an unclosed `/*`, which swallows the rest of the file as a
+single hidden token and so looks identical to pure commentary. Dropping that
+would turn a broken file into a silently clean one, which is the worst possible
+direction for a linter to fail in. Spark's lexer already records the case and
+the splitter now consults it.
 
-`LIVE` is absent from `keywords.txt` entirely, and `LIVE.tbl` is how DLT
-pipelines reference their own datasets, so it appears in nearly every DLT
-notebook. `MATERIALIZED VIEW` parses on its own but not after `OR REFRESH`.
+**Two of the five causes I first wrote up here were wrong**, and both were
+wrong the same way: the diagnostic pointed at a token several positions after
+the real problem.
 
-**2. Double-quoted path literals (5 files).** Path relations were added for
-single-quoted strings only:
+- Double-quoted path literals were never broken. `SELECT * FROM "/path"` has
+  always parsed. The actual cause was the missing `STREAM` keyword: in
+  `FROM STREAM read_files("/p", …)`, `STREAM` lexed as a table name and
+  `read_files` as its alias, which made the argument list a *column alias
+  list*, and the first string argument was the first thing that could not be an
+  identifier. The error landed on the path, so it looked like a string-literal
+  bug.
+- The "CTE without `AS`" was not a CTE problem either. `${test.nrows}` went
+  unsubstituted — the widget pattern did not allow a dot — and the leftover `$`
+  derailed the parse well before the `WITH`.
 
-```sql
-SELECT * FROM cloud_files("/databricks-datasets/retail-org/customers", "csv")
-SELECT * FROM delta.`...` WHERE src = "dbfs:/data/twitter_dais2022"
-```
+The lesson is worth keeping: on a grammar this size, the token ANTLR reports is
+where recovery gave up, not where the input went wrong.
 
-In Spark's default configuration a double-quoted token is a string literal, so
-these are valid and should parse exactly as the single-quoted form does.
+**What was genuinely missing**, all now supported: the `LIVE` spelling
+(`CREATE [OR REFRESH | STREAMING] LIVE TABLE`, which every published pipeline
+still uses), `MATERIALIZED VIEW` after `OR REFRESH` rather than only
+`OR REPLACE`, `TEMPORARY` streaming tables, the `STREAM` relation prefix, DLT
+expectations (`CONSTRAINT x EXPECT (…) ON VIOLATION DROP ROW | FAIL UPDATE`),
+and constraints inside a `CREATE TABLE` column list — inline `PRIMARY KEY`,
+inline `FOREIGN KEY REFERENCES`, and named table-level constraints, none of
+which Spark's `colDefinitionList` allows.
 
-**3. Bare `$name` widgets (1 file).** `preprocess.py` substitutes `${name}`,
-but Databricks also accepts the unbraced form, which real notebooks use:
+Five keywords were added for this: `LIVE`, `STREAM`, `EXPECT`, `VIOLATION`,
+`FAIL`. Every one is a plausible column name, which is exactly why they went
+through `keywords.txt` — the generated tests check each still works as a
+column, alias, table name and in DDL, in both keyword modes.
 
-```sql
-DROP TABLE IF EXISTS $db.customer;
-CAST('$job_dt' AS TIMESTAMP) AS created_at
-```
-
-Any fix has to stay length-preserving, like the braced form. `$db` -> `_db`
-happens to satisfy that, since `_` is a valid identifier start.
-
-**4. `WITH name (SELECT ...)` (1 file).** A CTE whose body is parenthesised but
-has no `AS`. Needs checking against Databricks before deciding whether this is
-a gap or a genuinely invalid file that belongs in the reject pile.
-
-**5. Corpus noise (1 file).** `PipelineSetting.json.sql` is JSON that happens
-to carry a `.sql` extension. It is not SQL and never will be. It costs 5
-points of `dbx-dlt-notebooks` recall, which is an argument for a
-not-SQL-at-all skip like the existing `looks_like_tsql` check rather than for
-quietly dropping the file.
-
-None of this was visible before. The Spark corpus is 495 files and every one of
-them is bare `.sql` with no notebook header, no cell separators, no `-- MAGIC`
-and no widgets — so `preprocess.py`, the module whose entire job is real-world
-file shape, had never been run over a corpus at all. The first 25 real
-Databricks files found a bug in it immediately.
+**Two files still fail, and both should.** `PipelineSetting.json.sql` is JSON
+with a `.sql` extension; it is now reported as a skip, on the same footing as
+the existing T-SQL check — wrong dialect, not wrong parser. The other contains
+`OPTIMIZE <table>`, a documentation placeholder for the reader to fill in. It
+is not valid SQL and a parser that accepted it would be worse.

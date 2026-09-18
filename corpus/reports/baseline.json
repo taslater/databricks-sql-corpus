@@ -49,40 +49,16 @@
       "name": "spark-sql-tests",
       "expectation": "mixed",
       "total": 304,
-      "passed": 236,
+      "passed": 287,
       "skipped_dialect": 0,
-      "rate": 77.63157894736842,
+      "rate": 94.4078947368421,
       "failures": [
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/binary_base64.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/binary_basic.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/binary_hex.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/binary_hex_discrete.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/bitwise.sql",
           "errors": [
-            "extraneous input '>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 472 more}",
-            "extraneous input '<' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 472 more}",
-            "extraneous input '>>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 472 more}"
+            "extraneous input '>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 477 more}",
+            "extraneous input '<' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 477 more}",
+            "extraneous input '>>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 477 more}"
           ]
         },
         {
@@ -92,39 +68,9 @@
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/cte-legacy.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/cte-nonlegacy.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
           "path": "corpus/cache/spark-sql-tests/inputs/cte.sql",
           "errors": [
             "no viable alternative at input 'WITH t()'"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/datetime-formatting-legacy.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/datetime-legacy.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/datetime-parsing-legacy.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
           ]
         },
         {
@@ -133,12 +79,6 @@
             "mismatched input 'desc_temp1' expecting {<EOF>, ';'}",
             "mismatched input 'desc_temp1' expecting {<EOF>, ';'}",
             "mismatched input 'insert' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/double-quoted-identifiers-enabled.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
           ]
         },
         {
@@ -152,22 +92,16 @@
         {
           "path": "corpus/cache/spark-sql-tests/inputs/execute-immediate.sql",
           "errors": [
-            "extraneous input '(' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}",
+            "extraneous input '(' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}",
             "mismatched input ')' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/explain-aqe.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/identifier-clause.sql",
           "errors": [
-            "mismatched input ''x.win'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}",
+            "mismatched input ''x.win'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}",
             "mismatched input '(' expecting ')'",
-            "mismatched input ''a'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}"
+            "mismatched input ''a'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}"
           ]
         },
         {
@@ -185,147 +119,9 @@
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/keywords-enforced.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
           "path": "corpus/cache/spark-sql-tests/inputs/literals.sql",
           "errors": [
             "no viable alternative at input 'select .'"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/array.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/cast.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/conditional-functions.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/date.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/datetime-parsing-invalid.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/datetime-special.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/decimalArithmeticOperations.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/double-quoted-identifiers.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/higher-order-functions.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/interval.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/keywords.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/literals.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/map.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/math.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/parse-schema-string.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/string-functions.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/timestamp.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/try_aggregates.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/try_arithmetic.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/try_datetime_functions.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/nonansi/try_element_at.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/parse-query-correctness-old-behavior.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
           ]
         },
         {
@@ -337,65 +133,11 @@
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/aggregates_part3.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/aggregates_part4.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/comments.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/insert.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/interval.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/join.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/select_implicit.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/union.sql",
-          "errors": [
-            "mismatched input ';' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
           "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/window_part3.sql",
           "errors": [
             "mismatched input 'BY' expecting ')'",
             "extraneous input 'BY' expecting {')', ', ', 'ORDER', 'RANGE', 'ROWS', ... and 1 more}",
             "mismatched input 'ten' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/postgreSQL/window_part4.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
           ]
         },
         {
@@ -430,59 +172,11 @@
           ]
         },
         {
-          "path": "corpus/cache/spark-sql-tests/inputs/timestampNTZ/datetime-special-ansi.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/timestampNTZ/datetime-special.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/timestampNTZ/timestamp-ansi.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/timestampNTZ/timestamp.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
           "path": "corpus/cache/spark-sql-tests/inputs/transform.sql",
           "errors": [
             "no viable alternative at input 'SELECT TRANSFORM(b AS'",
             "no viable alternative at input 'SELECT TRANSFORM(b b_1'",
             "no viable alternative at input 'SELECT TRANSFORM(b, MAX(a) AS'"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/udf/postgreSQL/udf-aggregates_part3.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/udf/postgreSQL/udf-aggregates_part4.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/udf/postgreSQL/udf-join.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/spark-sql-tests/inputs/udf/postgreSQL/udf-select_implicit.sql",
-          "errors": [
-            "mismatched input '<EOF>' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
           ]
         }
       ]
@@ -490,156 +184,26 @@
     {
       "name": "dbx-dlt-notebooks",
       "expectation": "valid",
-      "total": 20,
-      "passed": 4,
-      "skipped_dialect": 0,
-      "rate": 20.0,
-      "failures": [
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/apply-changes-from-snapshot-demo/src/notebooks/order_count_by_status_pattern1.sql",
-          "errors": [
-            "mismatched input 'LIVE' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/apply-changes-from-snapshot-demo/src/notebooks/order_count_by_status_pattern2.sql",
-          "errors": [
-            "mismatched input 'LIVE' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/change-data-capture-example/PipelineSetting.json.sql",
-          "errors": [
-            "mismatched input '{' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/change-data-capture-example/notebooks/2-Retail_DLT_CDC_sql.sql",
-          "errors": [
-            "no viable alternative at input '\"_source__/customers\"'",
-            "mismatched input '=>' expecting ')'",
-            "mismatched input '=>' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/customer360-fivetran-dlt-demo/Customer 360.sql",
-          "errors": [
-            "no viable alternative at input 'CREATE LIVE'",
-            "no viable alternative at input 'CREATE LIVE'",
-            "extraneous input 'LIVE' expecting 'TABLE'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/divvy-bike-demo/dbsql-divvybike-dashboard-sql.sql",
-          "errors": [
-            "mismatched input 'AND' expecting {<EOF>, ';'}",
-            "mismatched input 'AND' expecting {<EOF>, ';'}",
-            "mismatched input 'AND' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/divvy-bike-demo/dlt-sql-streaming-divvybikes.sql",
-          "errors": [
-            "no viable alternative at input '\"/FileStore/DivvyBikes/api_response/station_status\"'",
-            "mismatched input '=>' expecting ')'",
-            "mismatched input '=>' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/financial-services-examples/Personalization/02 - DLT APPLY CHANGES.sql",
-          "errors": [
-            "extraneous input 'LIVE' expecting 'TABLE'",
-            "mismatched input 'EXPECT' expecting ')'",
-            "extraneous input 'LIVE' expecting 'TABLE'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/kimball_modelling_demo/src/2 Dimensions.sql",
-          "errors": [
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/kimball_modelling_demo/src/3 Facts.sql",
-          "errors": [
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/sql/JHU COVID-19.sql",
-          "errors": [
-            "no viable alternative at input '\"/databricks-datasets/COVID/CSSEGISandData/json/\"'",
-            "mismatched input '=>' expecting ')'",
-            "mismatched input '=>' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/sql/Loan Risk Part 3 - ML Scoring.sql",
-          "errors": [
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/sql/Loan Risk.sql",
-          "errors": [
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/sql/Retail Sales.sql",
-          "errors": [
-            "no viable alternative at input '\"/databricks-datasets/retail-org/customers/\"'",
-            "mismatched input '=>' expecting ')'",
-            "no viable alternative at input '\"/databricks-datasets/retail-org/sales_orders/\"'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/sql/Wikipedia.sql",
-          "errors": [
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
-            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/twitter-dlt-huggingface-demo/Twitter-DataFlow.sql",
-          "errors": [
-            "no viable alternative at input '\"dbfs:/data/twitter_dais2022\"'",
-            "mismatched input '=>' expecting ')'",
-            "mismatched input 'EXPECT' expecting ')'"
-          ]
-        }
-      ]
+      "total": 19,
+      "passed": 19,
+      "skipped_dialect": 1,
+      "rate": 100.0,
+      "failures": []
     },
     {
       "name": "dbx-devrel",
       "expectation": "valid",
       "total": 5,
-      "passed": 3,
+      "passed": 4,
       "skipped_dialect": 0,
-      "rate": 60.0,
+      "rate": 80.0,
       "failures": [
         {
           "path": "corpus/cache/dbx-devrel/sessions/2020-05-28 | Slowly Changing Dimensions (SCD) Type 2/SCD Type 2 Blog Demo.sql",
           "errors": [
-            "extraneous input '$' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}",
-            "extraneous input '$' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}",
-            "mismatched input '$' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-devrel/sessions/2020-08-25 | Generating Surrogate Keys for your Data Lakehouse with Spark SQL and Delta Lake/Generating Surrogate Keys.sql",
-          "errors": [
-            "no viable alternative at input 'WITH sample_data (\\n  SELECT\\n    id,\\n    rand() random_number,\\n    'one one one' str1,\\n    'two one one' str2,\\n    'three one one' str3\\n  FROM\\n    RANGE(0, $'",
-            "no viable alternative at input 'WITH sample_data (\\n  SELECT\\n    id,\\n    rand() random_number,\\n    'one one one' str1,\\n    'two one one' str2,\\n    'three one one' str3\\n  FROM\\n    RANGE(0, $'",
-            "no viable alternative at input 'WITH sample_data (\\n  SELECT\\n    id,\\n    rand() random_number,\\n    'one one one' str1,\\n    'two one one' str2,\\n    'three one one' str3\\n  FROM\\n    RANGE(0, $'"
+            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}",
+            "mismatched input '>' expecting {<EOF>, ';'}",
+            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 461 more}"
           ]
         }
       ]
@@ -648,48 +212,48 @@
   "mutation": {
     "by_kind": {
       "delete-close-paren": {
-        "total": 198,
-        "rejected": 198,
+        "total": 214,
+        "rejected": 214,
         "tier": "guaranteed"
       },
       "insert-open-paren": {
-        "total": 198,
-        "rejected": 198,
+        "total": 214,
+        "rejected": 214,
         "tier": "guaranteed"
       },
       "unterminated-string": {
-        "total": 138,
-        "rejected": 138,
+        "total": 149,
+        "rejected": 149,
         "tier": "guaranteed"
       },
       "double-comma": {
-        "total": 196,
-        "rejected": 196,
+        "total": 212,
+        "rejected": 212,
         "tier": "guaranteed"
       },
       "dangling-operator": {
-        "total": 196,
-        "rejected": 196,
+        "total": 212,
+        "rejected": 212,
         "tier": "guaranteed"
       },
       "unclosed-comment": {
-        "total": 198,
-        "rejected": 198,
+        "total": 214,
+        "rejected": 214,
         "tier": "guaranteed"
       },
       "delete-keyword": {
-        "total": 197,
-        "rejected": 189,
+        "total": 213,
+        "rejected": 204,
         "tier": "weak"
       },
       "delete-comma": {
-        "total": 196,
-        "rejected": 97,
+        "total": 212,
+        "rejected": 108,
         "tier": "weak"
       }
     },
-    "guaranteed_total": 1124,
-    "guaranteed_rejected": 1124,
+    "guaranteed_total": 1215,
+    "guaranteed_rejected": 1215,
     "rejection_rate": 100.0,
     "escapes": []
   }

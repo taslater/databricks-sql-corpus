@@ -45,6 +45,50 @@ def test_widget_sql_parses():
     assert parse_text("SELECT * FROM ${env}.raw.events_raw").ok
 
 
+# Three spellings appear in real notebooks. Every one has to keep its length,
+# or a diagnostic after it points at the wrong column.
+@pytest.mark.parametrize(
+    "widget",
+    ["${env}", "${test.nrows}", "$db", "{{ station_list }}"],
+    ids=["braced", "braced-dotted", "bare", "dashboard"],
+)
+def test_every_parameter_form_is_substituted_and_keeps_its_length(widget):
+    original = f"SELECT * FROM {widget}.t"
+    result = substitute_widgets(original)
+    assert len(result.text) == len(original)
+    assert "$" not in result.text and "{" not in result.text
+    assert parse_text(original).ok
+
+
+def test_dotted_widget_does_not_become_a_qualified_name():
+    """`${a.b}` must stand in for ONE identifier, not `_a`.`b`."""
+    result = substitute_widgets("SELECT * FROM ${test.nrows}")
+    assert "." not in result.text[len("SELECT * FROM "):]
+
+
+# --- statement splitting ----------------------------------------------------
+def test_trailing_comment_after_last_semicolon_is_not_a_statement():
+    """A comment is not SQL. Parsing one reports an error at EOF and turns a
+    perfectly good file red -- which it did, on 51 files of Spark's own tests."""
+    assert parse_text("SELECT 1;\n-- set force = false for incremental\n").ok
+
+
+@pytest.mark.parametrize(
+    "sql", ["-- only a comment\n", "/* block */", "", "   \n\t", ";;;"],
+    ids=["line-comment", "block-comment", "empty", "whitespace", "semicolons"],
+)
+def test_input_with_no_code_yields_no_statements(sql):
+    assert split_statements(sql) == []
+    assert parse_text(sql).ok
+
+
+def test_unclosed_block_comment_is_still_an_error():
+    """The exception to the rule above: an unclosed /* swallows the file as one
+    hidden token, so it looks like pure commentary. Dropping it would turn a
+    broken file into a silently clean one."""
+    assert not parse_text("/* unclosed\nSELECT 1").ok
+
+
 def test_named_and_positional_parameters_need_no_preprocessing():
     assert parse_statement("SELECT * FROM t WHERE id = :my_param").ok
     assert parse_statement("SELECT * FROM t WHERE id = ?").ok

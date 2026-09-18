@@ -21,7 +21,7 @@ import pathlib
 import re
 from dataclasses import dataclass, field
 
-from antlr4 import CommonTokenStream, InputStream, ParserRuleContext
+from antlr4 import CommonTokenStream, InputStream, ParserRuleContext, Token
 from antlr4.atn.PredictionMode import PredictionMode
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.ErrorStrategy import BailErrorStrategy, DefaultErrorStrategy
@@ -178,6 +178,18 @@ def split_statements(sql: str) -> list[tuple[str, int]]:
 
     Uses the real lexer so semicolons inside 'strings', "strings", `backticks`
     and /* comments */ do not split anything.
+
+    A chunk carrying no code -- a trailing `-- comment` after the last
+    semicolon, or a cell that is only commentary -- is dropped rather than
+    handed to the parser. It has nothing to parse, so parsing it reports a
+    syntax error at EOF and marks a perfectly good file as broken. Comments and
+    whitespace arrive on the hidden channel, so the lexer already knows the
+    difference and no second pass over the text is needed.
+
+    An unclosed `/*` is the exception: it swallows the rest of the file as one
+    hidden-channel token, so the chunk looks like pure commentary and dropping
+    it would turn a broken file into a silently clean one. The lexer records
+    that case, and it is kept so the parser still reports it.
     """
     lexer = _make_lexer(sql, None)
     try:
@@ -190,22 +202,26 @@ def split_statements(sql: str) -> list[tuple[str, int]]:
     depth = 0
     start_index = 0  # character offset in sql
     start_line = 0
+    has_code = False  # a non-comment token seen since the last split
 
     for token in tokens:
+        if token.channel == Token.DEFAULT_CHANNEL and token.type != SqlBaseLexer.SEMICOLON:
+            has_code = True
         if token.type == SqlBaseLexer.LEFT_PAREN:
             depth += 1
         elif token.type == SqlBaseLexer.RIGHT_PAREN:
             depth = max(0, depth - 1)
         elif token.type == SqlBaseLexer.SEMICOLON and depth == 0:
-            chunk = sql[start_index : token.stop + 1]
-            if chunk.strip().strip(";"):
-                statements.append((chunk, start_line))
+            if has_code:
+                statements.append((sql[start_index : token.stop + 1], start_line))
             start_index = token.stop + 1
             start_line = sql.count("\n", 0, start_index)
+            has_code = False
 
-    tail = sql[start_index:]
-    if tail.strip():
-        statements.append((tail, start_line))
+    if has_code or lexer.has_unclosed_bracketed_comment:
+        tail = sql[start_index:]
+        if tail:
+            statements.append((tail, start_line))
     return statements
 
 

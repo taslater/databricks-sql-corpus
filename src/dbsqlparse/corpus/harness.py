@@ -46,6 +46,25 @@ def looks_like_tsql(text: str) -> bool:
     return sum(bool(p.search(text)) for p in TSQL_MARKERS) >= 1
 
 
+# A notebook header and `--` comments are the only things that legitimately
+# precede the first statement in one of these files.
+_LEADING_NOISE = re.compile(r"\A(?:\s*(?:--[^\n]*\n|/\*.*?\*/))*\s*", re.S)
+
+
+def looks_like_json(text: str) -> bool:
+    """True when the file is JSON wearing a .sql extension.
+
+    Published pipelines keep their config next to their SQL and sometimes name
+    it `PipelineSetting.json.sql`. It is not SQL and never will be, so counting
+    it as a recall failure permanently understates the parser for a reason that
+    has nothing to do with the parser. This is the same judgement as
+    looks_like_tsql -- wrong dialect, not wrong parser -- and it is reported as
+    a skip rather than silently dropped.
+    """
+    body = _LEADING_NOISE.sub("", text, count=1)
+    return body[:1] in ("{", "[")
+
+
 @dataclass
 class FileResult:
     path: str
@@ -96,7 +115,12 @@ def run_source(
     report = SourceReport(source=source)
     for path in iter_sql_files(root):
         text = path.read_text(encoding="utf-8", errors="replace")
-        if skip_foreign_dialects and source.name.startswith("local:") and looks_like_tsql(text):
+        # JSON is not a dialect question, so it applies to every source; T-SQL
+        # only shows up in repos of hand-written SQL, so it stays local-only.
+        not_sql = looks_like_json(text) or (
+            source.name.startswith("local:") and looks_like_tsql(text)
+        )
+        if skip_foreign_dialects and not_sql:
             report.files.append(
                 FileResult(str(path), source.name, ok=False, statements=0, skipped_dialect=True)
             )

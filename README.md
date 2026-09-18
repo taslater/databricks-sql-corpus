@@ -218,10 +218,14 @@ exists to handle is therefore invisible to the Spark corpus. The Databricks
 sources are small, but they are the only ones that see a file in the shape a
 Databricks user would actually commit it.
 
-Current baseline: 100% recall on all 191 TPC-DS/TPC-H/SSB queries, 100%
-rejection on 1124 guaranteed mutations, and **20% on the Delta Live Tables
-notebooks** — that last number is a real, known gap, not a rounding error. See
-[docs/design-notes.md](docs/design-notes.md#known-gap-delta-live-tables-live-syntax).
+Current baseline: **99.5% recall** across the valid sources — 100% on all 191
+TPC-DS/TPC-H/SSB queries and 100% on the Delta Live Tables notebooks — and 100%
+rejection on 1215 guaranteed mutations. The one remaining failure is a file
+containing `OPTIMIZE <table>`, a documentation placeholder rather than SQL.
+
+Adding the Databricks sources is what found most of the bugs that got it there,
+including one that had been suppressing 51 files of Spark's own test suite. See
+[docs/design-notes.md](docs/design-notes.md#what-the-databricks-corpus-found-and-what-it-cost-to-close).
 
 ## Keyword strictness
 

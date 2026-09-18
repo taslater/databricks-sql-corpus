@@ -6,8 +6,9 @@ the grammar dead:
   * Notebook source format -- a `-- Databricks notebook source` header, cells
     separated by `-- COMMAND ----------`, and `-- MAGIC %md` cells whose
     contents are Markdown or Python rather than SQL.
-  * Widget substitution -- `${env}.raw.events_raw`. The Spark lexer has no
-    token for `$` at all, so this is a hard lex failure.
+  * Parameter substitution -- `${env}.raw.events_raw`, `$db.customer` and
+    dashboard `{{ param }}`. The Spark lexer has no token for `$` at all, so
+    this is a hard lex failure.
 
 Everything here is line- and offset-preserving, so a diagnostic's line and
 column still point at the right place in the original file. That matters: a
@@ -24,8 +25,23 @@ from dataclasses import dataclass, field
 NOTEBOOK_HEADER = "-- Databricks notebook source"
 CELL_SEPARATOR_RE = re.compile(r"^--\s*COMMAND\s*-{2,}\s*$")
 MAGIC_RE = re.compile(r"^--\s*MAGIC\s*(%[a-zA-Z]+)?(.*)$")
-# ${name} widget substitution. Deliberately not matched inside a longer word.
-WIDGET_RE = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)?\}")
+# Parameter substitution. Three spellings appear in real notebooks and all
+# three have to go, because the Spark lexer has no token for `$` or `{` and
+# either one is a hard lex failure that kills the whole statement.
+#
+#   ${name} / ${dotted.name}   widget, braced. Databricks allows a dotted
+#                              widget name, which the original pattern missed.
+#   $name                      widget, unbraced. Older notebooks use this
+#                              throughout; `DROP TABLE IF EXISTS $db.customer`.
+#   {{ name }}                 Databricks SQL dashboard parameter.
+#
+# Deliberately not matched inside a longer word. Order matters: the braced form
+# has to win before the bare `$` alternative can claim the `$` of `${`.
+WIDGET_RE = re.compile(
+    r"\$\{(?P<braced>[A-Za-z_][A-Za-z0-9_.]*)?\}"
+    r"|\{\{\s*(?P<dashboard>[A-Za-z_][A-Za-z0-9_.]*)\s*\}\}"
+    r"|\$(?P<bare>[A-Za-z_][A-Za-z0-9_]*)"
+)
 
 
 @dataclass
@@ -134,7 +150,10 @@ def _placeholder_for(name: str, width: int) -> str:
     Length preservation is the whole point: every character offset after the
     substitution stays valid, so error positions need no remapping.
     """
-    candidate = f"_{name}"
+    # A dotted widget name (${test.nrows}) would otherwise produce a
+    # placeholder containing a dot, which lexes as a qualified name rather
+    # than the single identifier the caller is standing in for.
+    candidate = "_" + name.replace(".", "_")
     if len(candidate) > width:
         return candidate[:width]
     return candidate.ljust(width, "_")
@@ -146,7 +165,12 @@ def substitute_widgets(text: str) -> PreprocessResult:
 
     def repl(match: re.Match[str]) -> str:
         original = match.group(0)
-        name = match.group(1) or "param"
+        name = (
+            match.group("braced")
+            or match.group("dashboard")
+            or match.group("bare")
+            or "param"
+        )
         placeholder = _placeholder_for(name, len(original))
         subs[placeholder] = original
         return placeholder
