@@ -24,8 +24,8 @@ jobs:
         # 3.10 matters most: it is the only version that pulls in tomli.
         python: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - run: make venv
@@ -37,11 +37,11 @@ jobs:
     name: generated parser matches grammar
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
@@ -58,13 +58,13 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: make venv
       - name: Cache corpus
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: corpus/cache
           # Sources are pinned by revision, so the key only changes when
@@ -77,7 +77,7 @@ jobs:
           .venv/bin/python scripts/compare_baseline.py \
             corpus/reports/baseline.json corpus/reports/pr.json \
             >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: corpus-report
