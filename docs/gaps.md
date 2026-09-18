@@ -13,21 +13,73 @@ recorded below.
 
 ## Open
 
-| construct | repro | corpus files |
-| --- | --- | ---: |
-| `EXECUTE IMMEDIATE … USING` | `EXECUTE IMMEDIATE s USING (a AS b);` | 1 |
-| `DESCRIBE HISTORY` as a relation | `SELECT * FROM (DESCRIBE HISTORY t);` | 2 |
-| `DESCRIBE DETAIL` as a relation | `SELECT * FROM (DESCRIBE DETAIL t);` | 1 |
-| `SHOW GRANTS ON <object>` | `SHOW GRANTS ON demo.schema.names;` | 1 |
-| `CREATE TEMPORARY STREAMING LIVE VIEW` | `CREATE TEMPORARY STREAMING LIVE VIEW v AS SELECT 1;` | 1 |
-| `CREATE CATALOG … MANAGED LOCATION` | `CREATE CATALOG c MANAGED LOCATION 's3://x';` | 1 |
-| `GRANT READ VOLUME ON VOLUME` | ``GRANT READ VOLUME ON VOLUME c.s.w TO `grp`;`` | 1 |
-| `-- MAGIC` body line starting with `%` | the `magic_line` matcher is `(-- MAGIC)( [^%]{1})([^\n]*)`, which excludes `%` | 1 |
-| `DOUBLE PRECISION` | `CREATE TABLE t (x DOUBLE PRECISION);` | 0 |
-| `CONVERT TO DELTA … NO STATISTICS` | `CONVERT TO DELTA t NO STATISTICS;` | 0 |
+Nothing. Every construct the corpus exposed has a pull request against
+`sqlfluff/sqlfluff`; see "Landed" below.
 
-The last two have no corpus file: they came from the retired inventory, so
-they are real syntax but not yet observed in the wild. Lower priority.
+What is left is not dialect work:
+
+- **Templating** — four corpus files, in the section below. The fix is in
+  `placeholder.py`, not in a dialect.
+- **The securable list.** `AccessObjectSegment` has no `SHARE`, `CONNECTION`,
+  `EXTERNAL LOCATION`, `CLEAN ROOM`, `PROCEDURE` or `STORAGE`/`SERVICE
+  CREDENTIAL`, so `GRANT ... ON SHARE s`, `SHOW GRANTS ON CONNECTION c` and
+  their relatives are rejected. The limitation is symmetric across `GRANT`,
+  `REVOKE` and `SHOW GRANTS` — see #8516, which reuses that segment
+  deliberately so the three cannot drift apart. Widening it should move all
+  three together and needs six or so new keywords. No corpus file needs it
+  yet.
+- **The type-aware naming rules**, which belong in a SQLFluff plugin rather
+  than in core.
+
+### Notes on the three that were mis-recorded
+
+**`EXECUTE IMMEDIATE` was missing entirely**, not only its `USING` clause.
+Even `EXECUTE IMMEDIATE 'SELECT 1';` was unparsable. Apache Spark's reference
+gives the same syntax as Databricks', down to the bracketed
+`USING ( arg [AS] alias, ... )`, so it went in `dialect_sparksql.py` and
+`databricks` inherits it. Spark's own test file settles a question the
+Databricks page leaves ambiguous: `INTO (a, b)` is labelled
+`-- INTO does not support braces - parser error`, so the braced spelling stays
+rejected and a test asserts it.
+
+**`CONVERT TO DELTA` was mis-recorded.** `NO STATISTICS` had been supported all
+along — `Sequence("NO", "STATISTICS", optional=True)` is already in
+`ConvertToDeltaStatementSegment`. The real gap was the target: the grammar took
+only a `FileReferenceSegment`, so a path parsed while `CONVERT TO DELTA
+my_table` did not. The
+[reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta)
+is explicit that table_name is "either an optionally qualified table
+identifier or a path".
+
+**The `-- MAGIC` entry was mis-described, and closed itself.** It read as "body
+line starting with `%`", but the two corpus files that failed —
+`dbx-learn-databricks/Administration/Databricks Administration.sql` and
+`dbx-learn-databricks/Delta Lake/Change Data Feed.sql` — both failed on a
+single-line directive carrying content, followed by further body lines:
+
+```
+-- MAGIC %md # Databricks Administration
+-- MAGIC
+-- MAGIC Commands and tricks to manage Databricks clusters
+```
+
+which is the shape #8507 fixes. Measured 2026-09-18: on #8507's branch the
+first file parses and the second gets past the magic cell, failing instead on
+`DESC HISTORY` (#8510). With all four applied, both parse. The only
+`%`-leading body line anywhere in the corpus is `-- MAGIC %py`, a documented
+language alias, and it lexes fine.
+
+## Retired from the queue
+
+**`DOUBLE PRECISION` is not a Databricks gap.** The
+[DOUBLE type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/double-type)
+gives the syntax as `DOUBLE`, with no `PRECISION` spelling. The only corpus
+file containing it is `create_raw_tags.sql`, which the "Not gaps" section below
+already records as Lakebase — Databricks **PostgreSQL**, not Databricks SQL.
+It came from the retired parser's inventory and should not have been carried
+over. (Incidentally SQLFluff *does* accept `CAST(x AS DOUBLE PRECISION)` today,
+inherited from ANSI; only the column-definition path rejects it. Tightening
+that is not worth a pull request.)
 
 ## Templating, not dialect
 
@@ -56,14 +108,30 @@ Recorded so they are not re-investigated:
 
 ## Landed
 
-Open pull requests against `sqlfluff/sqlfluff`:
+| PR | construct | state |
+| --- | --- | --- |
+| [#8507](https://github.com/sqlfluff/sqlfluff/pull/8507) | magic cell body after a single-line directive | **merged** |
+| [#8508](https://github.com/sqlfluff/sqlfluff/pull/8508) | materialized view declaring only expectations | **merged** |
+| [#8509](https://github.com/sqlfluff/sqlfluff/pull/8509) | `PRIVATE` streaming tables, `CREATE FLOW` append flows (closes #8455) | **merged** |
+| [#8510](https://github.com/sqlfluff/sqlfluff/pull/8510) | `DESC HISTORY` / `DESC DETAIL` | **merged** |
+| [#8511](https://github.com/sqlfluff/sqlfluff/pull/8511) | `CREATE CATALOG … MANAGED LOCATION` | open |
+| [#8512](https://github.com/sqlfluff/sqlfluff/pull/8512) | `READ`/`WRITE VOLUME` privileges, `VOLUME` securable | open |
+| [#8513](https://github.com/sqlfluff/sqlfluff/pull/8513) | `LIVE` / `STREAMING LIVE` views | open |
+| [#8514](https://github.com/sqlfluff/sqlfluff/pull/8514) | `DESCRIBE HISTORY` / `DESCRIBE DETAIL` as relations | open |
+| [#8515](https://github.com/sqlfluff/sqlfluff/pull/8515) | `EXECUTE IMMEDIATE` | open |
+| [#8516](https://github.com/sqlfluff/sqlfluff/pull/8516) | `SHOW GRANTS` | open |
+| [#8517](https://github.com/sqlfluff/sqlfluff/pull/8517) | `CONVERT TO DELTA <table>` | open |
 
-| PR | construct |
-| --- | --- |
-| [#8507](https://github.com/sqlfluff/sqlfluff/pull/8507) | magic cell body after a single-line directive |
-| [#8508](https://github.com/sqlfluff/sqlfluff/pull/8508) | materialized view declaring only expectations |
-| [#8509](https://github.com/sqlfluff/sqlfluff/pull/8509) | `PRIVATE` streaming tables, `CREATE FLOW` append flows (closes #8455) |
-| [#8510](https://github.com/sqlfluff/sqlfluff/pull/8510) | `DESC HISTORY` / `DESC DETAIL` |
+All four of the first batch merged on 2026-09-18.
+
+`CREATE TEMPORARY STREAMING LIVE VIEW` turned out not to be a missing feature
+but a **regression in the `databricks` dialect**: `sparksql` parses it and has
+a fixture for it, while `databricks` does not.
+[#7405](https://github.com/sqlfluff/sqlfluff/pull/7405) separated `CREATE VIEW`
+from `CREATE MATERIALIZED VIEW` by writing a fresh segment instead of
+subclassing, and `OR REFRESH`, `STREAMING` and `LIVE` were dropped with it.
+Worth remembering when reading a gap: check the sibling dialect before
+assuming SQLFluff never supported something.
 
 ## Unverified divergences
 
@@ -80,3 +148,42 @@ either `SET key` or `SET key = value` and says nothing about an empty value.
 The corpus contains no instance either way. `corpus/mutate.py` keeps its
 `_in_set_statement` guard regardless, because skipping a mutation is the safe
 direction.
+
+## Where the numbers stand
+
+Measured 2026-09-18 against the 867-file corpus, `databricks` dialect.
+
+| source | released 4.3.0 | `main` with the four merged |
+| --- | ---: | ---: |
+| `dbx-learn-databricks` | 28.3% | **89.1%** |
+| `dbx-dlt-notebooks` | 73.7% | **94.7%** |
+| `dbx-lakeflow-connector` | 92.6% | **94.4%** |
+
+Overall recall on `main` after the four merges: **757/866 = 87.4%**, with
+rejection holding at 100% of guaranteed-invalid mutations. Thirty-three files
+that could not be parsed at all now parse. Most of that is #8507: a notebook
+whose magic cells do not lex fails as a whole file, so one lexer fix moves a
+lot of files at once.
+
+The six pull requests still open add one corpus file each, except
+`CONVERT TO DELTA`, which adds none — no published SQL on hand converts a
+registered table, so that one rests on the reference rather than on an
+observed failure.
+
+## Measurement artefacts
+
+Things that move the corpus numbers without anything having got better or
+worse. Recorded so the next person does not chase them.
+
+**`spark-sql-tests` fell 74.7% → 72.7% between released SQLFluff 4.3.0 and
+`main`** (measured 2026-09-18). Six files: `cte.sql`,
+`double-quoted-identifiers.sql`, `ilike-all.sql`, `ilike-any.sql`,
+`like-all.sql`, `like-any.sql`. Every one fails on empty parentheses —
+`WITH t() AS (SELECT 1)`, `LIKE ALL ()` — and every one is labelled in Spark's
+own source as a negative case (`-- negative case`, `-- CTE with empty column
+alias list is not allowed`). Upstream got **stricter**, which recall scores as
+a loss because the harness treats every file as valid SQL. Do not "fix" it.
+
+The lesson generalises: before attributing a corpus change to your own branch,
+measure clean `upstream/main` as a control. All three branches measured on
+2026-09-18 showed this same −2.0 pt, and none of them caused it.
