@@ -486,18 +486,175 @@
           ]
         }
       ]
+    },
+    {
+      "name": "dbx-dlt-notebooks",
+      "expectation": "valid",
+      "total": 20,
+      "passed": 4,
+      "skipped_dialect": 0,
+      "rate": 20.0,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/apply-changes-from-snapshot-demo/src/notebooks/order_count_by_status_pattern1.sql",
+          "errors": [
+            "mismatched input 'LIVE' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/apply-changes-from-snapshot-demo/src/notebooks/order_count_by_status_pattern2.sql",
+          "errors": [
+            "mismatched input 'LIVE' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/change-data-capture-example/PipelineSetting.json.sql",
+          "errors": [
+            "mismatched input '{' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/change-data-capture-example/notebooks/2-Retail_DLT_CDC_sql.sql",
+          "errors": [
+            "no viable alternative at input '\"_source__/customers\"'",
+            "mismatched input '=>' expecting ')'",
+            "mismatched input '=>' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/customer360-fivetran-dlt-demo/Customer 360.sql",
+          "errors": [
+            "no viable alternative at input 'CREATE LIVE'",
+            "no viable alternative at input 'CREATE LIVE'",
+            "extraneous input 'LIVE' expecting 'TABLE'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/divvy-bike-demo/dbsql-divvybike-dashboard-sql.sql",
+          "errors": [
+            "mismatched input 'AND' expecting {<EOF>, ';'}",
+            "mismatched input 'AND' expecting {<EOF>, ';'}",
+            "mismatched input 'AND' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/divvy-bike-demo/dlt-sql-streaming-divvybikes.sql",
+          "errors": [
+            "no viable alternative at input '\"/FileStore/DivvyBikes/api_response/station_status\"'",
+            "mismatched input '=>' expecting ')'",
+            "mismatched input '=>' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/financial-services-examples/Personalization/02 - DLT APPLY CHANGES.sql",
+          "errors": [
+            "extraneous input 'LIVE' expecting 'TABLE'",
+            "mismatched input 'EXPECT' expecting ')'",
+            "extraneous input 'LIVE' expecting 'TABLE'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/kimball_modelling_demo/src/2 Dimensions.sql",
+          "errors": [
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/kimball_modelling_demo/src/3 Facts.sql",
+          "errors": [
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/JHU COVID-19.sql",
+          "errors": [
+            "no viable alternative at input '\"/databricks-datasets/COVID/CSSEGISandData/json/\"'",
+            "mismatched input '=>' expecting ')'",
+            "mismatched input '=>' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/Loan Risk Part 3 - ML Scoring.sql",
+          "errors": [
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/Loan Risk.sql",
+          "errors": [
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/Retail Sales.sql",
+          "errors": [
+            "no viable alternative at input '\"/databricks-datasets/retail-org/customers/\"'",
+            "mismatched input '=>' expecting ')'",
+            "no viable alternative at input '\"/databricks-datasets/retail-org/sales_orders/\"'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/sql/Wikipedia.sql",
+          "errors": [
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}",
+            "mismatched input 'MATERIALIZED' expecting {'STREAMING', 'PRIVATE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-dlt-notebooks/twitter-dlt-huggingface-demo/Twitter-DataFlow.sql",
+          "errors": [
+            "no viable alternative at input '\"dbfs:/data/twitter_dais2022\"'",
+            "mismatched input '=>' expecting ')'",
+            "mismatched input 'EXPECT' expecting ')'"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dbx-devrel",
+      "expectation": "valid",
+      "total": 5,
+      "passed": 3,
+      "skipped_dialect": 0,
+      "rate": 60.0,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-devrel/sessions/2020-05-28 | Slowly Changing Dimensions (SCD) Type 2/SCD Type 2 Blog Demo.sql",
+          "errors": [
+            "extraneous input '$' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}",
+            "extraneous input '$' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 455 more}",
+            "mismatched input '$' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-devrel/sessions/2020-08-25 | Generating Surrogate Keys for your Data Lakehouse with Spark SQL and Delta Lake/Generating Surrogate Keys.sql",
+          "errors": [
+            "no viable alternative at input 'WITH sample_data (\\n  SELECT\\n    id,\\n    rand() random_number,\\n    'one one one' str1,\\n    'two one one' str2,\\n    'three one one' str3\\n  FROM\\n    RANGE(0, $'",
+            "no viable alternative at input 'WITH sample_data (\\n  SELECT\\n    id,\\n    rand() random_number,\\n    'one one one' str1,\\n    'two one one' str2,\\n    'three one one' str3\\n  FROM\\n    RANGE(0, $'",
+            "no viable alternative at input 'WITH sample_data (\\n  SELECT\\n    id,\\n    rand() random_number,\\n    'one one one' str1,\\n    'two one one' str2,\\n    'three one one' str3\\n  FROM\\n    RANGE(0, $'"
+          ]
+        }
+      ]
     }
   ],
   "mutation": {
     "by_kind": {
       "delete-close-paren": {
-        "total": 196,
-        "rejected": 196,
+        "total": 198,
+        "rejected": 198,
         "tier": "guaranteed"
       },
       "insert-open-paren": {
-        "total": 196,
-        "rejected": 196,
+        "total": 198,
+        "rejected": 198,
         "tier": "guaranteed"
       },
       "unterminated-string": {
@@ -506,33 +663,33 @@
         "tier": "guaranteed"
       },
       "double-comma": {
-        "total": 193,
-        "rejected": 193,
+        "total": 196,
+        "rejected": 196,
         "tier": "guaranteed"
       },
       "dangling-operator": {
-        "total": 194,
-        "rejected": 194,
+        "total": 196,
+        "rejected": 196,
         "tier": "guaranteed"
       },
       "unclosed-comment": {
-        "total": 195,
-        "rejected": 195,
+        "total": 198,
+        "rejected": 198,
         "tier": "guaranteed"
       },
       "delete-keyword": {
-        "total": 195,
-        "rejected": 187,
+        "total": 197,
+        "rejected": 189,
         "tier": "weak"
       },
       "delete-comma": {
-        "total": 193,
-        "rejected": 96,
+        "total": 196,
+        "rejected": 97,
         "tier": "weak"
       }
     },
-    "guaranteed_total": 1112,
-    "guaranteed_rejected": 1112,
+    "guaranteed_total": 1124,
+    "guaranteed_rejected": 1124,
     "rejection_rate": 100.0,
     "escapes": []
   }

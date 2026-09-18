@@ -7,7 +7,7 @@ PY := .venv/bin/python
 help:
 	@echo "make venv          create .venv and install the package"
 	@echo "make grammar       re-vendor + patch + regenerate the parser (needs Java)"
-	@echo "make corpus-fetch  download Spark's SQL test corpus"
+	@echo "make corpus-fetch  download the pinned public SQL corpus"
 	@echo "make corpus        measure parser accuracy against the corpus"
 	@echo "make test          run the test suite"
 	@echo "make verify-generated  check committed parser matches the grammar"

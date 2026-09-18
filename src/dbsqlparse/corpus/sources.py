@@ -12,6 +12,23 @@ separately:
                 kind that would wave broken SQL through CI.
     mixed    -- known to contain both; reported but not scored, since we have
                 no per-file ground truth.
+
+Two families of remote source, for different reasons:
+
+    Spark      -- breadth. Thousands of statements exercising the grammar this
+                  parser is built from, including the benchmark suites that
+                  recall is judged on.
+    Databricks -- shape. Spark's test resources are bare .sql files: not one
+                  carries a notebook header, a `-- COMMAND ----------` cell
+                  separator, a `-- MAGIC` cell or a `${widget}`. Everything
+                  preprocess.py exists to handle is therefore invisible to the
+                  Spark corpus, and was covered only by unit tests. These
+                  sources are small, but they are the only ones that exercise
+                  a real file as a Databricks user would commit it.
+
+Every remote source is pinned to an exact revision. A corpus that tracks a
+moving branch makes `baseline.json` drift on someone else's schedule, and an
+accuracy "regression" that nobody caused is worse than no baseline at all.
 """
 from __future__ import annotations
 
@@ -23,56 +40,97 @@ class Source:
     name: str
     description: str
     expectation: str  # "valid" | "invalid" | "mixed"
-    # Remote sources: paths within the apache/spark tree.
-    spark_prefix: str | None = None
+    # Remote sources: a GitHub repo pinned to an exact ref, and the subtree
+    # within it. `prefix` is stripped from cached paths.
+    repo: str | None = None
+    ref: str | None = None
+    prefix: str = ""
     # Local sources: directories on this machine.
     local_paths: tuple[str, ...] = field(default_factory=tuple)
 
+    @property
+    def is_remote(self) -> bool:
+        return self.repo is not None
+
 
 SPARK_TAG = "v4.0.4"
+SPARK_REPO = "apache/spark"
 
 SPARK_SOURCES = (
     Source(
         name="spark-tpcds",
         description="TPC-DS benchmark queries shipped with Spark",
         expectation="valid",
-        spark_prefix="sql/core/src/test/resources/tpcds/",
+        repo=SPARK_REPO, ref=SPARK_TAG,
+        prefix="sql/core/src/test/resources/tpcds/",
     ),
     Source(
         name="spark-tpcds-v2.7.0",
         description="TPC-DS v2.7.0 variants",
         expectation="valid",
-        spark_prefix="sql/core/src/test/resources/tpcds-v2.7.0/",
+        repo=SPARK_REPO, ref=SPARK_TAG,
+        prefix="sql/core/src/test/resources/tpcds-v2.7.0/",
     ),
     Source(
         name="spark-tpcds-modified",
         description="Modified TPC-DS queries",
         expectation="valid",
-        spark_prefix="sql/core/src/test/resources/tpcds-modifiedQueries/",
+        repo=SPARK_REPO, ref=SPARK_TAG,
+        prefix="sql/core/src/test/resources/tpcds-modifiedQueries/",
     ),
     Source(
         name="spark-tpch",
         description="TPC-H benchmark queries",
         expectation="valid",
-        spark_prefix="sql/core/src/test/resources/tpch/",
+        repo=SPARK_REPO, ref=SPARK_TAG,
+        prefix="sql/core/src/test/resources/tpch/",
     ),
     Source(
         name="spark-ssb",
         description="Star Schema Benchmark queries",
         expectation="valid",
-        spark_prefix="sql/core/src/test/resources/ssb/",
+        repo=SPARK_REPO, ref=SPARK_TAG,
+        prefix="sql/core/src/test/resources/ssb/",
     ),
     Source(
         name="spark-sql-tests",
         description="Spark's own SQL golden-file tests (includes deliberate error cases)",
         expectation="mixed",
-        spark_prefix="sql/core/src/test/resources/sql-tests/",
+        repo=SPARK_REPO, ref=SPARK_TAG,
+        prefix="sql/core/src/test/resources/sql-tests/",
     ),
 )
 
+# Public Databricks SQL, pinned. These are small on purpose: most published
+# Databricks notebooks are .py files carrying SQL in `# MAGIC %sql` cells, and
+# this tool lints .sql files, so only genuine .sql notebook exports qualify.
+DATABRICKS_SOURCES = (
+    Source(
+        name="dbx-dlt-notebooks",
+        description="Delta Live Tables example pipelines (SQL notebook exports)",
+        expectation="valid",
+        repo="databricks/delta-live-tables-notebooks",
+        ref="1d8b163cfc4c45aad40c3c552807a2a0c2890cf6",
+    ),
+    Source(
+        name="dbx-devrel",
+        description="Databricks developer-relations demo notebooks",
+        expectation="valid",
+        repo="databricks/devrel",
+        ref="edf902c419eee5bb891805ee75b5a52c5a8534bf",
+    ),
+)
+
+REMOTE_SOURCES = SPARK_SOURCES + DATABRICKS_SOURCES
+
 
 def local_sources(paths: list[str]) -> list[Source]:
-    """Build a source for each local directory of team SQL."""
+    """Build a source for each local directory of SQL.
+
+    Ad hoc by design: local results are never written to the committed
+    baseline (see harness.write_json), so pointing this at a private repo
+    measures recall without leaking any of it into a shared artefact.
+    """
     return [
         Source(
             name=f"local:{p.rstrip('/').split('/')[-1]}",
@@ -85,7 +143,7 @@ def local_sources(paths: list[str]) -> list[Source]:
 
 
 def by_name(name: str) -> Source | None:
-    for s in SPARK_SOURCES:
+    for s in REMOTE_SOURCES:
         if s.name == name:
             return s
     return None

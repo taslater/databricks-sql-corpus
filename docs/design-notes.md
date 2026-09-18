@@ -138,3 +138,64 @@ Spark does not really parse them. They fall into
 `unsupportedHiveNativeCommands`, a catch-all whose body is `.*?`, so they are
 *accepted* but nothing about them is validated. `DENY` has a real rule because
 it had no catch-all to fall into.
+
+## Known gap: Delta Live Tables LIVE syntax
+
+Adding the public Databricks corpus dropped `dbx-dlt-notebooks` to 20% recall
+(4 of 20 files) and `dbx-devrel` to 60% (3 of 5). Those numbers are a genuine
+gap in this parser, not noise in the corpus, and they are recorded in
+`baseline.json` rather than smoothed away. The 18 failures come from five
+causes, not eighteen:
+
+**1. DLT `LIVE` and `MATERIALIZED` (8 files).** The extensions cover
+`CREATE OR REFRESH STREAMING TABLE`, but the `OR REFRESH` path accepts only
+`STREAMING` and `PRIVATE`:
+
+```sql
+CREATE OR REFRESH LIVE TABLE t AS SELECT ...       -- 'LIVE' unexpected
+CREATE OR REFRESH MATERIALIZED VIEW v AS SELECT ...-- 'MATERIALIZED' unexpected
+CREATE LIVE TABLE t AS SELECT ...                  -- no viable alternative
+APPLY CHANGES INTO LIVE.target FROM ...            -- 'LIVE' unexpected
+```
+
+`LIVE` is absent from `keywords.txt` entirely, and `LIVE.tbl` is how DLT
+pipelines reference their own datasets, so it appears in nearly every DLT
+notebook. `MATERIALIZED VIEW` parses on its own but not after `OR REFRESH`.
+
+**2. Double-quoted path literals (5 files).** Path relations were added for
+single-quoted strings only:
+
+```sql
+SELECT * FROM cloud_files("/databricks-datasets/retail-org/customers", "csv")
+SELECT * FROM delta.`...` WHERE src = "dbfs:/data/twitter_dais2022"
+```
+
+In Spark's default configuration a double-quoted token is a string literal, so
+these are valid and should parse exactly as the single-quoted form does.
+
+**3. Bare `$name` widgets (1 file).** `preprocess.py` substitutes `${name}`,
+but Databricks also accepts the unbraced form, which real notebooks use:
+
+```sql
+DROP TABLE IF EXISTS $db.customer;
+CAST('$job_dt' AS TIMESTAMP) AS created_at
+```
+
+Any fix has to stay length-preserving, like the braced form. `$db` -> `_db`
+happens to satisfy that, since `_` is a valid identifier start.
+
+**4. `WITH name (SELECT ...)` (1 file).** A CTE whose body is parenthesised but
+has no `AS`. Needs checking against Databricks before deciding whether this is
+a gap or a genuinely invalid file that belongs in the reject pile.
+
+**5. Corpus noise (1 file).** `PipelineSetting.json.sql` is JSON that happens
+to carry a `.sql` extension. It is not SQL and never will be. It costs 5
+points of `dbx-dlt-notebooks` recall, which is an argument for a
+not-SQL-at-all skip like the existing `looks_like_tsql` check rather than for
+quietly dropping the file.
+
+None of this was visible before. The Spark corpus is 495 files and every one of
+them is bare `.sql` with no notebook header, no cell separators, no `-- MAGIC`
+and no widgets — so `preprocess.py`, the module whose entire job is real-world
+file shape, had never been run over a corpus at all. The first 25 real
+Databricks files found a bug in it immediately.

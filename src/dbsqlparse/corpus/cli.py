@@ -15,7 +15,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="dbsqlparse.corpus", description=__doc__)
     sub = ap.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("fetch", help="download Spark's SQL test corpus")
+    sub.add_parser("fetch", help="download the pinned public SQL corpus")
 
     run = sub.add_parser("run", help="measure parser accuracy against the corpus")
     run.add_argument(

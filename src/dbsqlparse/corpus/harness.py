@@ -20,7 +20,7 @@ from typing import Any
 
 from ..parser import ParseOptions, parse_text
 from .mutate import GUARANTEED, mutate_corpus
-from .sources import SPARK_SOURCES, Source
+from .sources import REMOTE_SOURCES, Source
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 CACHE_DIR = REPO_ROOT / "corpus" / "cache"
@@ -123,7 +123,7 @@ def run_valid_corpus(
     from .sources import local_sources
 
     reports: list[SourceReport] = []
-    for source in SPARK_SOURCES:
+    for source in REMOTE_SOURCES:
         root = CACHE_DIR / source.name
         if not root.exists():
             continue

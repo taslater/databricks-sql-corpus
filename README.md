@@ -201,6 +201,28 @@ SELECT a FROM t      -->   SELECT FROM t          -- valid: t aliases FROM
 
 Scoring those as misses would count correct behaviour as a bug.
 
+### Where the corpus comes from
+
+Every source is pinned to an exact revision, so the numbers are reproducible
+and `corpus/reports/baseline.json` only moves when someone means it to.
+
+| source | what it is for |
+| --- | --- |
+| `spark-*` | breadth — the benchmark suites and Spark's own golden-file tests |
+| `dbx-*` | shape — real Databricks notebook exports, pinned from public repos |
+
+The two do different jobs. Spark's test resources are bare `.sql` files: not
+one carries a notebook header, a `-- COMMAND ----------` separator, a
+`-- MAGIC` cell or a `${widget}`. Everything [preprocess.py](src/dbsqlparse/preprocess.py)
+exists to handle is therefore invisible to the Spark corpus. The Databricks
+sources are small, but they are the only ones that see a file in the shape a
+Databricks user would actually commit it.
+
+Current baseline: 100% recall on all 191 TPC-DS/TPC-H/SSB queries, 100%
+rejection on 1124 guaranteed mutations, and **20% on the Delta Live Tables
+notebooks** — that last number is a real, known gap, not a rounding error. See
+[docs/design-notes.md](docs/design-notes.md#known-gap-delta-live-tables-live-syntax).
+
 ## Keyword strictness
 
 By default Spark treats almost every keyword as usable as an identifier, so

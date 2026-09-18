@@ -175,11 +175,18 @@ default keyword mode legitimately re-parses them as valid
 (`SELECT a b FROM t` — `b` aliases `a`).
 
 `corpus/reports/baseline.json` is committed so accuracy regressions show up in
-diffs; `corpus/cache/` is not, since it is reproducible from a Spark tag.
+diffs; `corpus/cache/` is not, since every source is pinned to an exact
+revision and the cache is reproducible from `sources.py` alone.
+
 Current baseline: 100% on the TPC-DS/TPC-H/SSB suites, ~78% on
-`spark-sql-tests` (which is a mixed valid/invalid source), 100% rejection on
-1112 guaranteed mutations. Do not regenerate the baseline to make a regression
-disappear — investigate the diff first.
+`spark-sql-tests` (a mixed valid/invalid source), 20% on `dbx-dlt-notebooks`
+and 60% on `dbx-devrel`, 100% rejection on 1124 guaranteed mutations.
+
+The two `dbx-*` numbers are low because of one open gap, not many: Delta Live
+Tables `LIVE` syntax is unsupported. Do not regenerate the baseline to make a
+regression disappear — investigate the diff first. Adding a source that exposes
+a gap is not a regression, and `scripts/compare_baseline.py` is written to tell
+the two apart.
 
 ## Conventions
 
