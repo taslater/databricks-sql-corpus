@@ -624,6 +624,21 @@ class SqlBaseParserVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by SqlBaseParser#createWidget.
+    def visitCreateWidget(self, ctx:SqlBaseParser.CreateWidgetContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#removeWidget.
+    def visitRemoveWidget(self, ctx:SqlBaseParser.RemoveWidgetContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#showGrants.
+    def visitShowGrants(self, ctx:SqlBaseParser.ShowGrantsContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by SqlBaseParser#useCatalog.
     def visitUseCatalog(self, ctx:SqlBaseParser.UseCatalogContext):
         return self.visitChildren(ctx)
@@ -1481,6 +1496,11 @@ class SqlBaseParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by SqlBaseParser#tableName.
     def visitTableName(self, ctx:SqlBaseParser.TableNameContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#describeHistoryRelation.
+    def visitDescribeHistoryRelation(self, ctx:SqlBaseParser.DescribeHistoryRelationContext):
         return self.visitChildren(ctx)
 
 
@@ -2446,6 +2466,16 @@ class SqlBaseParserVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by SqlBaseParser#dltExpectation.
     def visitDltExpectation(self, ctx:SqlBaseParser.DltExpectationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#widgetType.
+    def visitWidgetType(self, ctx:SqlBaseParser.WidgetTypeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SqlBaseParser#widgetChoices.
+    def visitWidgetChoices(self, ctx:SqlBaseParser.WidgetChoicesContext):
         return self.visitChildren(ctx)
 
 

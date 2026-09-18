@@ -218,10 +218,11 @@ exists to handle is therefore invisible to the Spark corpus. The Databricks
 sources are small, but they are the only ones that see a file in the shape a
 Databricks user would actually commit it.
 
-Current baseline: **99.5% recall** across the valid sources — 100% on all 191
-TPC-DS/TPC-H/SSB queries and 100% on the Delta Live Tables notebooks — and 100%
-rejection on 1215 guaranteed mutations. The one remaining failure is a file
-containing `OPTIMIZE <table>`, a documentation placeholder rather than SQL.
+Current baseline: **99.4% recall** across the valid sources — 100% on all 191
+TPC-DS/TPC-H/SSB queries and on three of the five Databricks sources — and 100%
+rejection on 1322 guaranteed mutations. Both remaining failures are the parser
+being right: one file holds `OPTIMIZE <table>`, a documentation placeholder,
+and the other is genuinely missing a semicolon.
 
 Adding the Databricks sources is what found most of the bugs that got it there,
 including one that had been suppressing 51 files of Spark's own test suite. See

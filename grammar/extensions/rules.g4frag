@@ -185,3 +185,20 @@ dltExpectation
     : EXPECT LEFT_PAREN booleanExpression RIGHT_PAREN
         (ON VIOLATION (DROP ROW | FAIL UPDATE))?
     ;
+
+// --- Notebook widgets -------------------------------------------------------
+widgetType
+    : TEXT
+    | DROPDOWN
+    | COMBOBOX
+    | MULTISELECT
+    ;
+
+// CHOICES takes either a literal list or a query that produces one. Only the
+// TEXT form (which has no CHOICES) appears in the corpus, but the four types
+// are one rule and covering three of them would leave a gap of exactly the
+// kind this rule exists to close.
+widgetChoices
+    : VALUES LEFT_PAREN expression (COMMA expression)* RIGHT_PAREN
+    | query
+    ;

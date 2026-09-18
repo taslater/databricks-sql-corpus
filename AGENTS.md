@@ -178,15 +178,15 @@ default keyword mode legitimately re-parses them as valid
 diffs; `corpus/cache/` is not, since every source is pinned to an exact
 revision and the cache is reproducible from `sources.py` alone.
 
-Current baseline: 100% on the TPC-DS/TPC-H/SSB suites, on
-`dbx-dlt-notebooks` and on `dbx-descomplicando-sql`; 87% on
-`dbx-learn-databricks`, 80% on `dbx-devrel`, 60% on `dbx-packt-cookbook`, ~94%
-on `spark-sql-tests` (a mixed valid/invalid source). 100% rejection on 1320
-guaranteed mutations.
+Current baseline: 100% on the TPC-DS/TPC-H/SSB suites and on three of the five
+`dbx-*` sources; 93.3% on `dbx-packt-cookbook`, 80% on `dbx-devrel`, ~94% on
+`spark-sql-tests` (a mixed valid/invalid source). 100% rejection on 1322
+guaranteed mutations. `GAPS` is empty.
 
-The `dbx-*` shortfalls are the 11 entries in `GAPS` (widget DDL, `@v0` time
-travel, `MANAGED LOCATION`, `STREAMING LIVE VIEW`, column-level tags and the
-rest), plus two files that are not SQL at all.
+The two remaining `dbx-*` failures are both correct behaviour, not gaps: one
+file holds `OPTIMIZE <table>`, a documentation placeholder, and the other is
+missing a semicolon between two `USE` statements -- a real bug in that repo
+that the parser is right to reject.
 
 Do not regenerate the baseline to make a regression disappear — investigate the
 diff first. Adding a source that exposes a gap is not a regression, and

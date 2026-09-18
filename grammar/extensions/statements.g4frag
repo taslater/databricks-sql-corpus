@@ -25,7 +25,8 @@
         (PATTERN EQ pattern=stringLit)?
         (FORMAT_OPTIONS formatOptions=propertyList)?
         (COPY_OPTIONS copyOptions=propertyList)?                       #copyInto
-    | CREATE (OR REFRESH)? TEMPORARY? PRIVATE? (STREAMING LIVE? | LIVE) TABLE
+    | CREATE (OR REFRESH)? TEMPORARY? PRIVATE? (STREAMING LIVE? | LIVE)
+        (TABLE | VIEW)
         (IF errorCapturingNot EXISTS)? identifierReference
         (LEFT_PAREN colDefinitionList RIGHT_PAREN)?
         tableProvider?
@@ -46,6 +47,7 @@
     | DROP VOLUME (IF EXISTS)? identifierReference                     #dropVolume
     | CREATE CATALOG (IF errorCapturingNot EXISTS)? identifierReference
         (USING SHARE share=identifierReference)?
+        (MANAGED LOCATION managedLocation=stringLit)?
         commentSpec?
         (WITH (DBPROPERTIES | PROPERTIES) propertyList)?               #createCatalog
     | DROP CATALOG (IF EXISTS)? identifierReference
@@ -66,7 +68,21 @@
         DROP CONSTRAINT (IF EXISTS)? name=errorCapturingIdentifier
         (RESTRICT | CASCADE)?                                          #alterTableDropConstraint
 
+    // --- Notebook widgets ---------------------------------------------------
+    // Widget DDL opens most parameterised notebooks, so failing to parse it
+    // takes down every statement after it too.
+    | CREATE WIDGET widgetType
+        name=errorCapturingIdentifier
+        DEFAULT defaultValue=expression
+        (CHOICES widgetChoices)?                                        #createWidget
+    | REMOVE WIDGET name=errorCapturingIdentifier                       #removeWidget
+
     // --- Unity Catalog governance ------------------------------------------
+    // Spark only has `SHOW GRANT` (singular) inside its
+    // unsupportedHiveNativeCommands catch-all, so `SHOW GRANTS ON x` is read
+    // as `SHOW <identifier> FUNCTIONS` and fails on the missing FUNCTIONS.
+    | SHOW GRANTS (principal=errorCapturingIdentifier)?
+        ON securable=securableObject                                    #showGrants
     | USE CATALOG identifierReference                                   #useCatalog
     | ALTER ownerTarget identifierReference
         SET? OWNER TO principal=errorCapturingIdentifier                #setOwner

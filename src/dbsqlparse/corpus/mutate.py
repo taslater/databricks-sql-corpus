@@ -28,6 +28,7 @@ from antlr4 import CommonTokenStream, Token
 
 from ..generated.SqlBaseLexer import SqlBaseLexer
 from ..parser import UpperCaseInputStream
+from ..preprocess import CELL_SEPARATOR_RE
 
 GUARANTEED = "guaranteed"
 WEAK = "weak"
@@ -61,9 +62,21 @@ def _in_set_statement(tokens: list, index: int) -> bool:
     other context makes a trailing `=` a syntax error. Without this check the
     mutation is mis-tiered and the corpus reports a false negative that is
     really the parser being correct.
+
+    A statement ends at a semicolon *or* at a notebook cell separator. Walking
+    back only to the semicolon misses the common notebook shape, where cells
+    hold one unterminated statement each and the nearest semicolon is several
+    cells earlier -- which is exactly how this escaped the first time.
     """
     i = index
-    while i > 0 and tokens[i - 1].type != SqlBaseLexer.SEMICOLON:
+    while i > 0:
+        previous = tokens[i - 1]
+        if previous.type == SqlBaseLexer.SEMICOLON:
+            break
+        if previous.channel != Token.DEFAULT_CHANNEL and CELL_SEPARATOR_RE.match(
+            previous.text.strip()
+        ):
+            break
         i -= 1
     for token in tokens[i:index + 1]:
         if token.channel == Token.DEFAULT_CHANNEL:

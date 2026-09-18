@@ -171,6 +171,7 @@ statement
     | CREATE namespace (IF errorCapturingNot EXISTS)? identifierReference
         (commentSpec |
          locationSpec |
+         (MANAGED LOCATION managedLocation=stringLit) |
          (WITH (DBPROPERTIES | PROPERTIES) propertyList))*             #createNamespace
     | ALTER namespace identifierReference
         SET (DBPROPERTIES | PROPERTIES) propertyList                   #setNamespaceProperties
@@ -349,7 +350,8 @@ statement
         (PATTERN EQ pattern=stringLit)?
         (FORMAT_OPTIONS formatOptions=propertyList)?
         (COPY_OPTIONS copyOptions=propertyList)?                       #copyInto
-    | CREATE (OR REFRESH)? TEMPORARY? PRIVATE? (STREAMING LIVE? | LIVE) TABLE
+    | CREATE (OR REFRESH)? TEMPORARY? PRIVATE? (STREAMING LIVE? | LIVE)
+        (TABLE | VIEW)
         (IF errorCapturingNot EXISTS)? identifierReference
         (LEFT_PAREN colDefinitionList RIGHT_PAREN)?
         tableProvider?
@@ -370,6 +372,7 @@ statement
     | DROP VOLUME (IF EXISTS)? identifierReference                     #dropVolume
     | CREATE CATALOG (IF errorCapturingNot EXISTS)? identifierReference
         (USING SHARE share=identifierReference)?
+        (MANAGED LOCATION managedLocation=stringLit)?
         commentSpec?
         (WITH (DBPROPERTIES | PROPERTIES) propertyList)?               #createCatalog
     | DROP CATALOG (IF EXISTS)? identifierReference
@@ -390,7 +393,21 @@ statement
         DROP CONSTRAINT (IF EXISTS)? name=errorCapturingIdentifier
         (RESTRICT | CASCADE)?                                          #alterTableDropConstraint
 
+    // --- Notebook widgets ---------------------------------------------------
+    // Widget DDL opens most parameterised notebooks, so failing to parse it
+    // takes down every statement after it too.
+    | CREATE WIDGET widgetType
+        name=errorCapturingIdentifier
+        DEFAULT defaultValue=expression
+        (CHOICES widgetChoices)?                                        #createWidget
+    | REMOVE WIDGET name=errorCapturingIdentifier                       #removeWidget
+
     // --- Unity Catalog governance ------------------------------------------
+    // Spark only has `SHOW GRANT` (singular) inside its
+    // unsupportedHiveNativeCommands catch-all, so `SHOW GRANTS ON x` is read
+    // as `SHOW <identifier> FUNCTIONS` and fails on the missing FUNCTIONS.
+    | SHOW GRANTS (principal=errorCapturingIdentifier)?
+        ON securable=securableObject                                    #showGrants
     | USE CATALOG identifierReference                                   #useCatalog
     | ALTER ownerTarget identifierReference
         SET? OWNER TO principal=errorCapturingIdentifier                #setOwner
@@ -940,6 +957,7 @@ fromClause
 temporalClause
     : FOR? (SYSTEM_VERSION | VERSION) AS OF version
     | FOR? (SYSTEM_TIME | TIMESTAMP) AS OF timestamp=valueExpression
+        | AT_SIGN (version | identifier)
     ;
 
 aggregationClause
@@ -1110,6 +1128,8 @@ identifierComment
 relationPrimary
     : identifierReference temporalClause?
       optionsClause? sample? tableAlias                     #tableName
+    | LEFT_PAREN DESCRIBE HISTORY identifierReference RIGHT_PAREN
+      tableAlias                                            #describeHistoryRelation
     | STREAM identifierReference temporalClause?
       optionsClause? sample? tableAlias                     #streamTableName
     | STREAM functionTable                                  #streamTableValuedFunction
@@ -1689,6 +1709,8 @@ alterColumnAction
     | setOrDrop=(SET | DROP) errorCapturingNot NULL
     | SET defaultExpression
     | dropDefault=DROP DEFAULT
+        | SET TAGS propertyList
+    | UNSET TAGS propertyList
     ;
 
 stringLit
@@ -2137,6 +2159,14 @@ ansiNonReserved
     | EXPECT
     | VIOLATION
     | FAIL
+    | WIDGET
+    | TEXT
+    | DROPDOWN
+    | COMBOBOX
+    | MULTISELECT
+    | CHOICES
+    | GRANTS
+    | MANAGED
 
 //--ANSI-NON-RESERVED-END
     ;
@@ -2621,6 +2651,14 @@ nonReserved
     | EXPECT
     | VIOLATION
     | FAIL
+    | WIDGET
+    | TEXT
+    | DROPDOWN
+    | COMBOBOX
+    | MULTISELECT
+    | CHOICES
+    | GRANTS
+    | MANAGED
 
 //--DEFAULT-NON-RESERVED-END
     ;
@@ -2811,4 +2849,21 @@ tableLevelConstraint
 dltExpectation
     : EXPECT LEFT_PAREN booleanExpression RIGHT_PAREN
         (ON VIOLATION (DROP ROW | FAIL UPDATE))?
+    ;
+
+// --- Notebook widgets -------------------------------------------------------
+widgetType
+    : TEXT
+    | DROPDOWN
+    | COMBOBOX
+    | MULTISELECT
+    ;
+
+// CHOICES takes either a literal list or a query that produces one. Only the
+// TEXT form (which has no CHOICES) appears in the corpus, but the four types
+// are one rule and covering three of them would leave a gap of exactly the
+// kind this rule exists to close.
+widgetChoices
+    : VALUES LEFT_PAREN expression (COMMA expression)* RIGHT_PAREN
+    | query
     ;

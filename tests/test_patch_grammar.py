@@ -76,7 +76,67 @@ PARSER_INJECTIONS = [
         lambda t: pg.add_inline_column_constraints(t),
         "    | generationExpression\n    | commentSpec",
     ),
+    (
+        "at-version-travel",
+        lambda t: pg.add_at_version_travel(t),
+        "    : FOR? (SYSTEM_VERSION | VERSION) AS OF version",
+    ),
+    (
+        "column-tags",
+        lambda t: pg.add_column_tags(t),
+        "    | setOrDrop=(SET | DROP) errorCapturingNot NULL",
+    ),
+    (
+        "describe-history-relation",
+        lambda t: pg.add_describe_relation(t),
+        "      optionsClause? sample? tableAlias                     #tableName",
+    ),
+    (
+        "managed-location",
+        lambda t: pg.add_managed_location(t),
+        "         (WITH (DBPROPERTIES | PROPERTIES) propertyList))*             #createNamespace",
+    ),
 ]
+
+# The lexer injections are checked separately: they anchor on the lexer
+# grammar, not the parser one.
+LEXER_INJECTIONS = [
+    ("at-sign-token", lambda t: pg.add_at_sign_token(t), pg.LEXER_KEYWORD_ANCHOR),
+]
+
+
+@pytest.mark.parametrize(
+    "inject,anchor",
+    [(i, a) for _, i, a in LEXER_INJECTIONS],
+    ids=[n for n, _, _ in LEXER_INJECTIONS],
+)
+def test_lexer_injection_raises_when_its_anchor_moves(inject, anchor):
+    text = VENDORED_LEXER.read_text()
+    assert anchor in text, "anchor no longer present in the vendored lexer"
+    # Replace outright rather than append: appending would leave the original
+    # anchor intact as a substring and the test would prove nothing.
+    damaged = text.replace(anchor, "SPARK_MOVED_THIS")
+    with pytest.raises(pg.PatchError):
+        inject(damaged)
+
+
+@pytest.mark.parametrize(
+    "inject,anchor",
+    [(i, a) for _, i, a in LEXER_INJECTIONS],
+    ids=[n for n, _, _ in LEXER_INJECTIONS],
+)
+def test_lexer_injection_changes_the_grammar_when_its_anchor_is_present(inject, anchor):
+    original = VENDORED_LEXER.read_text()
+    assert anchor in original
+    assert inject(original) != original
+
+
+def test_at_sign_token_precedes_the_unrecognized_catch_all():
+    """UNRECOGNIZED is `.` -- it matches any single character. If AT_SIGN landed
+    after it, `@` would keep falling into the catch-all and `tbl@v3` would still
+    not parse, with nothing to show that the injection had failed."""
+    patched = pg.add_at_sign_token(VENDORED_LEXER.read_text())
+    assert patched.index("AT_SIGN: '@';") < patched.index("UNRECOGNIZED")
 
 
 @pytest.mark.parametrize(

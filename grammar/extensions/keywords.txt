@@ -143,3 +143,20 @@ STREAM
 EXPECT
 VIOLATION
 FAIL
+
+# --- Notebook widget DDL ---
+# CREATE WIDGET sits at the top of most parameterised notebooks, so a miss
+# here takes the whole file with it.
+WIDGET
+TEXT
+DROPDOWN
+COMBOBOX
+MULTISELECT
+CHOICES
+
+# --- Unity Catalog ---
+# GRANTS for `SHOW GRANTS ON <object>`; MANAGED for the storage root in
+# `CREATE CATALOG|SCHEMA ... MANAGED LOCATION '...'`. Both are ordinary column
+# names, so both need the nonReserved entries this file generates.
+GRANTS
+MANAGED

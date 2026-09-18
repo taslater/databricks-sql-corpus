@@ -415,6 +415,158 @@ def add_inline_column_constraints(text: str) -> str:
     return text.replace(anchor, replacement, 1)
 
 
+def add_at_sign_token(text: str) -> str:
+    """Define `@` as a real token so `tbl@v3` can be parsed.
+
+    Spark has no `@`. It falls through to the UNRECOGNIZED catch-all at the
+    bottom of the lexer, which exists so statement splitting can skip over text
+    it cannot read -- so `SELECT * FROM cdf_demo@v0` cannot parse at all.
+
+    This goes in at the keyword-list anchor, which sits ahead of
+    STRING_LITERAL, IDENTIFIER and UNRECOGNIZED, so the new token wins over the
+    catch-all while an `@` inside a string literal or a backquoted identifier
+    still belongs to that token by longest match. That matters: the corpus is
+    full of paths and email addresses like `/Repos/jacek@japila`, and none of
+    them may start lexing differently.
+
+    It cannot go through keywords.txt, which generates `NAME: 'NAME';` -- here
+    the token name and the literal differ.
+    """
+    return insert_before(
+        text,
+        LEXER_KEYWORD_ANCHOR,
+        "\n// --- Databricks time travel (see scripts/patch_grammar.py) ---\n"
+        "AT_SIGN: '@';\n\n",
+        "SqlBaseLexer.g4",
+    )
+
+
+def add_at_version_travel(text: str) -> str:
+    """Add the `@version` spelling of time travel.
+
+    Databricks accepts a short form next to the VERSION AS OF that Spark
+    already has:
+
+        SELECT * FROM cdf_demo@v0
+        SELECT count(*) FROM delta.`/mnt/p`@v524
+
+    Extending temporalClause rather than relationPrimary picks up every place a
+    relation can carry one -- plain tables, path relations and STREAM sources --
+    from a single alternative.
+
+    `version` is INTEGER_VALUE | stringLit, and `v0` is neither: it lexes as one
+    IDENTIFIER. So the alternative accepts an identifier too, which
+    over-accepts a little. That is the same trade add_path_relation makes:
+    over-accepting costs a missed error, under-accepting blocks a merge request
+    that was fine.
+    """
+    anchor = (
+        "temporalClause\n"
+        "    : FOR? (SYSTEM_VERSION | VERSION) AS OF version\n"
+        "    | FOR? (SYSTEM_TIME | TIMESTAMP) AS OF timestamp=valueExpression\n"
+        "    ;"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find temporalClause to add @version "
+            "time travel to; the time-travel rules have changed shape."
+        )
+    replacement = anchor[:-1] + "    | AT_SIGN (version | identifier)\n    ;"
+    return text.replace(anchor, replacement, 1)
+
+
+def add_column_tags(text: str) -> str:
+    """Allow tags to be set on a column, not just on the table.
+
+        ALTER TABLE t ALTER COLUMN c SET TAGS ('pii' = 'true')
+        ALTER TABLE t ALTER COLUMN c UNSET TAGS ('pii')
+
+    The table-level forms are already extensions (#setTags / #unsetTags); this
+    is the column-level counterpart, which hangs off Spark's alterColumnAction.
+    """
+    anchor = (
+        "alterColumnAction\n"
+        "    : TYPE dataType\n"
+        "    | commentSpec\n"
+        "    | colPosition\n"
+        "    | setOrDrop=(SET | DROP) errorCapturingNot NULL\n"
+        "    | SET defaultExpression\n"
+        "    | dropDefault=DROP DEFAULT\n"
+        "    ;"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find alterColumnAction to add column "
+            "tags to; the ALTER COLUMN rules have changed shape."
+        )
+    replacement = anchor[:-1] + (
+        "    | SET TAGS propertyList\n"
+        "    | UNSET TAGS propertyList\n"
+        "    ;"
+    )
+    return text.replace(anchor, replacement, 1)
+
+
+def add_describe_relation(text: str) -> str:
+    """Allow `(DESCRIBE HISTORY t)` where a relation is expected.
+
+        SELECT * FROM (DESCRIBE HISTORY my_students)
+        SELECT max(version) FROM (DESCRIBE HISTORY my_streaming_table)
+
+    Spark's aliasedQuery takes a `query`, and DESCRIBE HISTORY is a statement
+    rather than a query, so the parenthesised form fails.
+
+    Deliberately narrow: DESCRIBE HISTORY specifically, not `statement`. The
+    general form would accept `SELECT * FROM (DROP TABLE x)`, which is the kind
+    of over-acceptance that costs a real error rather than a hypothetical one.
+    """
+    anchor = (
+        "relationPrimary\n"
+        "    : identifierReference temporalClause?\n"
+        "      optionsClause? sample? tableAlias                     #tableName"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find relationPrimary to add DESCRIBE "
+            "HISTORY relations to; the relation rules have changed shape."
+        )
+    addition = (
+        "\n    | LEFT_PAREN DESCRIBE HISTORY identifierReference RIGHT_PAREN\n"
+        "      tableAlias                                            #describeHistoryRelation"
+    )
+    return text.replace(anchor, anchor + addition, 1)
+
+
+def add_managed_location(text: str) -> str:
+    """Add Unity Catalog's MANAGED LOCATION to CREATE SCHEMA.
+
+        CREATE SCHEMA s MANAGED LOCATION 's3://bucket/prefix'
+
+    It sets the storage root for managed tables in that schema. The CREATE
+    CATALOG counterpart is ours already, in grammar/extensions/statements.g4frag;
+    this one has to be spliced because CREATE SCHEMA is Spark's rule.
+    """
+    anchor = (
+        "    | CREATE namespace (IF errorCapturingNot EXISTS)? identifierReference\n"
+        "        (commentSpec |\n"
+        "         locationSpec |\n"
+        "         (WITH (DBPROPERTIES | PROPERTIES) propertyList))*             #createNamespace"
+    )
+    if anchor not in text:
+        raise PatchError(
+            "SqlBaseParser.g4: could not find createNamespace to add MANAGED "
+            "LOCATION to; the namespace rules have changed shape."
+        )
+    replacement = (
+        "    | CREATE namespace (IF errorCapturingNot EXISTS)? identifierReference\n"
+        "        (commentSpec |\n"
+        "         locationSpec |\n"
+        "         (MANAGED LOCATION managedLocation=stringLit) |\n"
+        "         (WITH (DBPROPERTIES | PROPERTIES) propertyList))*             #createNamespace"
+    )
+    return text.replace(anchor, replacement, 1)
+
+
 def add_variant_path(text: str) -> str:
     """Add `v:field` variant extraction to the expression grammar.
 
@@ -490,6 +642,7 @@ def patch_lexer(text: str) -> str:
     text = apply_actions(text, LEXER_ACTIONS, "SqlBaseLexer.g4")
     assert_no_java_left(text, "SqlBaseLexer.g4")
     text = add_lexer_keywords(text, read_keywords())
+    text = add_at_sign_token(text)
 
     decl = "lexer grammar SqlBaseLexer;"
     if decl not in text:
@@ -517,6 +670,10 @@ def patch_parser(text: str) -> str:
     text = add_stream_relation(text)
     text = add_column_constraints(text)
     text = add_inline_column_constraints(text)
+    text = add_at_version_travel(text)
+    text = add_column_tags(text)
+    text = add_describe_relation(text)
+    text = add_managed_location(text)
     text = add_cluster_by_auto(text)
     text = add_variant_path(text)
     text = add_object_data_type(text)

@@ -505,6 +505,18 @@ STREAM: 'STREAM';
 EXPECT: 'EXPECT';
 VIOLATION: 'VIOLATION';
 FAIL: 'FAIL';
+WIDGET: 'WIDGET';
+TEXT: 'TEXT';
+DROPDOWN: 'DROPDOWN';
+COMBOBOX: 'COMBOBOX';
+MULTISELECT: 'MULTISELECT';
+CHOICES: 'CHOICES';
+GRANTS: 'GRANTS';
+MANAGED: 'MANAGED';
+
+
+// --- Databricks time travel (see scripts/patch_grammar.py) ---
+AT_SIGN: '@';
 
 //--SPARK-KEYWORD-LIST-END
 //============================

@@ -245,3 +245,66 @@ all:
 
 Both were scoring correct parser behaviour as a false negative. Rejection is
 back to 100%, now on 1320 guaranteed mutations.
+
+## Closing the last 11 gaps, and why `@` needed a lexer token
+
+The 11 gaps the widened corpus found are now closed. `dbx-learn-databricks`
+went 87% -> 100% and `dbx-packt-cookbook` 60% -> 93.3%, with every `spark-*`
+suite unchanged. `GAPS` is empty again.
+
+Nine of the eleven were ordinary: seven new keywords (`WIDGET`, `TEXT`,
+`DROPDOWN`, `COMBOBOX`, `MULTISELECT`, `CHOICES`, `GRANTS`, `MANAGED`) through
+`keywords.txt`, two new statements for widget DDL, one for `SHOW GRANTS ON`,
+and small widenings of alternatives that already existed.
+
+Two were more interesting.
+
+### `@` is the first symbol token this project has had to add
+
+Databricks writes time travel two ways: `VERSION AS OF 3`, which Spark has, and
+`tbl@v3`, which it does not. Spark has no `@` **token at all** — the character
+falls through to `UNRECOGNIZED`, the `.` catch-all at the bottom of the lexer
+that exists so statement splitting can skip over text it cannot read. So
+`SELECT * FROM cdf_demo@v0` could not parse under any parser rule, because the
+lexer never produced anything a rule could match.
+
+This is the one thing that could not go through `keywords.txt`: that file
+generates `NAME: 'NAME';`, and here the token name and the literal differ. It
+needed its own injection.
+
+Placement is the whole safety argument. `AT_SIGN: '@';` goes in at the
+keyword-list anchor, which sits ahead of `STRING_LITERAL`, `IDENTIFIER` and
+`UNRECOGNIZED`. Ahead of the catch-all is what makes the token exist at all;
+being a distinct first character from the string and identifier rules is what
+keeps it from disturbing them. That matters more than it sounds: the corpus is
+full of `@` inside paths and email addresses — `/Repos/jacek@japila`,
+`douglas.moore@databricks` — and every one of them must keep lexing as part of
+its enclosing string or backquoted identifier, which longest-match guarantees.
+A test pins the ordering, because an `AT_SIGN` defined *after* `UNRECOGNIZED`
+would compile cleanly and change nothing.
+
+`version` is `INTEGER_VALUE | stringLit` and `v0` is neither — it lexes as a
+single `IDENTIFIER` — so the new alternative accepts an identifier too. That
+over-accepts slightly, which is the trade `add_path_relation` already makes
+deliberately: over-accepting costs a missed error, under-accepting blocks a
+merge request that was fine.
+
+### A command used as a relation
+
+`SELECT * FROM (DESCRIBE HISTORY t)` is how Databricks queries table history.
+Spark's `aliasedQuery` takes a `query`, and `DESCRIBE HISTORY` is a statement,
+so the parenthesised form fails.
+
+The injection is deliberately narrow — `DESCRIBE HISTORY` specifically, not
+`statement`. The general form would accept `SELECT * FROM (DROP TABLE x)`,
+which trades a hypothetical false positive for a real false negative.
+
+### The SET exclusion was still wrong
+
+Rejection dipped to 99.9% again, on the same shape as before: `SET
+spark.databricks.delta.formatCheck.enabled=` truncated after the `=`. The
+guard added last round walked back to the previous semicolon to decide whether
+an `EQ` was inside a `SET`, and in a notebook the nearest semicolon can be
+several cells away — cells hold one unterminated statement each. The walk now
+stops at a cell separator as well, which is what it should have done first
+time. Rejection is back to 100% on 1322 guaranteed mutations.

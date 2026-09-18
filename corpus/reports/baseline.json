@@ -56,9 +56,9 @@
         {
           "path": "corpus/cache/spark-sql-tests/inputs/bitwise.sql",
           "errors": [
-            "extraneous input '>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 477 more}",
-            "extraneous input '<' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 477 more}",
-            "extraneous input '>>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 477 more}"
+            "extraneous input '>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 485 more}",
+            "extraneous input '<' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 485 more}",
+            "extraneous input '>>' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 485 more}"
           ]
         },
         {
@@ -92,22 +92,22 @@
         {
           "path": "corpus/cache/spark-sql-tests/inputs/execute-immediate.sql",
           "errors": [
-            "extraneous input '(' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}",
+            "extraneous input '(' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}",
             "mismatched input ')' expecting {<EOF>, ';'}"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/identifier-clause.sql",
           "errors": [
-            "mismatched input ''x.win'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}",
+            "mismatched input ''x.win'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}",
             "mismatched input '(' expecting ')'",
-            "mismatched input ''a'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}"
+            "mismatched input ''a'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}"
           ]
         },
         {
           "path": "corpus/cache/spark-sql-tests/inputs/ignored.sql",
           "errors": [
-            "mismatched input 'some' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
+            "mismatched input 'some' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
           ]
         },
         {
@@ -201,9 +201,9 @@
         {
           "path": "corpus/cache/dbx-devrel/sessions/2020-05-28 | Slowly Changing Dimensions (SCD) Type 2/SCD Type 2 Blog Demo.sql",
           "errors": [
-            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 460 more}",
+            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}",
             "mismatched input '>' expecting {<EOF>, ';'}",
-            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 461 more}"
+            "extraneous input '<' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 469 more}"
           ]
         }
       ]
@@ -212,98 +212,25 @@
       "name": "dbx-learn-databricks",
       "expectation": "valid",
       "total": 46,
-      "passed": 40,
+      "passed": 46,
       "skipped_dialect": 0,
-      "rate": 86.95652173913044,
-      "failures": [
-        {
-          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/Change Data Feed.sql",
-          "errors": [
-            "mismatched input '@' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-learn-databricks/Delta Lake/DESCRIBE HISTORY.sql",
-          "errors": [
-            "extraneous input 'my_students' expecting ')'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Deep Dive into DLTs.sql",
-          "errors": [
-            "mismatched input '@' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-learn-databricks/Delta Live Tables/Full Refresh.sql",
-          "errors": [
-            "extraneous input 'my_streaming_table' expecting ')'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-learn-databricks/Unity Catalog/Unity Catalog.sql",
-          "errors": [
-            "missing 'FUNCTIONS' at 'ON'",
-            "mismatched input 'demo_catalog' expecting {<EOF>, ';'}",
-            "missing 'FUNCTIONS' at 'ON'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-learn-databricks/workshops/Databricks Workshop Day 2.sql",
-          "errors": [
-            "no viable alternative at input 'CREATE WIDGET'"
-          ]
-        }
-      ]
+      "rate": 100.0,
+      "failures": []
     },
     {
       "name": "dbx-packt-cookbook",
       "expectation": "valid",
       "total": 15,
-      "passed": 9,
+      "passed": 14,
       "skipped_dialect": 0,
-      "rate": 60.0,
+      "rate": 93.33333333333333,
       "failures": [
         {
           "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Clean Up.sql",
           "errors": [
-            "no viable alternative at input 'CREATE WIDGET'",
-            "no viable alternative at input 'CREATE WIDGET'",
-            "mismatched input 'USE' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Download Inventory Data.sql",
-          "errors": [
-            "no viable alternative at input 'CREATE WIDGET'",
-            "no viable alternative at input 'CREATE WIDGET'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Setup.sql",
-          "errors": [
-            "no viable alternative at input 'CREATE WIDGET'",
-            "no viable alternative at input 'CREATE WIDGET'"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-packt-cookbook/Chapter09/9.7 apply-changes_into-dlt.sql",
-          "errors": [
-            "missing 'TABLE' at 'VIEW'",
-            "mismatched input 'movie_and_show_titles' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-packt-cookbook/Chapter10/10.2 uc_object_hierarchy.sql",
-          "errors": [
-            "mismatched input 'MANAGED' expecting {<EOF>, ';'}"
-          ]
-        },
-        {
-          "path": "corpus/cache/dbx-packt-cookbook/Chapter10/10.4 tags_comments_metadata.sql",
-          "errors": [
-            "no viable alternative at input 'ALTER TABLE\\n  de_book.credit_card.transactions_table\\nALTER COLUMN\\n  Transaction_ID\\nSET\\n  TAGS'",
-            "mismatched input 'UNSET' expecting {<EOF>, ';'}"
+            "mismatched input 'USE' expecting {<EOF>, ';'}",
+            "mismatched input 'NOT' expecting {<EOF>, ';'}",
+            "mismatched input 'NOT' expecting {<EOF>, ';'}"
           ]
         }
       ]
@@ -326,13 +253,13 @@
         "tier": "guaranteed"
       },
       "insert-open-paren": {
-        "total": 231,
-        "rejected": 231,
+        "total": 232,
+        "rejected": 232,
         "tier": "guaranteed"
       },
       "unterminated-string": {
-        "total": 158,
-        "rejected": 158,
+        "total": 160,
+        "rejected": 160,
         "tier": "guaranteed"
       },
       "double-comma": {
@@ -341,23 +268,23 @@
         "tier": "guaranteed"
       },
       "dangling-operator": {
-        "total": 215,
-        "rejected": 215,
+        "total": 216,
+        "rejected": 216,
         "tier": "guaranteed"
       },
       "dangling-boolean-operator": {
-        "total": 221,
-        "rejected": 220,
+        "total": 218,
+        "rejected": 217,
         "tier": "weak"
       },
       "unclosed-comment": {
-        "total": 257,
-        "rejected": 257,
+        "total": 255,
+        "rejected": 255,
         "tier": "guaranteed"
       },
       "delete-keyword": {
-        "total": 232,
-        "rejected": 213,
+        "total": 233,
+        "rejected": 215,
         "tier": "weak"
       },
       "delete-comma": {
@@ -366,8 +293,8 @@
         "tier": "weak"
       }
     },
-    "guaranteed_total": 1320,
-    "guaranteed_rejected": 1320,
+    "guaranteed_total": 1322,
+    "guaranteed_rejected": 1322,
     "rejection_rate": 100.0,
     "escapes": []
   }

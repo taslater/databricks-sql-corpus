@@ -1115,6 +1115,33 @@ class SqlBaseParserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by SqlBaseParser#createWidget.
+    def enterCreateWidget(self, ctx:SqlBaseParser.CreateWidgetContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#createWidget.
+    def exitCreateWidget(self, ctx:SqlBaseParser.CreateWidgetContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#removeWidget.
+    def enterRemoveWidget(self, ctx:SqlBaseParser.RemoveWidgetContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#removeWidget.
+    def exitRemoveWidget(self, ctx:SqlBaseParser.RemoveWidgetContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#showGrants.
+    def enterShowGrants(self, ctx:SqlBaseParser.ShowGrantsContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#showGrants.
+    def exitShowGrants(self, ctx:SqlBaseParser.ShowGrantsContext):
+        pass
+
+
     # Enter a parse tree produced by SqlBaseParser#useCatalog.
     def enterUseCatalog(self, ctx:SqlBaseParser.UseCatalogContext):
         pass
@@ -2660,6 +2687,15 @@ class SqlBaseParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by SqlBaseParser#tableName.
     def exitTableName(self, ctx:SqlBaseParser.TableNameContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#describeHistoryRelation.
+    def enterDescribeHistoryRelation(self, ctx:SqlBaseParser.DescribeHistoryRelationContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#describeHistoryRelation.
+    def exitDescribeHistoryRelation(self, ctx:SqlBaseParser.DescribeHistoryRelationContext):
         pass
 
 
@@ -4397,6 +4433,24 @@ class SqlBaseParserListener(ParseTreeListener):
 
     # Exit a parse tree produced by SqlBaseParser#dltExpectation.
     def exitDltExpectation(self, ctx:SqlBaseParser.DltExpectationContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#widgetType.
+    def enterWidgetType(self, ctx:SqlBaseParser.WidgetTypeContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#widgetType.
+    def exitWidgetType(self, ctx:SqlBaseParser.WidgetTypeContext):
+        pass
+
+
+    # Enter a parse tree produced by SqlBaseParser#widgetChoices.
+    def enterWidgetChoices(self, ctx:SqlBaseParser.WidgetChoicesContext):
+        pass
+
+    # Exit a parse tree produced by SqlBaseParser#widgetChoices.
+    def exitWidgetChoices(self, ctx:SqlBaseParser.WidgetChoicesContext):
         pass
 
 
