@@ -146,6 +146,33 @@ DATABRICKS_SOURCES = (
         repo="TeoMeWhy/descomplicando-sql",
         ref="0ce1ea5ecc64dc80e16560259fad2103b7c43b63",
     ),
+    Source(
+        name="dbx-lakeflow-connector",
+        description="Lakeflow/Zerobus connector project SQL, Apache-2.0",
+        expectation="valid",
+        repo="pravinva/lakeflow-ignition-zerobus-connector",
+        ref="4699d21f34cdea288e28a03c49e5163a057fe852",
+    ),
+    # SQLFluff's per-dialect parse fixtures. A different kind of corpus from
+    # the notebook sources: curated one construct at a time by people solving
+    # this exact problem, dialect-labelled, and named after what they test --
+    # so a failure says which feature is missing rather than which file broke.
+    Source(
+        name="sqlfluff-sparksql",
+        description="SQLFluff sparksql dialect parse fixtures (MIT)",
+        expectation="valid",
+        repo="sqlfluff/sqlfluff",
+        ref="34f052cef661a48adcd8ae1d3e438d479ce9bf94",
+        prefix="test/fixtures/dialects/sparksql/",
+    ),
+    Source(
+        name="sqlfluff-databricks",
+        description="SQLFluff databricks dialect parse fixtures (MIT)",
+        expectation="valid",
+        repo="sqlfluff/sqlfluff",
+        ref="34f052cef661a48adcd8ae1d3e438d479ce9bf94",
+        prefix="test/fixtures/dialects/databricks/",
+    ),
 )
 
 REMOTE_SOURCES = SPARK_SOURCES + DATABRICKS_SOURCES

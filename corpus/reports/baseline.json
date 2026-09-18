@@ -243,6 +243,340 @@
       "skipped_dialect": 0,
       "rate": 100.0,
       "failures": []
+    },
+    {
+      "name": "dbx-lakeflow-connector",
+      "expectation": "valid",
+      "total": 54,
+      "passed": 50,
+      "skipped_dialect": 0,
+      "rate": 92.5925925925926,
+      "failures": [
+        {
+          "path": "corpus/cache/dbx-lakeflow-connector/onboarding/lakebase/create_raw_tags.sql",
+          "errors": [
+            "mismatched input 'PRECISION' expecting ')'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-lakeflow-connector/pipelines/sql/metric_views.sql",
+          "errors": [
+            "mismatched input 'METRICS' expecting 'SCHEMA'",
+            "mismatched input '$' expecting {'(', 'FROM', 'MAP', 'REDUCE', 'SELECT', 'TABLE', ... and 2 more}",
+            "mismatched input 'METRICS' expecting 'SCHEMA'"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-lakeflow-connector/pipelines/sql/setup_uc_functions.sql",
+          "errors": [
+            "missing 'RETURN' at 'AS'",
+            "mismatched input '$' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/dbx-lakeflow-connector/workshop/demo_queries.sql",
+          "errors": [
+            "mismatched input 'LIMIT' expecting {<EOF>, ';'}",
+            "missing ')' at 'medallion'",
+            "mismatched input '.' expecting {<EOF>, ';'}"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sqlfluff-sparksql",
+      "expectation": "valid",
+      "total": 134,
+      "passed": 118,
+      "skipped_dialect": 0,
+      "rate": 88.05970149253731,
+      "failures": [
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/create_table_datasource.sql",
+          "errors": [
+            "no viable alternative at input 'CLUSTER BY NONE'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/databricks_dlt_constraint.sql",
+          "errors": [
+            "mismatched input 'CONSTRAINT' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input 'CONSTRAINT' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input 'CONSTRAINT' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/databricks_dlt_create_view.sql",
+          "errors": [
+            "mismatched input ''a'' expecting ')'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/delta_convert_to.sql",
+          "errors": [
+            "mismatched input 'NO' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/delta_describe_detail.sql",
+          "errors": [
+            "extraneous input ''/data/events/'' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/delta_describe_history.sql",
+          "errors": [
+            "extraneous input ''/data/events/'' expecting {<EOF>, ';'}",
+            "mismatched input ''/data/events/'' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/delta_generate_manifest.sql",
+          "errors": [
+            "mismatched input ''/data/events/'' expecting {'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', 'ALWAYS', ... and 468 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/from_insert_statement.sql",
+          "errors": [
+            "mismatched input 'FROM' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/iceberg_alter_table.sql",
+          "errors": [
+            "mismatched input 'COMMENT' expecting {<EOF>, ';'}",
+            "missing '(' at 'FIELD'",
+            "mismatched input 'catalog' expecting {')', ','}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/insert_table.sql",
+          "errors": [
+            "missing 'WHERE' at 'USING'",
+            "missing 'WHERE' at 'USING'",
+            "missing 'WHERE' at 'USING'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/merge_into.sql",
+          "errors": [
+            "mismatched input 'EXCEPT' expecting {<EOF>, ';'}",
+            "mismatched input 'EXCEPT' expecting {<EOF>, ';'}",
+            "mismatched input 'EXCEPT' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/pivot_clause.sql",
+          "errors": [
+            "mismatched input ',' expecting 'IN'",
+            "mismatched input ',' expecting 'IN'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/select_from_values.sql",
+          "errors": [
+            "no viable alternative at input '(values (1,2), (3,4)) ('",
+            "mismatched input '2' expecting {'(', 'ADD', 'AFTER', 'AGGREGATE', 'ALL', 'ALTER', ... and 470 more}",
+            "no viable alternative at input '(3'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/select_lateral_column_alias.sql",
+          "errors": [
+            "mismatched input ')' expecting ','"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/select_qualify.sql",
+          "errors": [
+            "mismatched input 'QUALIFY' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-sparksql/values_with_alias.sql",
+          "errors": [
+            "mismatched input '(' expecting {<EOF>, ';'}",
+            "mismatched input '(' expecting {<EOF>, ';'}"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sqlfluff-databricks",
+      "expectation": "valid",
+      "total": 59,
+      "passed": 36,
+      "skipped_dialect": 0,
+      "rate": 61.016949152542374,
+      "failures": [
+        {
+          "path": "corpus/cache/sqlfluff-databricks/alter_table.sql",
+          "errors": [
+            "mismatched input 'NOT' expecting {<EOF>, ';'}",
+            "no viable alternative at input 'ALTER TABLE pets DROP FOREIGN'",
+            "no viable alternative at input 'ALTER TABLE persons DROP PRIMARY'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/alter_view.sql",
+          "errors": [
+            "mismatched input '(' expecting {<EOF>, ';'}",
+            "no viable alternative at input 'ALTER MATERIALIZED'",
+            "no viable alternative at input 'ALTER MATERIALIZED'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/alter_volume.sql",
+          "errors": [
+            "no viable alternative at input 'ALTER VOLUME some_vol RENAME'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/bare_magic_first_line.sql",
+          "errors": [
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/bare_magic_line.sql",
+          "errors": [
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/bare_magic_modulo.sql",
+          "errors": [
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/bare_magic_notebook_start.sql",
+          "errors": [
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/bare_magic_sql.sql",
+          "errors": [
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/bare_magic_sql_notebook_start.sql",
+          "errors": [
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input '%' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/comment_on.sql",
+          "errors": [
+            "no viable alternative at input 'COMMENT ON CATALOG'",
+            "no viable alternative at input 'COMMENT ON CONNECTION'",
+            "no viable alternative at input 'COMMENT ON SHARE'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/create_flow_auto_cdc_into.sql",
+          "errors": [
+            "mismatched input 'AUTO' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}",
+            "mismatched input 'AUTO' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}",
+            "mismatched input 'AUTO' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 53 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/create_function.sql",
+          "errors": [
+            "missing 'RETURN' at 'AS'",
+            "mismatched input '$' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/create_materialized_view.sql",
+          "errors": [
+            "mismatched input '1' expecting {STRING_LITERAL, DOUBLEQUOTED_STRING}",
+            "mismatched input '1' expecting {STRING_LITERAL, DOUBLEQUOTED_STRING}",
+            "mismatched input '2' expecting {STRING_LITERAL, DOUBLEQUOTED_STRING}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/create_table.sql",
+          "errors": [
+            "no viable alternative at input 'CLUSTER BY NONE'",
+            "mismatched input 'ON' expecting ')'",
+            "mismatched input 'ON' expecting ')'"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/create_table_clone.sql",
+          "errors": [
+            "mismatched input 'CLONE' expecting {<EOF>, ';'}",
+            "mismatched input 'CLONE' expecting {<EOF>, ';'}",
+            "mismatched input 'CLONE' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/create_view.sql",
+          "errors": [
+            "mismatched input 'METRICS' expecting 'SCHEMA'",
+            "mismatched input 'LANGUAGE' expecting {'(', 'AS', 'COMMENT', 'DEFAULT', 'PARTITIONED', 'TBLPROPERTIES', ... and 1 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/databricks_dlt_apply_changes_into.sql",
+          "errors": [
+            "mismatched input 'WHERE' expecting {'APPLY', 'SEQUENCE'}",
+            "mismatched input 'WHERE' expecting {'APPLY', 'SEQUENCE'}",
+            "mismatched input 'WHERE' expecting {'APPLY', 'SEQUENCE'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/merge_into.sql",
+          "errors": [
+            "mismatched input 'except' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/named_parameters.sql",
+          "errors": [
+            "mismatched input ':' expecting {<EOF>, ';'}",
+            "mismatched input '(' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/select_lateral_column_alias.sql",
+          "errors": [
+            "mismatched input ')' expecting ','"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/set_tags.sql",
+          "errors": [
+            "mismatched input 'UNSET' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input 'UNSET' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}",
+            "mismatched input 'UNSET' expecting {'(', 'ADD', 'ALTER', 'ANALYZE', 'CACHE', 'CALL', ... and 54 more}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/try_cast_operator.sql",
+          "errors": [
+            "mismatched input '?' expecting {<EOF>, ';'}",
+            "mismatched input '?' expecting {<EOF>, ';'}",
+            "mismatched input '?' expecting {<EOF>, ';'}"
+          ]
+        },
+        {
+          "path": "corpus/cache/sqlfluff-databricks/use_catalog.sql",
+          "errors": [
+            "extraneous input ''hive_metastore'' expecting {<EOF>, ';'}"
+          ]
+        }
+      ]
     }
   ],
   "mutation": {

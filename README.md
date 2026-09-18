@@ -210,6 +210,7 @@ and `corpus/reports/baseline.json` only moves when someone means it to.
 | --- | --- |
 | `spark-*` | breadth — the benchmark suites and Spark's own golden-file tests |
 | `dbx-*` | shape — real Databricks notebook exports, pinned from public repos |
+| `sqlfluff-*` | coverage — SQLFluff's per-dialect fixtures, one construct each |
 
 The two do different jobs. Spark's test resources are bare `.sql` files: not
 one carries a notebook header, a `-- COMMAND ----------` separator, a
@@ -218,11 +219,13 @@ exists to handle is therefore invisible to the Spark corpus. The Databricks
 sources are small, but they are the only ones that see a file in the shape a
 Databricks user would actually commit it.
 
-Current baseline: **99.4% recall** across the valid sources — 100% on all 191
-TPC-DS/TPC-H/SSB queries and on three of the five Databricks sources — and 100%
-rejection on 1322 guaranteed mutations. Both remaining failures are the parser
-being right: one file holds `OPTIMIZE <table>`, a documentation placeholder,
-and the other is genuinely missing a semicolon.
+Current baseline: 100% on all 191 TPC-DS/TPC-H/SSB queries and on three of the
+Databricks notebook sources, 100% rejection on 1322 guaranteed mutations, and
+**92.0% recall overall** across 867 files. That last number went *down* when
+SQLFluff's dialect fixtures were added, which is the corpus working: they test
+one construct per file and found 43 things this parser cannot yet do. Twelve
+are reproduced in `GAPS`; see
+[docs/design-notes.md](docs/design-notes.md#a-different-kind-of-corpus-sqlfluffs-dialect-fixtures).
 
 Adding the Databricks sources is what found most of the bugs that got it there,
 including one that had been suppressing 51 files of Spark's own test suite. See

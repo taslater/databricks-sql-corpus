@@ -345,8 +345,44 @@ def test_spark_statements_are_not_shadowed(sql):
     assert parse_statement(sql).ok, sql
 
 # Still unsupported. Empty for now -- entries go here as they are discovered.
-# Still unsupported. Empty -- entries go here as they are discovered.
-GAPS: dict[str, str] = {}
+# Still unsupported. Found by SQLFluff's per-dialect parse fixtures and the
+# Lakeflow connector project -- see corpus/reports/baseline.json. Each entry
+# below was reproduced in isolation; the fixture files hold further failures
+# whose exact cause has not been pinned down yet, and those are tracked by the
+# corpus rather than here.
+GAPS: dict[str, str] = {
+    # Clause ordering. QUALIFY parses, but only before WINDOW -- the injection
+    # sits between havingClause and windowClause, and Databricks allows either
+    # order. The kind of combination hand-written notebooks never exercise.
+    "qualify-after-window": (
+        "SELECT a FROM t WINDOW w AS (ORDER BY a) QUALIFY rank <= 3 ORDER BY a"
+    ),
+    # ANSI type alias for DOUBLE. PRECISION is not a token in Spark at all.
+    "double-precision": "CREATE TABLE t (x DOUBLE PRECISION)",
+    # Databricks metric views.
+    "view-with-metrics": "CREATE OR REPLACE VIEW v WITH METRICS LANGUAGE YAML AS $$x$$",
+    # A UDF whose body is a language block rather than an expression.
+    "function-language-body": (
+        "CREATE FUNCTION f(x INT) RETURNS DOUBLE LANGUAGE PYTHON AS $$ return 1 $$"
+    ),
+    "describe-history-limit": "DESCRIBE HISTORY t LIMIT 10",
+    "convert-to-delta-no-statistics": "CONVERT TO DELTA t NO STATISTICS",
+    "describe-detail-path": "DESCRIBE DETAIL '/data/events/'",
+    "merge-update-set-except": (
+        "MERGE INTO t USING s ON t.k = s.k "
+        "WHEN MATCHED THEN UPDATE SET * EXCEPT (c)"
+    ),
+    # SET TAG ON <kind> parses; the UNSET counterpart does not. This is a
+    # different statement from the ALTER ... SET TAGS form already supported.
+    "unset-tag-on": "UNSET TAG ON TABLE c.s.t `tag1`",
+    # A catalog named by a string literal rather than an identifier.
+    "use-catalog-string": "USE CATALOG 'hive_metastore'",
+    "comment-on-catalog": "COMMENT ON CATALOG c IS 'x'",
+    # Lakeflow's AUTO CDC spelling of APPLY CHANGES.
+    "create-flow-auto-cdc": (
+        "CREATE FLOW f AS AUTO CDC INTO t FROM s KEYS (k) SEQUENCE BY ts"
+    ),
+}
 
 
 @pytest.mark.parametrize("sql", SPARK_NATIVE.values(), ids=list(SPARK_NATIVE))

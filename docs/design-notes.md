@@ -308,3 +308,59 @@ an `EQ` was inside a `SET`, and in a notebook the nearest semicolon can be
 several cells away — cells hold one unterminated statement each. The walk now
 stops at a cell separator as well, which is what it should have done first
 time. Rejection is back to 100% on 1322 guaranteed mutations.
+
+## A different kind of corpus: SQLFluff's dialect fixtures
+
+Searching for more notebook SQL turned up ~12,000 public `.sql` files carrying
+the Databricks header, and almost none of it was usable:
+
+- **363 of 481 candidate repos have no licence at all.** Absent a licence,
+  default copyright applies, so they are not appropriate to build a shared
+  reference on.
+- **Databricks' own repos are proprietary.** `dbdemos-notebooks`, `tmm`,
+  `app-templates` and `databricks-blogposts` all carry the "DB license", and
+  `tmm` explicitly declares its contents Confidential Information. Ruled out
+  regardless of how good the SQL is.
+- **Databricks Academy material is deliberately incomplete.** Every mirror of
+  the learning path is full of `<FILL_IN>` blanks for students. Adding them
+  would cost recall forever for a reason that is not a parser gap — the same
+  shape as the `OPTIMIZE <table>` file already in the corpus.
+- **Much of it is not Databricks SQL.** Repos surfaced by a "databricks" search
+  turned out to contain `CREATE OR REPLACE TRIGGER` and `[bracketed]`
+  identifiers — Oracle and T-SQL. One `CREATE WIDGET` match was the Ozone
+  Widget Framework, nothing to do with SQL at all.
+- **dbt projects are Jinja, not SQL.** `dbt-databricks` has 76 `.sql` files and
+  every one is a macro template.
+
+The useful find was a different kind of source entirely: **SQLFluff's
+per-dialect parse fixtures** (MIT) — 134 `sparksql` and 59 `databricks` files,
+curated one construct at a time by people solving this exact problem. They are
+worth more than their file count suggests, for two reasons.
+
+First, each fixture is *named after what it tests*, so a failure reports which
+feature is missing rather than which file broke. Second, they cover
+combinations that hand-written code never produces. The clearest example:
+`QUALIFY` has been supported since the extensions were written and every
+notebook in the corpus parses it, but `select_qualify.sql` fails — because
+`QUALIFY` after a `WINDOW` clause does not parse. The injection sits between
+`havingClause` and `windowClause`, and Databricks allows either order. No
+amount of real-world notebook SQL was going to find that.
+
+They also settled a question I had got wrong. NHS Digital's public pipelines
+use a bare ` %py` on its own line instead of `-- MAGIC %py`, and since no file
+in the existing 125 used that form, I took it for one repo's idiosyncratic
+export and set it aside. SQLFluff has **six** fixtures for it, including
+`bare_magic_modulo.sql` for the case that makes it hard — telling a bare magic
+line apart from the modulo operator. It is a real Databricks notebook form that
+a serious linter handles deliberately, and this parser should too.
+
+Three sources added, taking the corpus from 620 files to 867:
+
+| source | licence | what it adds |
+| --- | --- | --- |
+| `sqlfluff-sparksql` | MIT | 134 construct-level fixtures |
+| `sqlfluff-databricks` | MIT | 59 fixtures, incl. bare-magic notebooks |
+| `dbx-lakeflow-connector` | Apache-2.0 | a real project: metric views, UC functions |
+
+They found 43 failures, 12 of them reproduced in isolation and recorded in
+`GAPS`. Every pre-existing source is unchanged and rejection stays at 100%.

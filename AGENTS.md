@@ -178,10 +178,14 @@ default keyword mode legitimately re-parses them as valid
 diffs; `corpus/cache/` is not, since every source is pinned to an exact
 revision and the cache is reproducible from `sources.py` alone.
 
-Current baseline: 100% on the TPC-DS/TPC-H/SSB suites and on three of the five
-`dbx-*` sources; 93.3% on `dbx-packt-cookbook`, 80% on `dbx-devrel`, ~94% on
-`spark-sql-tests` (a mixed valid/invalid source). 100% rejection on 1322
-guaranteed mutations. `GAPS` is empty.
+Current baseline: 100% on the TPC-DS/TPC-H/SSB suites and on three `dbx-*`
+sources; 92.6% on `dbx-lakeflow-connector`, 88.1% on `sqlfluff-sparksql`, 61%
+on `sqlfluff-databricks`, ~94% on `spark-sql-tests` (a mixed valid/invalid
+source). 100% rejection on 1322 guaranteed mutations.
+
+`GAPS` holds 12 entries, all found by the SQLFluff dialect fixtures and the
+Lakeflow connector. The fixtures are named after the construct they test, so a
+corpus failure there tells you which feature is missing.
 
 The two remaining `dbx-*` failures are both correct behaviour, not gaps: one
 file holds `OPTIMIZE <table>`, a documentation placeholder, and the other is
