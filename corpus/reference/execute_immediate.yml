@@ -1,0 +1,81 @@
+# EXECUTE IMMEDIATE. The INTO and USING clauses are each bracketed, and the
+# list inside USING is comma-delimited, so the partial forms are the trailing
+# comma and the keyword with its value missing. The six rejection boundaries
+# #8515 restored live in databricks_test.py; these are the reference-side
+# equivalents.
+statement: EXECUTE IMMEDIATE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate
+checked: 2026-09-19
+syntax: |
+  EXECUTE IMMEDIATE sql_string
+          [ INTO var_name [, ...] ]
+          [ USING { arg_expr [ AS ] [alias] } [, ...] ]
+cases:
+  - id: execute-immediate.plain
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE 'SELECT 1'
+  - id: execute-immediate.into
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE s INTO x
+  - id: execute-immediate.into-multiple
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE s INTO x, y
+  - id: execute-immediate.using
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE s USING 1
+  - id: execute-immediate.using-multiple
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE s USING 1, 2
+  - id: execute-immediate.using-alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE s USING 1 AS a
+  - id: execute-immediate.into-and-using
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE s INTO x USING 1 AS a, 2 AS b
+  - id: execute-immediate.literal-with-parameters
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXECUTE IMMEDIATE 'SELECT a FROM t WHERE b = ?' USING 1
+  - id: execute-immediate.into-without-variable
+    verdict: must-reject
+    anchor: "#syntax"
+    from: execute-immediate.into
+    omits: "var_name"
+    sql: |
+      EXECUTE IMMEDIATE s INTO
+  - id: execute-immediate.into-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: execute-immediate.into-multiple
+    omits: "var_name"
+    sql: |
+      EXECUTE IMMEDIATE s INTO x,
+  - id: execute-immediate.using-without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: execute-immediate.using
+    omits: "arg_expr"
+    sql: |
+      EXECUTE IMMEDIATE s USING
+  - id: execute-immediate.using-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: execute-immediate.using-multiple
+    omits: "arg_expr"
+    sql: |
+      EXECUTE IMMEDIATE s USING 1,
