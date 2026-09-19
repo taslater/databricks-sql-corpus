@@ -1,0 +1,82 @@
+# JSON path expression. Tier 1.5: the access grammar VARIANT depends on.
+# Most of it already parses; the cases are the permanent record so a future
+# rewrite cannot silently drop what works, and two documented accessors do
+# not parse today (`[ * ]` and delimited identifiers) -- both filed in
+# docs/gaps.md. See docs/reference-corpus-plan.md, "Tier 1.5".
+#
+# The page's production uses braces for the required first accessor and real
+# brackets for `field`, `*` and `index`; `[...]` after the continuation group
+# means the group repeats.
+statement: JSON path expression
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression
+checked: 2026-09-19
+syntax: |
+  { { identifier | [ field ] | [ * ] | [ index ] }  [ . identifier | [ field ] | [ * ] | [ index ] ] [...] }
+cases:
+  - id: json-path.identifier
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:owner FROM t
+  - id: json-path.bracketed-field
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:['owner'] FROM t
+  - id: json-path.index
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:store.fruit[0] FROM t
+  - id: json-path.dot-continuation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:store.bicycle FROM t
+  - id: json-path.chained-brackets
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:['store']['bicycle'] FROM t
+  - id: json-path.mixed-chain
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:store.basket[0][2].b FROM t
+  - id: json-path.variant
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT v:field FROM t
+  - id: json-path.star
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT raw:store.book[*] FROM t
+  - id: json-path.delimited-identifier
+    verdict: must-parse
+    anchor: "#extract-using-identifier-and-delimiters"
+    sql: |
+      SELECT raw:`full name` FROM t
+  - id: json-path.empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: json-path.identifier
+    omits: "{ identifier | [ field ] | [ * ] | [ index ] }"
+    sql: |
+      SELECT v:
+  - id: json-path.empty-brackets
+    verdict: must-reject
+    anchor: "#syntax"
+    from: json-path.bracketed-field
+    omits: "field"
+    sql: |
+      SELECT v:[]
+    note: Empty brackets match none of `[ field ]`, `[ * ]` or `[ index ]`.
+  - id: json-path.dot-without-field
+    verdict: must-reject
+    anchor: "#syntax"
+    from: json-path.dot-continuation
+    omits: "identifier"
+    sql: |
+      SELECT v:field.

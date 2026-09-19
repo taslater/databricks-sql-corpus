@@ -114,6 +114,30 @@ reference corpus as `struct.not-null`, `struct.not-null-with-comment` and
 closes. Found 2026-09-19 by the Tier 1.5 batch; no corpus file uses either
 clause, so it is recorded from the reference.
 
+**The JSON path `[ * ]` wildcard is rejected.** The
+[JSON path expression reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression)
+gives the accessor production as
+`{ { identifier | [ field ] | [ * ] | [ index ] } [ . identifier | [ field ] | [ * ] | [ index ] ] [...] }`,
+and the page navigates arrays with it in its own examples. SQLFluff `main` at
+`33d8c8459` rejects every probed position, including the documented shape
+`SELECT raw:store.book[*] FROM t`; `[0]` and `['field']` in the same position
+parse. Pinned by `json-path.star`. The page notes `[ * ]` is not supported
+for `VARIANT`, and the case navigates a STRING path. Found 2026-09-19 by the
+reference corpus, the first gap of the Tier 1.5 batch — the tier was expected
+to be pure regression-pinning, and its probes had not covered `[ * ]`.
+
+**Delimited identifiers are rejected in a JSON path.** The
+[same reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression)
+shows backticked field names in its delimiter examples ("Use backticks to
+escape special characters"), and its `identifier` production links to the
+identifiers page, where a delimited identifier is a spelling of the same
+production. SQLFluff `main` rejects a JSON path field written as a delimited
+identifier, with or without characters that need escaping:
+``SELECT raw:`full name` FROM t``, ``SELECT raw:`owner` FROM t`` and
+``SELECT raw:`fb:testid` FROM t`` are all rejected, while the plain
+identifier parses. Pinned by `json-path.delimited-identifier`. Also found
+2026-09-19 by the Tier 1.5 batch.
+
 **Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
 [GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)
 gives `privilege_types` as `{ ALL PRIVILEGES | privilege_type [, ...] }` —
