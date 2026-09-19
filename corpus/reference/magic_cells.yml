@@ -1,0 +1,29 @@
+# Notebook magic cells. The `-- MAGIC` lines are the notebook-source
+# representation of a magic command in a cell; the documented rule is that a
+# cell has at most one magic command, it must be the first line of the cell,
+# and the lines after it are its body. #8507 made the shape where the
+# directive already carried content parse; this is its regression lock.
+#
+# The export prefix is not itself on this page, so the case transcribes the
+# cell semantics rather than a syntax line from the reference.
+statement: Notebook magic cell
+doc: https://docs.databricks.com/aws/en/notebooks/notebooks-code
+syntax: |
+  A notebook cell can only have one cell magic command, and it must be the
+  first line of the cell; the remaining lines are the command's body.
+cases:
+  - id: magic-cells.single-line-directive-with-body
+    verdict: must-parse
+    anchor: "#use-magic-commands"
+    sql: |
+      -- Databricks notebook source
+      -- MAGIC %md # Reference case
+      -- MAGIC
+      -- MAGIC Body text on the lines after a directive that carried content.
+
+      -- COMMAND ----------
+
+      SELECT 1
+    note: |
+      The #8507 regression lock: the first directive carries content of its
+      own, and the following `-- MAGIC` lines are still its body.

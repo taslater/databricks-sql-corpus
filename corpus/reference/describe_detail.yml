@@ -1,0 +1,25 @@
+# DESCRIBE DETAIL. The statement's own page has been removed from the
+# language-manual index; it now lives in a section of the DESCRIBE TABLE page,
+# which is the live anchor used here.
+statement: DESCRIBE DETAIL
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-table
+syntax: DESCRIBE DETAIL [ schema_name . ] table_name
+cases:
+  - id: describe-detail.table
+    verdict: must-parse
+    anchor: "#describe-detail"
+    sql: |
+      DESCRIBE DETAIL t
+  - id: describe-detail.schema-qualified-table
+    verdict: must-parse
+    anchor: "#describe-detail"
+    sql: |
+      DESCRIBE DETAIL schema1.t
+  - id: describe-detail.desc-abbreviation
+    verdict: must-parse
+    anchor: "#describe-detail"
+    sql: |
+      DESC DETAIL t
+    note: |
+      DESC is the documented abbreviation for DESCRIBE (the syntax block at
+      the top of the same page), and #8510 added it here.
