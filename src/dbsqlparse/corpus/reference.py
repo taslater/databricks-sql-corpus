@@ -30,6 +30,12 @@ Databricks SQL reference rather than scraped from GitHub. Each case carries
                                        reference makes exclusive; it must name
                                        both in `conflicts:`, each checked
                                        against the syntax block the same way
+                extra                  the case supplies production text
+                                       beyond what the production allows --
+                                       a type repeated in a one-type bracket,
+                                       or a parameter list on a type that has
+                                       none; it names it in `extra:`, checked
+                                       against the syntax block
 
 Each file carries `syntax` (the reference's production, verbatim) and
 `checked` (the date the page was read), both required: the syntax block is
@@ -85,11 +91,15 @@ VERDICTS = (MUST_PARSE, MUST_REJECT)
 # and a case that lies about its reason passes that check for the wrong one.
 OMISSION = "omission"
 EXCLUSIVE_ALTERNATIVE = "exclusive-alternative"
-REASONS = (OMISSION, EXCLUSIVE_ALTERNATIVE)
+EXTRA = "extra"
+REASONS = (OMISSION, EXCLUSIVE_ALTERNATIVE, EXTRA)
 
 _FILE_KEYS = frozenset({"statement", "doc", "syntax", "checked", "cases"})
 _CASE_KEYS = frozenset(
-    {"id", "verdict", "anchor", "sql", "from", "omits", "reason", "conflicts", "note"}
+    {
+        "id", "verdict", "anchor", "sql", "from",
+        "omits", "reason", "conflicts", "extra", "note",
+    }
 )
 
 
@@ -112,6 +122,7 @@ class ReferenceCase:
     omits: str = ""
     reason: str = OMISSION
     conflicts: tuple[str, ...] = ()
+    extra: str = ""
     note: str = ""
 
 
@@ -309,13 +320,18 @@ def _load_file(path: pathlib.Path) -> list[ReferenceCase]:
                     f"{path.name}: case {case.id!r}: omits {case.omits!r} does "
                     "not appear in the syntax block"
                 )
-        else:
+        elif case.reason == EXCLUSIVE_ALTERNATIVE:
             for alternative in case.conflicts:
                 if _normalise_for_check(alternative) not in block:
                     raise ReferenceError(
                         f"{path.name}: case {case.id!r}: conflicts alternative "
                         f"{alternative!r} does not appear in the syntax block"
                     )
+        elif _normalise_for_check(case.extra) not in block:
+            raise ReferenceError(
+                f"{path.name}: case {case.id!r}: extra {case.extra!r} does "
+                "not appear in the syntax block"
+            )
     return file_cases
 
 
@@ -381,6 +397,8 @@ def _load_case(
         raise ReferenceError(f"{label}: only a must-reject case may carry `reason:`")
     if verdict == MUST_PARSE and "conflicts" in raw:
         raise ReferenceError(f"{label}: only a must-reject case may carry `conflicts:`")
+    if verdict == MUST_PARSE and "extra" in raw:
+        raise ReferenceError(f"{label}: only a must-reject case may carry `extra:`")
     reason = raw.get("reason", OMISSION)
     if not isinstance(reason, str) or reason not in REASONS:
         raise ReferenceError(
@@ -404,6 +422,9 @@ def _load_case(
     omits = raw.get("omits", "")
     if not isinstance(omits, str):
         raise ReferenceError(f"{label}: omits must be a string")
+    extra = raw.get("extra", "")
+    if not isinstance(extra, str):
+        raise ReferenceError(f"{label}: extra must be a string")
     if verdict == MUST_REJECT:
         if reason == OMISSION:
             if not omits.strip():
@@ -416,17 +437,42 @@ def _load_case(
                     f"{label}: `conflicts:` is only for `reason: "
                     f"{EXCLUSIVE_ALTERNATIVE}`"
                 )
-        elif omits.strip():
-            raise ReferenceError(
-                f"{label}: a `reason: {EXCLUSIVE_ALTERNATIVE}` case records "
-                "`conflicts:`, not `omits:`"
-            )
-        elif not conflicts:
-            raise ReferenceError(
-                f"{label}: a must-reject case with `reason: "
-                f"{EXCLUSIVE_ALTERNATIVE}` needs `conflicts:`, the two "
-                "alternatives the statement mixes"
-            )
+            if extra.strip():
+                raise ReferenceError(
+                    f"{label}: `extra:` is only for `reason: {EXTRA}`"
+                )
+        elif reason == EXCLUSIVE_ALTERNATIVE:
+            if omits.strip():
+                raise ReferenceError(
+                    f"{label}: a `reason: {EXCLUSIVE_ALTERNATIVE}` case records "
+                    "`conflicts:`, not `omits:`"
+                )
+            if extra.strip():
+                raise ReferenceError(
+                    f"{label}: `extra:` is only for `reason: {EXTRA}`"
+                )
+            if not conflicts:
+                raise ReferenceError(
+                    f"{label}: a must-reject case with `reason: "
+                    f"{EXCLUSIVE_ALTERNATIVE}` needs `conflicts:`, the two "
+                    "alternatives the statement mixes"
+                )
+        else:
+            if not extra.strip():
+                raise ReferenceError(
+                    f"{label}: a must-reject case with `reason: {EXTRA}` needs "
+                    "`extra:`, the production text it over-supplies"
+                )
+            if omits.strip():
+                raise ReferenceError(
+                    f"{label}: a `reason: {EXTRA}` case records `extra:`, "
+                    "not `omits:`"
+                )
+            if conflicts:
+                raise ReferenceError(
+                    f"{label}: `conflicts:` is only for `reason: "
+                    f"{EXCLUSIVE_ALTERNATIVE}`"
+                )
     if "note" in raw and not isinstance(raw["note"], str):
         raise ReferenceError(f"{label}: note must be a string")
     return ReferenceCase(
@@ -441,6 +487,7 @@ def _load_case(
         omits=omits,
         reason=reason,
         conflicts=conflicts,
+        extra=extra,
         note=raw.get("note", ""),
     )
 
@@ -490,7 +537,7 @@ def reference_payload(report: ReferenceReport) -> dict:
 def _case_payload(result: CaseResult) -> dict:
     """One case's entry in `corpus/reports/*.json`.
 
-    `reason` and `conflicts` appear only when the reason is not the default
+    `reason` and its field appear only when the reason is not the default
     omission, so widening the model did not rewrite every must-reject entry
     in the committed baseline.
     """
@@ -503,9 +550,12 @@ def _case_payload(result: CaseResult) -> dict:
         "anchor": result.case.anchor,
         "message": None if result.conforms else result.message,
     }
-    if result.case.reason != OMISSION:
+    if result.case.reason == EXCLUSIVE_ALTERNATIVE:
         payload["reason"] = result.case.reason
         payload["conflicts"] = list(result.case.conflicts)
+    elif result.case.reason == EXTRA:
+        payload["reason"] = result.case.reason
+        payload["extra"] = result.case.extra
     return payload
 
 
@@ -582,9 +632,12 @@ def format_reference_gaps(report: ReferenceReport) -> str:
             if case.reason == OMISSION:
                 lines.append("partial form accepted by the parser")
                 lines.append(f"omits: {case.omits}")
-            else:
+            elif case.reason == EXCLUSIVE_ALTERNATIVE:
                 lines.append("exclusive alternatives mixed by the parser")
                 lines.append(f"conflicts: {', '.join(case.conflicts)}")
+            else:
+                lines.append("over-supplied production accepted by the parser")
+                lines.append(f"extra: {case.extra}")
             lines.append(f"from: {case.from_id}")
         else:
             lines.append("documented syntax rejected by the parser")

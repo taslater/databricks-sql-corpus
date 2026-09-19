@@ -92,6 +92,7 @@ def make_case(
     omits: str = "",
     reason: str = reference.OMISSION,
     conflicts: tuple[str, ...] = (),
+    extra: str = "",
 ) -> ReferenceCase:
     return ReferenceCase(
         id=id_,
@@ -104,6 +105,7 @@ def make_case(
         omits=omits,
         reason=reason,
         conflicts=conflicts,
+        extra=extra,
     )
 
 
@@ -370,6 +372,36 @@ def test_the_conflicts_check_ignores_case_and_whitespace(tmp_path):
     assert load_reference(tmp_path)[1].conflicts == ("all", "distinct   on ( a )")
 
 
+def test_an_extra_case_names_the_over_supplied_production(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: over\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a, a FROM t\n"
+            "from: full\nreason: extra\nextra: ', a'",
+            syntax="SELECT a [ , a ] FROM t",
+        ),
+    )
+    over = load_reference(tmp_path)[1]
+    assert over.reason == reference.EXTRA
+    assert over.extra == ", a"
+    assert over.omits == ""
+
+
+def test_an_extra_production_must_be_in_the_syntax_block(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: over\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a FROM t\n"
+            "from: full\nreason: extra\nextra: INVENTED",
+            syntax="SELECT [ a ] FROM t",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="extra 'INVENTED' does not appear"):
+        load_reference(tmp_path)
+
+
 # --- case schema ------------------------------------------------------------
 VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
 
@@ -379,8 +411,8 @@ VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
     [
         ("just a string", "every case must be a mapping"),
         (
-            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\nextra: 1",
-            "unknown keys ['extra']",
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\nunexpected: 1",
+            "unknown keys ['unexpected']",
         ),
         ("verdict: must-parse\nanchor: '#s'\nsql: SELECT 1", "missing required key 'id'"),
         ("id: x\nanchor: '#s'\nsql: SELECT 1", "missing required key 'verdict'"),
@@ -474,6 +506,40 @@ VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
             "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
             "reason: exclusive-alternative\nconflicts: [ '', b ]",
             "conflicts must be a list of exactly two non-empty alternatives",
+        ),
+        (
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\nextra: SELECT 1",
+            "only a must-reject case may carry `extra:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "omits: SELECT 1\nextra: SELECT 1",
+            "`extra:` is only for `reason: extra`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nconflicts: [ a, b ]\nextra: SELECT 1",
+            "`extra:` is only for `reason: extra`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: extra",
+            "needs `extra:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: extra\nomits: SELECT 1\nextra: SELECT 1",
+            "records `extra:`, not `omits:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: extra\nconflicts: [ a, b ]\nextra: SELECT 1",
+            "`conflicts:` is only for `reason: exclusive-alternative`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: extra\nextra: [ 1 ]",
+            "extra must be a string",
         ),
     ],
 )
@@ -720,6 +786,26 @@ def test_reference_gaps_names_the_conflicting_alternatives():
     assert "omits:" not in out
 
 
+def test_reference_gaps_names_the_over_supplied_production():
+    report = ReferenceReport(
+        results=[
+            CaseResult(
+                make_case(
+                    "over", MUST_REJECT, from_id="full",
+                    reason=reference.EXTRA, extra="elementType",
+                ),
+                parsed=True,
+            ),
+        ],
+        controls=[CaseResult(c, parsed=c.verdict == MUST_PARSE) for c in CONTROLS],
+    )
+    out = format_reference_gaps(report)
+    assert "## over" in out
+    assert "over-supplied production accepted by the parser" in out
+    assert "extra: elementType" in out
+    assert "omits:" not in out
+
+
 def test_reference_gaps_on_a_clean_report_says_zero():
     report = ReferenceReport(
         results=[CaseResult(make_case("a", MUST_PARSE), parsed=True)],
@@ -790,14 +876,23 @@ def test_the_payload_carries_the_reason_only_when_it_is_not_the_default():
         "mixed", MUST_REJECT, from_id="full",
         reason=reference.EXCLUSIVE_ALTERNATIVE, conflicts=("ALL", "DISTINCT"),
     )
+    over = make_case(
+        "over", MUST_REJECT, from_id="full",
+        reason=reference.EXTRA, extra="elementType",
+    )
     payload = reference_payload(ReferenceReport(results=[
         CaseResult(omission, parsed=False),
         CaseResult(mixed, parsed=True),
+        CaseResult(over, parsed=False),
     ]))
     assert "reason" not in payload["cases"][0]
     assert "conflicts" not in payload["cases"][0]
+    assert "extra" not in payload["cases"][0]
     assert payload["cases"][1]["reason"] == reference.EXCLUSIVE_ALTERNATIVE
     assert payload["cases"][1]["conflicts"] == ["ALL", "DISTINCT"]
+    assert payload["cases"][2]["reason"] == reference.EXTRA
+    assert payload["cases"][2]["extra"] == "elementType"
+    assert "conflicts" not in payload["cases"][2]
 
 
 def test_the_standalone_json_report_creates_its_parent(tmp_path):

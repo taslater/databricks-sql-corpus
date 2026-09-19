@@ -89,10 +89,11 @@ on every `must-reject` and forbidden on every `must-parse`:
 ```
 
 Every must-reject case also carries a `reason:` — `omission` (the default)
-for a partial form, or `exclusive-alternative` for a statement that mixes
-two alternatives the reference makes exclusive. An `exclusive-alternative`
-case records both mixed alternatives in `conflicts: [ FIRST, SECOND ]`
-instead of `omits:`, and each is checked against the `syntax:` block:
+for a partial form, `exclusive-alternative` for a statement that mixes two
+alternatives the reference makes exclusive, or `extra` for production text
+supplied beyond what the production allows. An `exclusive-alternative` case
+records both mixed alternatives in `conflicts: [ FIRST, SECOND ]` instead of
+`omits:`, and each is checked against the `syntax:` block:
 
 ```yaml
   - id: grant.all-privileges-in-list
@@ -134,11 +135,13 @@ half-transcribe them.
    every `[ ... ]` containing more than one token, write a must-reject case
    for each partial form — the bracket with its interior half-supplied.
    Point `from:` at the full-form must-parse sibling and quote the missing
-   text in `omits:`. Also cover: empty parenthesised lists where at least
+   text in    `omits:`. Also cover: empty parenthesised lists where at least
    one item is required, clauses used without the keyword that gates them
-   (the `PRIVATE`-without-`STREAMING` shape), and mixed exclusive
-   alternatives (`{ A | B }` written as `A, B`), which use
-   `reason: exclusive-alternative` and `conflicts:` instead of `omits:`.
+   (the `PRIVATE`-without-`STREAMING` shape), mixed exclusive alternatives
+   (`{ A | B }` written as `A, B`), which use
+   `reason: exclusive-alternative` and `conflicts:` instead of `omits:`, and
+   over-supplied parameter lists (`MAP<k, v, w>`, `VARIANT<a: INT>`), which
+   use `reason: extra` and `extra:`.
 5. **Run it:** `make reference PY=.venv-main/bin/python` for the worktree on
    `main`, or `make reference` for whatever the default venv holds. It needs
    no fetched corpus and takes seconds.

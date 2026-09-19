@@ -149,15 +149,18 @@ per reference page, each case carrying the statement, a `must-parse` or
 `from:` link to its full-form sibling and the production it `omits:`. Each
 file also carries `syntax:` (the page's production, verbatim) and
 `checked:` (the date the page was read); both are required. Every must-reject
-case carries a `reason:` — `omission` (the default) for a partial form, or
+case carries a `reason:` — `omission` (the default) for a partial form,
 `exclusive-alternative` for a statement that mixes alternatives the reference
-makes exclusive. An omission quotes the missing production in `omits:`; an
-exclusive-alternative names both mixed alternatives in `conflicts:`. The
-loader is strict — unknown keys, duplicate ids, unresolved `from:` links, an
-unknown `reason:`, a must-reject missing the field its reason requires, and an
-`omits:` or `conflicts:` entry that does not appear in the file's `syntax:`
-block are all errors — because a mistyped case that silently loads would make
-the corpus agree with the mistake.
+makes exclusive, or `extra` for production text supplied beyond what the
+production allows (a type repeated in a one-type bracket, a parameter list on
+a type that has none). The reason decides the field: `omits:` quotes the
+missing production, `conflicts:` names both mixed alternatives, `extra:`
+names the over-supplied text. The loader is strict — unknown keys, duplicate
+ids, unresolved `from:` links, an unknown `reason:`, a must-reject missing the
+field its reason requires, and an `omits:`, `conflicts:` or `extra:` entry
+that does not appear in the file's `syntax:` block are all errors — because a
+mistyped case that silently loads would make the corpus agree with the
+mistake.
 
 The rule that generates the cases is unchanged: **wherever the reference
 brackets an optional multi-token production, the partial forms are explicit
