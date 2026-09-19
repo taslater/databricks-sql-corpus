@@ -13,6 +13,23 @@ recorded below.
 
 ## Open
 
+**`REPLACE USING (…) SEQUENCE BY …` in append flows is rejected, while the
+incomplete form is accepted.** The
+[CREATE FLOW reference](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow)
+defines the append branch as
+`INSERT [ONCE] INTO target_table BY NAME [ replace_using_spec ] query`, with
+`replace_using_spec` = `REPLACE USING ( column_name [, ...] ) SEQUENCE BY
+sequence_column`, and its Example 3 uses the pair. SQLFluff `main` at
+`33d8c8459` (measured 2026-09-19) does the opposite: it accepts
+`REPLACE USING (…)` with no `SEQUENCE BY` and rejects the documented pair.
+Found while reconciling
+[#8460](https://github.com/sqlfluff/sqlfluff/pull/8460) against the merged
+#8509; the corrected grammar already exists on #8460's branch (a two-token
+addition at `dialect_databricks.py:2465`). It lands either through the
+author's reduced rebase or as a follow-up PR. No corpus file exercises it
+yet, so it is recorded from the reference and #8460's fixture rather than
+from a failure count.
+
 **`DROP MATERIALIZED VIEW`** is unparsable in the `databricks` dialect as of
 SQLFluff 4.3.0. Repro: `DROP MATERIALIZED VIEW mv;`. Found 2026-09-19 by the
 semantic-model tests in `sqlfluff-plugin-conventions`, not by this corpus —
