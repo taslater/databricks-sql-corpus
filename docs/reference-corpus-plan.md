@@ -135,7 +135,7 @@ half-transcribe them.
    every `[ ... ]` containing more than one token, write a must-reject case
    for each partial form — the bracket with its interior half-supplied.
    Point `from:` at the full-form must-parse sibling and quote the missing
-   text in    `omits:`. Also cover: empty parenthesised lists where at least
+   text in `omits:`. Also cover: empty parenthesised lists where at least
    one item is required, clauses used without the keyword that gates them
    (the `PRIVATE`-without-`STREAMING` shape), mixed exclusive alternatives
    (`{ A | B }` written as `A, B`), which use

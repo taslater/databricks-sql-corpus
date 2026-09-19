@@ -9,9 +9,9 @@ upstream do not make SQLFluff accept invalid SQL in exchange.
 
 ## What it has found
 
-Sixteen bugs in SQLFluff's Databricks support, found by running the corpus
+Nineteen bugs in SQLFluff's Databricks support, found by running the corpus
 and grouping the failures by construct. Thirteen have pull requests upstream,
-five of them merged; three more are recorded in `docs/gaps.md` without one
+five of them merged; six more are recorded in `docs/gaps.md` without one
 yet.
 
 Recall over the corpus, before and after. One file is skipped as a different
@@ -24,9 +24,9 @@ dialect, so 866 of the 867 are measured:
 | `dbx-lakeflow-connector` | 50/54 — 92.6% | 51/54 — 94.4% |
 | **overall** | 730/866 — 84.3% | **758/866 — 87.5%** |
 
-Reference conformance moved with it. The doc-derived corpus now carries 171
-cases over 16 reference pages: released 4.3.0 accepts 43 of the 113 must-parse
-cases and `main` accepts 52. Rejection over the scraped corpus held at 100%
+Reference conformance moved with it. The doc-derived corpus now carries 253
+cases over 27 reference pages: released 4.3.0 accepts 95 of the 170 must-parse
+cases and `main` accepts 104. Rejection over the scraped corpus held at 100%
 throughout — the fixes widened what SQLFluff accepts without letting invalid
 SQL through, which is the trade the mutation corpus exists to check.
 
