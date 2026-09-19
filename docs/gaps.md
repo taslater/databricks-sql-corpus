@@ -63,6 +63,53 @@ Found 2026-09-19 by the reference corpus
 own, and exactly the class the scraped corpus cannot see: no published file
 uses the construct, so recall had nothing to fail on.
 
+**`CREATE CATALOG` covers only part of its clause set.** On `main` at
+`33d8c8459`, `CreateCatalogStatementSegment` accepts a name and `COMMENT`
+only. The
+[CREATE CATALOG reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog)
+documents five clause alternatives and a second production, and the rest are
+rejected. Each repro is pinned by the reference corpus case named beside it:
+
+| repro | case |
+| --- | --- |
+| `CREATE CATALOG c USING SHARE provider.share` | `create-catalog.using-share` |
+| `CREATE CATALOG c RETAIN DROPPED FOR 30 DAYS` | `create-catalog.retain-dropped-days` |
+| `CREATE CATALOG c DEFAULT COLLATION UTF8_BINARY` | `create-catalog.default-collation` |
+| `CREATE CATALOG c OPTIONS (k = 'v')` | `create-catalog.options` |
+| `CREATE FOREIGN CATALOG fc USING CONNECTION conn OPTIONS (k = 'v')` | `create-catalog.foreign` |
+
+`MANAGED LOCATION` is [#8511](https://github.com/sqlfluff/sqlfluff/pull/8511)'s
+territory; the other clauses have no pull request. The foreign-catalog
+production is a whole statement form, not a clause: it takes
+`USING CONNECTION` and `OPTIONS` both unbracketed, and the reference corpus
+rejects their partial forms (`create-catalog.foreign-without-connection`,
+`create-catalog.foreign-without-options`).
+
+**`CREATE VIEW` lost its data-source production.** The
+[CREATE VIEW reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view)
+gives a second production, `CREATE [ OR REPLACE ] [ GLOBAL ] TEMPORARY VIEW
+[ IF NOT EXISTS ] view_name [ column_list ] USING data_source [ OPTIONS
+( option_key [ = ] option_value [, ...] ) ]`, and it is rejected by
+`databricks` — `TemporaryViewUsingSegment` is not part of the rewritten
+`CreateViewStatementSegment`, though `sparksql` still carries `USING` and
+`OPTIONS`. That is the same #7405 rewrite whose LIVE/STREAMING loss #8513
+repairs, and #8513 does not restore these. Repro:
+`CREATE TEMPORARY VIEW v USING csv OPTIONS (path '/data');` — cases
+`create-view.using-data-source`, `create-view.using-data-source-without-options`
+and `create-view.using-data-source-equals`. The parenthesised clause list
+`WITH ( SCHEMA BINDING )` from the `with_clause` production is rejected too
+(`create-view.with-parenthesised-clause`). No pull request covers either.
+
+**Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
+[GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)
+gives `privilege_types` as `{ ALL PRIVILEGES | privilege_type [, ...] }` —
+exclusive alternatives. SQLFluff accepts the mixed form:
+`GRANT ALL PRIVILEGES, SELECT ON TABLE t TO p`. The reference corpus case is
+`grant.all-privileges-in-list`, and it is the only over-acceptance the Tier 1
+batch found other than the known #8509 one. This wants a grammar that binds
+the choice, not a widening: it is the quiet failure direction, invisible to
+recall and to every fixture that only checks positive forms.
+
 Everything else the corpus exposed has a pull request against
 `sqlfluff/sqlfluff`; see "Landed" below.
 
@@ -76,8 +123,15 @@ What is left is not dialect work:
   their relatives are rejected. The limitation is symmetric across `GRANT`,
   `REVOKE` and `SHOW GRANTS` — see #8516, which reuses that segment
   deliberately so the three cannot drift apart. Widening it should move all
-  three together and needs six or so new keywords. No corpus file needs it
-  yet.
+  three together and needs six or so new keywords. The reference corpus now
+  pins the whole list: `privileges.yml` carries one must-parse case per
+  securable in the production (`privileges.catalog` … `privileges.volume`),
+  plus the partial forms its brackets allow, and `show_grants.yml` pins the
+  statement's own shape. On `main` the `SHOW GRANTS` statement itself is
+  unimplemented (#8516), so its rejection cases report **vacuous** rather than
+  informative until that merges; the GRANT half of the list stays informative.
+  `READ`/`WRITE VOLUME` as privilege types are #8512's, pinned by
+  `grant.read-volume-privilege` and `grant.write-volume-privilege`.
 - **The type-aware naming rules** — built. They live in the public
   `sqlfluff-plugin-conventions` repo (18 rules plus arbitrary scorer
   functions), not in core.
@@ -91,7 +145,10 @@ gives the same syntax as Databricks', down to the bracketed
 `databricks` inherits it. Spark's own test file settles a question the
 Databricks page leaves ambiguous: `INTO (a, b)` is labelled
 `-- INTO does not support braces - parser error`, so the braced spelling stays
-rejected and a test asserts it.
+rejected and a test asserts it. The reference corpus pins it as
+`execute-immediate.*`: eight must-parse cases across `INTO` and `USING`, and
+four rejection boundaries for their partial forms. On `main` the whole
+statement is rejected, so those rejections are vacuous until #8515 merges.
 
 **`CONVERT TO DELTA` was mis-recorded.** `NO STATISTICS` had been supported all
 along — `Sequence("NO", "STATISTICS", optional=True)` is already in
@@ -100,7 +157,9 @@ only a `FileReferenceSegment`, so a path parsed while `CONVERT TO DELTA
 my_table` did not. The
 [reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta)
 is explicit that table_name is "either an optionally qualified table
-identifier or a path".
+identifier or a path". The reference corpus pins the target as
+`convert-to-delta.table` and `convert-to-delta.qualified-table`, with
+`convert-to-delta.path` keeping the form the dialect already accepted.
 
 **The `-- MAGIC` entry was mis-described, and closed itself.** It read as "body
 line starting with `%`", but the two corpus files that failed —

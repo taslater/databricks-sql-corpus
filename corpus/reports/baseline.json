@@ -1007,17 +1007,288 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 26,
-      "passed": 11,
-      "rate": 42.30769230769231
+      "total": 113,
+      "passed": 43,
+      "rate": 38.05309734513274
     },
     "must_reject": {
-      "total": 9,
-      "caught": 8,
-      "informative": 0,
-      "rate": 88.88888888888889
+      "total": 58,
+      "caught": 55,
+      "informative": 20,
+      "vacuous": 35,
+      "rate": 94.82758620689656
     },
     "cases": [
+      {
+        "id": "convert-to-delta.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CONVERT TO DELTA t'"
+      },
+      {
+        "id": "convert-to-delta.qualified-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CONVERT TO DELTA c.s.t'"
+      },
+      {
+        "id": "convert-to-delta.path",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "convert-to-delta.no-statistics",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CONVERT TO DELTA t NO STATISTICS'"
+      },
+      {
+        "id": "convert-to-delta.partitioned-by",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CONVERT TO DELTA t PARTITIONED BY (d DAT...'"
+      },
+      {
+        "id": "convert-to-delta.no-statistics-partitioned-by",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CONVERT TO DELTA t NO STATISTICS PARTITI...'"
+      },
+      {
+        "id": "convert-to-delta.without-table-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "convert-to-delta.no-without-statistics",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "convert-to-delta.partitioned-without-by",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CONVERT TO DELTA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.plain",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.using-share",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 18: Found unparsable section: 'USING SHARE provider.share'"
+      },
+      {
+        "id": "create-catalog.managed-location",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 18: Found unparsable section: \"MANAGED LOCATION 's3://example-bucket/da...\""
+      },
+      {
+        "id": "create-catalog.retain-dropped-days",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 18: Found unparsable section: 'RETAIN DROPPED FOR 30 DAYS'"
+      },
+      {
+        "id": "create-catalog.retain-dropped-hour",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 18: Found unparsable section: 'RETAIN DROPPED FOR 1 HOUR'"
+      },
+      {
+        "id": "create-catalog.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 18: Found unparsable section: 'DEFAULT COLLATION UTF8_BINARY'"
+      },
+      {
+        "id": "create-catalog.options",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 18: Found unparsable section: \"OPTIONS (k = 'v')\""
+      },
+      {
+        "id": "create-catalog.repeated-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 38: Found unparsable section: \"MANAGED LOCATION 's3://example-bucket/da...\""
+      },
+      {
+        "id": "create-catalog.foreign",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FOREIGN CATALOG fc USING CONNECTI...'"
+      },
+      {
+        "id": "create-catalog.foreign-if-not-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FOREIGN CATALOG IF NOT EXISTS fc ...'"
+      },
+      {
+        "id": "create-catalog.foreign-comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FOREIGN CATALOG fc USING CONNECTI...'"
+      },
+      {
+        "id": "create-catalog.using-share-without-share-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.managed-location-without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.retain-dropped-without-unit",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.default-collation-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.empty-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.options-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.foreign-without-connection",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-catalog.foreign-without-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
       {
         "id": "create-flow.append-by-name",
         "verdict": "must-parse",
@@ -1235,6 +1506,366 @@
         "message": null
       },
       {
+        "id": "create-view.plain",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.or-replace",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.temporary",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.global-temporary",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.column-list",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.with-schema-binding",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.with-schema-type-evolution",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.with-parenthesised-clause",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE VIEW v WITH (SCHEMA BINDING) AS S...'"
+      },
+      {
+        "id": "create-view.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.default-collation",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.tblproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.repeated-clauses",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.metric-yaml",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.using-data-source",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW v USING csv OPTION...'"
+      },
+      {
+        "id": "create-view.using-data-source-without-options",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW v USING csv'"
+      },
+      {
+        "id": "create-view.using-data-source-equals",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE TEMPORARY VIEW v USING csv OPTION...'"
+      },
+      {
+        "id": "create-view.or-without-replace",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.or-refresh",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.global-without-temporary",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.if-without-not-exists",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.empty-column-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.column-comment-without-text",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.with-without-clause",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.schema-type-without-evolution",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.without-as-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.using-without-data-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.using-without-temporary",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.empty-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view.options-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.managed",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.external",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.qualified-name",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.external-all-clauses",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.external-without-keyword",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.if-without-not-exists",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.location-without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-volume.comment-without-text",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "describe-detail.table",
         "verdict": "must-parse",
         "ok": true,
@@ -1325,6 +1956,222 @@
         "message": "Line 1, Position 1: Found unparsable section: 'DROP MATERIALIZED VIEW IF EXISTS mv'"
       },
       {
+        "id": "execute-immediate.plain",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"EXECUTE IMMEDIATE 'SELECT 1'\""
+      },
+      {
+        "id": "execute-immediate.into",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE s INTO x'"
+      },
+      {
+        "id": "execute-immediate.into-multiple",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE s INTO x, y'"
+      },
+      {
+        "id": "execute-immediate.using",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE s USING 1'"
+      },
+      {
+        "id": "execute-immediate.using-multiple",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE s USING 1, 2'"
+      },
+      {
+        "id": "execute-immediate.using-alias",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE s USING 1 AS a'"
+      },
+      {
+        "id": "execute-immediate.into-and-using",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'EXECUTE IMMEDIATE s INTO x USING 1 AS a,...'"
+      },
+      {
+        "id": "execute-immediate.literal-with-parameters",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"EXECUTE IMMEDIATE 'SELECT a FROM t WHERE...\""
+      },
+      {
+        "id": "execute-immediate.into-without-variable",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "execute-immediate.into-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "execute-immediate.using-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "execute-immediate.using-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXECUTE IMMEDIATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.all-privileges",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.single-privilege",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.multiple-privileges",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.read-volume-privilege",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'GRANT READ VOLUME ON VOLUME v TO p'"
+      },
+      {
+        "id": "grant.write-volume-privilege",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'GRANT WRITE VOLUME ON VOLUME v TO p'"
+      },
+      {
+        "id": "grant.qualified-table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.backticked-principal",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.without-privilege-types",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.trailing-comma-in-privileges",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.all-privileges-in-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.without-to",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant.without-principal",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GRANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "magic-cells.single-line-directive-with-body",
         "verdict": "must-parse",
         "ok": false,
@@ -1332,6 +2179,384 @@
         "doc": "https://docs.databricks.com/aws/en/notebooks/notebooks-code",
         "anchor": "#use-magic-commands",
         "message": "Line 4, Position 1: Found unparsable section: '-- MAGIC Body text on the lines after a ...'"
+      },
+      {
+        "id": "privileges.catalog",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON CATALOG c'"
+      },
+      {
+        "id": "privileges.catalog-without-name",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON CATALOG'"
+      },
+      {
+        "id": "privileges.connection",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON CONNECTION conn'"
+      },
+      {
+        "id": "privileges.clean-room",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON CLEAN ROOM cr'"
+      },
+      {
+        "id": "privileges.external-location",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON EXTERNAL LOCATION loc'"
+      },
+      {
+        "id": "privileges.external-metadata",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON EXTERNAL METADATA m'"
+      },
+      {
+        "id": "privileges.function",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON FUNCTION f'"
+      },
+      {
+        "id": "privileges.metastore",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON METASTORE'"
+      },
+      {
+        "id": "privileges.procedure",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON PROCEDURE proc'"
+      },
+      {
+        "id": "privileges.schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON SCHEMA s'"
+      },
+      {
+        "id": "privileges.share",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON SHARE sh'"
+      },
+      {
+        "id": "privileges.storage-credential",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON STORAGE CREDENTIAL sc'"
+      },
+      {
+        "id": "privileges.service-credential",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON SERVICE CREDENTIAL sc'"
+      },
+      {
+        "id": "privileges.credential-without-scope",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON CREDENTIAL c'"
+      },
+      {
+        "id": "privileges.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON TABLE t'"
+      },
+      {
+        "id": "privileges.table-without-keyword",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON t'"
+      },
+      {
+        "id": "privileges.materialized-view",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON MATERIALIZED VIEW mv'"
+      },
+      {
+        "id": "privileges.view",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON VIEW v'"
+      },
+      {
+        "id": "privileges.volume",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON VOLUME vol'"
+      },
+      {
+        "id": "privileges.storage-credential-without-keyword",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "privileges.storage-credential-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "privileges.service-credential-without-keyword",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "privileges.materialized-view-without-view",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "privileges.materialized-view-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.all-privileges",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.single-privilege",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.multiple-privileges",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.use-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.read-volume-privilege",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REVOKE READ VOLUME ON VOLUME v FROM p'"
+      },
+      {
+        "id": "revoke.without-privilege-types",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.trailing-comma-in-privileges",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.without-from",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke.without-principal",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REVOKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-grants.on-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON TABLE t'"
+      },
+      {
+        "id": "show-grants.principal-on-schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS p ON SCHEMA s'"
+      },
+      {
+        "id": "show-grants.backticked-principal",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS `p@example.com` ON TABLE t'"
+      },
+      {
+        "id": "show-grants.qualified-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON TABLE c.s.t'"
+      },
+      {
+        "id": "show-grants.on-share",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON SHARE sh'"
+      },
+      {
+        "id": "show-grants.on-connection",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON CONNECTION conn'"
+      },
+      {
+        "id": "show-grants.without-securable",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-grants.without-on",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-grants.principal-without-securable",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW GRANTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
+        "anchor": "#syntax",
+        "message": null
       }
     ]
   }

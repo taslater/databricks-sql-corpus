@@ -146,10 +146,13 @@ else's older open one. See the entry in `docs/gaps.md`.
 the Databricks SQL reference rather than scraped from GitHub: one YAML file
 per reference page, each case carrying the statement, a `must-parse` or
 `must-reject` verdict, the doc URL and anchor, plus, for a partial form, a
-`from:` link to its full-form sibling and the production it `omits:`. The
-loader is strict — unknown keys, duplicate ids and unresolved `from:` links
-are errors — because a mistyped case that silently loads would make the corpus
-agree with the mistake.
+`from:` link to its full-form sibling and the production it `omits:`. Each
+file also carries `syntax:` (the page's production, verbatim) and `checked:`
+(the date the page was read); both are required. The loader is strict —
+unknown keys, duplicate ids, unresolved `from:` links, a must-reject without
+`omits:`, and an `omits:` that does not appear in the file's `syntax:` block
+are all errors — because a mistyped case that silently loads would make the
+corpus agree with the mistake.
 
 The rule that generates the cases is unchanged: **wherever the reference
 brackets an optional multi-token production, the partial forms are explicit
@@ -162,14 +165,34 @@ reference documents syntax that CI would block, and a must-reject miss means
 the parser accepts a form the reference does not define. A must-reject case
 only counts as **informative** when its full-form sibling parses — otherwise
 the rejection may be for an unrelated reason, and the report calls it vacuous.
-Every run also checks two controls built into the harness rather than the data,
-one valid statement that must parse and one structurally invalid statement
-that must not; the `make reference` exit code is non-zero if either misbehaves.
+The vacuous count is the corpus's health metric and is carried in
+`baseline.json`, so `compare_baseline.py` reports its trend. Every run also
+checks two controls built into the harness rather than the data, one valid
+statement that must parse and one structurally invalid statement that must
+not; the `make reference` exit code is non-zero if either misbehaves.
+`make reference-gaps` prints only the divergences, with case id, doc link and
+a one-line repro, in the shape a `docs/gaps.md` entry wants.
 
 `corpus/reports/baseline.json` carries a `reference` section, and
 `scripts/compare_baseline.py` diffs it case by case: a newly added case that
 fails is new coverage, while a case flipping from conforming to not, or
-disappearing, is a regression.
+disappearing, is a regression. `docs/reference-coverage.md` lists every page
+in the language manual and the Lakeflow SQL reference with a status
+(`done` / `queued` / `n/a`), so what is left is a file rather than a memory.
+
+**State on 2026-09-19.** The Tier 1 batch took the corpus from 7 pages / 35
+cases to 16 / 171: the GRANT family with the Unity Catalog securable list, the
+CREATE CATALOG clause set, CREATE VIEW, EXECUTE IMMEDIATE, CONVERT TO DELTA and
+CREATE VOLUME. On `main` at `33d8c8459` the reference report reads
+`52/113 must-parse, 56/58 must-reject (25 informative, 31 vacuous)`, controls
+ok; on released 4.3.0 it reads `43/113, 55/58 (20 informative, 35 vacuous)`.
+The batch's evidence is the case ids in `docs/gaps.md`: it pinned the open
+#8511/#8512/#8513/#8515/#8516/#8517 work, found three unclaimed gaps (the
+CREATE CATALOG clause set beyond `MANAGED LOCATION`, the CREATE VIEW
+data-source production and parenthesised `WITH` list, both #7405 regressions)
+and one new over-acceptance (`GRANT ALL PRIVILEGES, SELECT` parses). Vacuous
+rejections are expected while a whole statement is an open PR — on `main` the
+`SHOW GRANTS` rejections prove nothing until #8516 merges.
 
 **Adding a case.** Read the live page, transcribe a minimal skeleton of your
 own construction (never an example body), and record the anchor and production

@@ -1,0 +1,328 @@
+# Reference corpus coverage
+
+Which Databricks SQL reference pages the reference corpus covers, which
+are queued, and which cannot produce statement cases. The queue order is
+in `docs/reference-corpus-plan.md`; this file answers "what is left".
+
+Generated 2026-09-19 from the
+[SQL language reference index](https://docs.databricks.com/aws/en/sql/language-manual/)
+and the [Pipeline SQL language reference](https://docs.databricks.com/aws/en/ldp/developer/sql-ref).
+A page appears once even when the index links it from several sections.
+
+- **done** — a file in `corpus/reference/` transcribes this page
+- **queued** — statement or clause syntax still to transcribe
+- **n/a** — not a statement-grammar surface: concepts, function
+  catalogues, configuration parameters, Runtime-only I/O commands, and
+  type/format reference already covered through the table statements
+
+The notebook magic-cell cases (`magic_cells.yml`) come from outside both
+indexes; the Unity Catalog privileges reference supplies the privilege
+names for the GRANT-family cases. Both are listed below.
+
+## General reference (1 done, 5 queued, 45 n/a)
+
+| page | status |
+| --- | --- |
+| [How to use the SQL reference](https://docs.databricks.com/aws/en/sql/language-manual/how-to-use) | n/a |
+| [Adding comments to SQL statements](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-comment) | n/a |
+| [Reserved words and schemas](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words) | n/a |
+| [Identifiers](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers) | n/a |
+| [Names](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names) | n/a |
+| [IDENTIFIER clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause) | queued |
+| [SQL expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression) | queued |
+| [NULL semantics](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-null-semantics) | n/a |
+| [Parameter markers](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-parameter-marker) | n/a |
+| [Variables](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-variables) | n/a |
+| [Name resolution](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-name-resolution) | n/a |
+| [JSON path expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression) | queued |
+| [Collation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-collation) | n/a |
+| [Partitions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-partition) | n/a |
+| [Data types](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datatypes) | n/a |
+| [SQL data type rules](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datatype-rules) | n/a |
+| [Datetime patterns](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datetime-pattern) | n/a |
+| [Configuration parameters](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-parameters) | n/a |
+| [ANSI_MODE](https://docs.databricks.com/aws/en/sql/language-manual/parameters/ansi_mode) | n/a |
+| [LEGACY_TIME_PARSER_POLICY](https://docs.databricks.com/aws/en/sql/language-manual/parameters/legacy_time_parser_policy) | n/a |
+| [MAX_FILE_PARTITION_BYTES](https://docs.databricks.com/aws/en/sql/language-manual/parameters/max_partition_bytes) | n/a |
+| [READ_ONLY_EXTERNAL_METASTORE](https://docs.databricks.com/aws/en/sql/language-manual/parameters/read_only_external_metastore) | n/a |
+| [STATEMENT_TIMEOUT](https://docs.databricks.com/aws/en/sql/language-manual/parameters/statement_timeout) | n/a |
+| [TIMEZONE](https://docs.databricks.com/aws/en/sql/language-manual/parameters/timezone) | n/a |
+| [USE_CACHED_RESULT](https://docs.databricks.com/aws/en/sql/language-manual/parameters/use_cached_result) | n/a |
+| [Functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions) | n/a |
+| [Built-in functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-builtin) | n/a |
+| [Alphabetical list of built-in functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-builtin-alpha) | n/a |
+| [Window functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-window-functions) | n/a |
+| [Lambda functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-lambda-functions) | n/a |
+| [H3 geospatial functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-h3-geospatial-functions) | n/a |
+| [ST geospatial functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-st-geospatial-functions) | n/a |
+| [IP functions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-ip-functions) | n/a |
+| [User-defined aggregate functions (UDAFs)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-udf-aggregate) | n/a |
+| [External user-defined scalar functions (UDFs)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-udf-scalar) | n/a |
+| [Integration with Hive UDFs, UDAFs, and UDTFs](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-udf-hive) | n/a |
+| [Function invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation) | queued |
+| [Principal](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-principal) | n/a |
+| [Privileges and securable objects in Unity Catalog](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges) | done |
+| [Privileges and securable objects in the Hive metastore](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms) | queued |
+| [External locations](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-external-locations) | n/a |
+| [External tables](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-external-tables) | n/a |
+| [Credentials](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-storage-credentials) | n/a |
+| [Volumes](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-volumes) | n/a |
+| [ANSI compliance in Databricks Runtime](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-ansi-compliance) | n/a |
+| [Apache Hive compatibility](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-hive-compatibility) | n/a |
+| [SQL scripting](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-scripting) | n/a |
+| [Authorized user and session user](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-authorized-user) | n/a |
+| [OpenSharing](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-sharing) | n/a |
+| [Federated queries (Lakehouse Federation)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-federated-queries) | n/a |
+| [Information schema](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-information-schema) | n/a |
+
+## DDL statements (5 done, 54 queued, 0 n/a)
+
+| page | status |
+| --- | --- |
+| [ALTER CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog) | queued |
+| [ALTER CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection) | queued |
+| [ALTER CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential) | queued |
+| [ALTER DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-database) | queued |
+| [ALTER EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location) | queued |
+| [ALTER MATERIALIZED VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view) | queued |
+| [ALTER PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider) | queued |
+| [ALTER RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient) | queued |
+| [ALTER SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema) | queued |
+| [ALTER SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share) | queued |
+| [ALTER STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table) | queued |
+| [ALTER TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table) | queued |
+| [ALTER VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view) | queued |
+| [ALTER VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume) | queued |
+| [CREATE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog) | done |
+| [CREATE CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection) | queued |
+| [CREATE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-database) | queued |
+| [CREATE FUNCTION (SQL, Python, Scala, and Java)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function) | queued |
+| [CREATE FUNCTION (External)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function) | queued |
+| [CREATE EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location) | queued |
+| [CREATE MATERIALIZED VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view) | done |
+| [CREATE POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy) | queued |
+| [CREATE PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure) | queued |
+| [CREATE RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient) | queued |
+| [CREATE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema) | queued |
+| [CREATE SERVER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-server) | queued |
+| [CREATE SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share) | queued |
+| [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-streaming-table) | queued |
+| [CREATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table) | queued |
+| [CREATE VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view) | done |
+| [CREATE VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume) | done |
+| [DROP CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog) | queued |
+| [DROP CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-connection) | queued |
+| [DROP CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-credential) | queued |
+| [DROP DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-database) | queued |
+| [DROP FUNCTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-function) | queued |
+| [DROP EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-location) | queued |
+| [DROP POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-policy) | queued |
+| [DROP PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-procedure) | queued |
+| [DROP PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-provider) | queued |
+| [DROP RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-recipient) | queued |
+| [DROP SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema) | queued |
+| [DROP SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-share) | queued |
+| [DROP TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table) | queued |
+| [DROP VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable) | queued |
+| [DROP VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view) | done |
+| [DROP VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-volume) | queued |
+| [COMMENT ON](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment) | queued |
+| [DECLARE VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable) | queued |
+| [REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table) | queued |
+| [REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign) | queued |
+| [REFRESH (MATERIALIZED VIEW or STREAMING TABLE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full) | queued |
+| [SET TAG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag) | queued |
+| [TRUNCATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-truncate-table) | queued |
+| [UNDROP](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table) | queued |
+| [UNSET TAG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag) | queued |
+| [USE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog) | queued |
+| [USE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-usedb) | queued |
+| [USE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema) | queued |
+
+## DML statements (0 done, 4 queued, 0 n/a)
+
+| page | status |
+| --- | --- |
+| [INSERT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into) | queued |
+| [INSERT OVERWRITE DIRECTORY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory) | queued |
+| [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | queued |
+| [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | queued |
+
+## Data retrieval statements (0 done, 29 queued, 0 n/a)
+
+| page | status |
+| --- | --- |
+| [SQL Pipeline Syntax](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline) | queued |
+| [Query](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query) | queued |
+| [SELECT (subselect)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select) | queued |
+| [VALUES clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values) | queued |
+| [EXPLAIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain) | queued |
+| [SELECT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list) | queued |
+| [\* (star) clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star) | queued |
+| [table reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference) | queued |
+| [JOIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join) | queued |
+| [WHERE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where) | queued |
+| [GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby) | queued |
+| [HAVING clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having) | queued |
+| [QUALIFY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-qualify) | queued |
+| [ORDER BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby) | queued |
+| [SORT BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby) | queued |
+| [CLUSTER BY clause (SELECT)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby) | queued |
+| [DISTRIBUTE BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby) | queued |
+| [LIMIT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit) | queued |
+| [OFFSET clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset) | queued |
+| [MATCH_RECOGNIZE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize) | queued |
+| [PIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot) | queued |
+| [UNPIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot) | queued |
+| [LATERAL VIEW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view) | queued |
+| [TABLESAMPLE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling) | queued |
+| [Table-valued function (TVF) invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf) | queued |
+| [Common table expression (CTE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte) | queued |
+| [Set operators](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops) | queued |
+| [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | queued |
+| [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | queued |
+
+## Delta Lake (2 done, 13 queued, 0 n/a)
+
+| page | status |
+| --- | --- |
+| [CREATE BLOOM FILTER INDEX (deprecated)](https://docs.databricks.com/aws/en/sql/language-manual/delta-create-bloomfilter-index) | queued |
+| [DROP BLOOM FILTER INDEX](https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index) | queued |
+| [COPY INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into) | queued |
+| [DELETE FROM](https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from) | queued |
+| [MERGE INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into) | queued |
+| [UPDATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-update) | queued |
+| [CACHE SELECT](https://docs.databricks.com/aws/en/sql/language-manual/delta-cache) | queued |
+| [CONVERT TO DELTA](https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta) | done |
+| [DESCRIBE HISTORY](https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history) | done |
+| [FSCK REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck) | queued |
+| [GENERATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-generate) | queued |
+| [OPTIMIZE](https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize) | queued |
+| [REORG TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table) | queued |
+| [RESTORE](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore) | queued |
+| [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum) | queued |
+
+## SQL scripting (0 done, 12 queued, 0 n/a)
+
+| page | status |
+| --- | --- |
+| [BEGIN END compound statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt) | queued |
+| [CASE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt) | queued |
+| [FOR statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt) | queued |
+| [GET DIAGNOSTICS statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt) | queued |
+| [IF THEN ELSE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/if-stmt) | queued |
+| [ITERATE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/iterate-stmt) | queued |
+| [LEAVE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/leave-stmt) | queued |
+| [LOOP statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/loop-stmt) | queued |
+| [REPEAT statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/repeat-stmt) | queued |
+| [RESIGNAL statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/resignal-stmt) | queued |
+| [SIGNAL statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/signal-stmt) | queued |
+| [WHILE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/while-stmt) | queued |
+
+## Auxiliary statements (2 done, 55 queued, 9 n/a)
+
+| page | status |
+| --- | --- |
+| [ANALYZE TABLE … COMPUTE STATISTICS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-statistics) | queued |
+| [ANALYZE TABLE … COMPUTE STORAGE METRICS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-storage-metrics) | queued |
+| [SYNC](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-sync) | queued |
+| [CACHE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-cache-table) | queued |
+| [CLEAR CACHE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-clear-cache) | queued |
+| [REFRESH CACHE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh) | queued |
+| [REFRESH FUNCTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-function) | queued |
+| [REFRESH TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-table) | queued |
+| [UNCACHE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-uncache-table) | queued |
+| [DESCRIBE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-catalog) | queued |
+| [DESCRIBE CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-connection) | queued |
+| [DESCRIBE CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-credential) | queued |
+| [DESCRIBE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-database) | queued |
+| [DESCRIBE FUNCTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-function) | queued |
+| [DESCRIBE EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-location) | queued |
+| [DESCRIBE POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-policy) | queued |
+| [DESCRIBE PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-procedure) | queued |
+| [DESCRIBE PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-provider) | queued |
+| [DESCRIBE QUERY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-query) | queued |
+| [DESCRIBE RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-recipient) | queued |
+| [DESCRIBE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-schema) | queued |
+| [DESCRIBE SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-share) | queued |
+| [DESCRIBE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-table) | done |
+| [DESCRIBE VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-volume) | queued |
+| [LIST](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-list) | queued |
+| [SHOW ALL IN SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-all-in-share) | queued |
+| [SHOW CATALOGS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-catalogs) | queued |
+| [SHOW COLUMNS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-columns) | queued |
+| [SHOW CONNECTIONS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-connections) | queued |
+| [SHOW CREATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-create-table) | queued |
+| [SHOW CREDENTIALS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-credentials) | queued |
+| [SHOW DATABASES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-databases) | queued |
+| [SHOW FUNCTIONS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-functions) | queued |
+| [SHOW GROUPS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-groups) | queued |
+| [SHOW EXTERNAL LOCATIONS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-locations) | queued |
+| [SHOW PARTITIONS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-partitions) | queued |
+| [SHOW POLICIES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-policies) | queued |
+| [SHOW PROCEDURES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-procedures) | queued |
+| [SHOW PROVIDERS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-providers) | queued |
+| [SHOW RECIPIENTS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-recipients) | queued |
+| [SHOW SCHEMAS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-schemas) | queued |
+| [SHOW SHARES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-shares) | queued |
+| [SHOW SHARES IN PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-shares-in-provider) | queued |
+| [SHOW TABLE EXTENDED](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-table) | queued |
+| [SHOW TABLES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables) | queued |
+| [SHOW TABLES DROPPED](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables-dropped) | queued |
+| [SHOW TBLPROPERTIES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tblproperties) | queued |
+| [SHOW USERS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-users) | queued |
+| [SHOW VIEWS](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-views) | queued |
+| [SHOW VOLUMES](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-volumes) | queued |
+| [CALL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-call) | queued |
+| [EXECUTE IMMEDIATE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate) | done |
+| [RESET](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-reset) | queued |
+| [SET](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set) | queued |
+| [SET RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-recipient) | queued |
+| [SET TIME ZONE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set-timezone) | queued |
+| [SET variable](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-variable) | queued |
+| [ADD ARCHIVE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-resource-mgmt-add-archive) | n/a |
+| [ADD FILE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-resource-mgmt-add-file) | n/a |
+| [ADD JAR](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-resource-mgmt-add-jar) | n/a |
+| [LIST ARCHIVE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-resource-mgmt-list-archive) | n/a |
+| [LIST FILE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-resource-mgmt-list-file) | n/a |
+| [LIST JAR](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-resource-mgmt-list-jar) | n/a |
+| [GET](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-connector-get) | n/a |
+| [PUT INTO](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-connector-put-into) | n/a |
+| [REMOVE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-connector-remove) | n/a |
+
+## Security (3 done, 9 queued, 0 n/a)
+
+| page | status |
+| --- | --- |
+| [ALTER GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group) | queued |
+| [CREATE GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-create-group) | queued |
+| [DENY](https://docs.databricks.com/aws/en/sql/language-manual/security-deny) | queued |
+| [DROP GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-drop-group) | queued |
+| [GRANT](https://docs.databricks.com/aws/en/sql/language-manual/security-grant) | done |
+| [GRANT ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-grant-share) | queued |
+| [MSCK REPAIR PRIVILEGES](https://docs.databricks.com/aws/en/sql/language-manual/security-msck) | queued |
+| [REVOKE](https://docs.databricks.com/aws/en/sql/language-manual/security-revoke) | done |
+| [REVOKE ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-revoke-share) | queued |
+| [SHOW GRANTS](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant) | done |
+| [SHOW GRANTS ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-on-share) | queued |
+| [SHOW GRANTS TO RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-to-recipient) | queued |
+
+## Lakeflow pipelines (2 done, 5 queued, 1 n/a)
+
+| page | status |
+| --- | --- |
+| [Pipeline SQL language reference](https://docs.databricks.com/aws/en/ldp/developer/sql-ref) | n/a |
+| [AUTO CDC INTO](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into) | queued |
+| [CREATE FLOW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow) | done |
+| [CREATE MATERIALIZED VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view) | queued |
+| [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table) | done |
+| [CREATE TABLE ... FLOW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow) | queued |
+| [CREATE TEMPORARY VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view) | queued |
+| [CREATE VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view) | queued |
+
+## Not statement pages, still in the corpus
+
+| page | status |
+| --- | --- |
+| [Work with code cells](https://docs.databricks.com/aws/en/notebooks/notebooks-code) | done |
+| [Unity Catalog privileges reference](https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference) | done |
