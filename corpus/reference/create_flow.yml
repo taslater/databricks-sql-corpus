@@ -1,0 +1,79 @@
+# CREATE FLOW append flows.
+#
+# This file is where the reference blind spot bit. SQLFluff #8509 merged a
+# grammar that accepts `REPLACE USING (c)` and rejects the documented pair
+# `REPLACE USING (c) SEQUENCE BY d`. The must-reject case below is the check
+# that would have caught it before merge.
+statement: CREATE FLOW
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow
+syntax: |
+  CREATE FLOW flow_name [COMMENT comment] AS
+  { AUTO CDC [ONCE] INTO target_table create_auto_cdc_flow_spec
+  | INSERT [ONCE] INTO target_table BY NAME [ replace_using_spec ] query }
+cases:
+  - id: create-flow.append-by-name
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME SELECT * FROM STREAM s
+  - id: create-flow.append-once
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW f AS INSERT ONCE INTO t BY NAME SELECT * FROM archive
+  - id: create-flow.append-with-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW f COMMENT 'backfill' AS INSERT ONCE INTO t BY NAME SELECT * FROM archive
+  - id: create-flow.auto-cdc
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW f AS AUTO CDC INTO t FROM STREAM s KEYS (id) SEQUENCE BY seq
+  - id: create-flow.append-replace-using-sequence-by
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME REPLACE USING (c) SEQUENCE BY d SELECT * FROM STREAM s
+    note: |
+      The documented pair. `replace_using_spec` binds both tokens, so this is
+      a must-parse case even though each token is optional with the other.
+  - id: create-flow.append-replace-using-multiple-columns
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME REPLACE USING (a, b) SEQUENCE BY d SELECT * FROM STREAM s
+  - id: create-flow.replace-using-without-sequence-by
+    verdict: must-reject
+    anchor: "#parameters"
+    from: create-flow.append-replace-using-sequence-by
+    omits: "SEQUENCE BY sequence_column"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME REPLACE USING (c) SELECT * FROM STREAM s
+    note: |
+      #8509 shipped this form: [ replace_using_spec ] was made optional as a
+      whole, so the interior was never bound and the omission of SEQUENCE BY
+      became accepted.
+  - id: create-flow.sequence-by-without-replace-using
+    verdict: must-reject
+    anchor: "#parameters"
+    from: create-flow.append-by-name
+    omits: "REPLACE USING ( column_name [, ...] )"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME SEQUENCE BY d SELECT * FROM STREAM s
+  - id: create-flow.replace-using-empty-column-list
+    verdict: must-reject
+    anchor: "#parameters"
+    from: create-flow.append-replace-using-sequence-by
+    omits: "column_name [, ...]"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME REPLACE USING () SEQUENCE BY d SELECT * FROM STREAM s
+    note: At least one key column is required.
+  - id: create-flow.append-without-by-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-flow.append-by-name
+    omits: "BY NAME"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t SELECT * FROM STREAM s

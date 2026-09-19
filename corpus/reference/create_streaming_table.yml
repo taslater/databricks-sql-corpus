@@ -1,0 +1,64 @@
+# CREATE STREAMING TABLE. PRIVATE is the #8509 regression lock. The inline
+# FLOW clause is documented but not implemented in the databricks dialect as
+# of SQLFluff main at 33d8c8459; this corpus found it, and the must-parse
+# cases below are what record it until an upstream fix lands.
+statement: CREATE STREAMING TABLE
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table
+syntax: |
+  CREATE [OR REFRESH] [PRIVATE] STREAMING TABLE table_name
+    [ table_specification ] [ table_clauses ] [ { flow_clause | AS query } ]
+  flow_clause:
+    FLOW { INSERT [ONCE] BY NAME query
+         | AUTO CDC auto_cdc_flow_spec
+         | REPLACE WHERE predicate BY NAME query
+         | REPLACE USING ( column_name [, ...] ) SEQUENCE BY sequence_column
+           BY NAME query }
+cases:
+  - id: create-streaming-table.plain
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE OR REFRESH STREAMING TABLE t AS SELECT * FROM STREAM s
+  - id: create-streaming-table.private
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      CREATE PRIVATE STREAMING TABLE t (a BIGINT)
+  - id: create-streaming-table.private-with-refresh
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      CREATE OR REFRESH PRIVATE STREAMING TABLE t AS SELECT * FROM STREAM s
+  - id: create-streaming-table.inline-insert-flow
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE OR REFRESH STREAMING TABLE t FLOW INSERT BY NAME SELECT * FROM STREAM s
+    note: Rejected by the databricks dialect on main; the inline FLOW clause is missing.
+  - id: create-streaming-table.inline-replace-using-flow
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE OR REFRESH STREAMING TABLE t FLOW REPLACE USING (c) SEQUENCE BY d BY NAME SELECT * FROM STREAM s
+    note: The documented REPLACE USING form for an inline flow; rejected with the rest of FLOW.
+  - id: create-streaming-table.flow-insert-without-by-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-streaming-table.inline-insert-flow
+    omits: "BY NAME"
+    sql: |
+      CREATE OR REFRESH STREAMING TABLE t FLOW INSERT SELECT * FROM STREAM s
+  - id: create-streaming-table.flow-replace-using-without-sequence-by
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-streaming-table.inline-replace-using-flow
+    omits: "SEQUENCE BY sequence_column"
+    sql: |
+      CREATE OR REFRESH STREAMING TABLE t FLOW REPLACE USING (c) BY NAME SELECT * FROM STREAM s
+  - id: create-streaming-table.flow-replace-using-without-by-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-streaming-table.inline-replace-using-flow
+    omits: "BY NAME"
+    sql: |
+      CREATE OR REFRESH STREAMING TABLE t FLOW REPLACE USING (c) SEQUENCE BY d SELECT * FROM STREAM s

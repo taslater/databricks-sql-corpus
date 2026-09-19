@@ -32,8 +32,9 @@ the corpus, and the machinery for turning it into upstream pull requests.
 ```bash
 make venv
 make corpus-fetch     # ~22 MB from 14 pinned public repositories
-make corpus           # recall + rejection
+make corpus           # recall + rejection + reference conformance
 make gaps             # failures grouped by construct
+make reference        # doc-derived cases only -- no fetched corpus needed
 ```
 
 To measure an **unmerged** SQLFluff branch, install a fork checkout over the
@@ -64,6 +65,14 @@ misses a bug gets a second look at review.
 A corpus of only-valid SQL cannot distinguish a good parser from one that
 accepts everything, which is why both numbers exist.
 
+**Reference conformance** — a third number, from `corpus/reference/`: cases
+transcribed from the Databricks SQL reference, each `must-parse` or
+`must-reject` and citing the page and anchor it came from. The scraped corpus
+samples what people publish, not what the dialect allows, so a construct no
+file uses — and any partial form of it — is invisible to recall and to
+mutation. This is the corpus that catches those, and the one that would have
+caught the `REPLACE USING (…) SEQUENCE BY …` defect before it merged.
+
 ## The corpus
 
 867 files across 14 sources, each pinned to an exact commit: Apache Spark's
@@ -75,7 +84,14 @@ teaching material.
 
 The cache is not committed: every source is reproducible from
 `src/dbsqlparse/corpus/sources.py`. `corpus/reports/baseline.json` is
-committed, so a change in accuracy shows up in a diff.
+committed, so a change in accuracy shows up in a diff, including case-by-case
+reference conformance.
+
+`corpus/reference/` is committed, because it is not scraped from anywhere: it
+is a small set of cases written from the
+[SQL reference](https://docs.databricks.com/aws/en/sql/language-manual/), one
+file per page, with the anchor and production recorded so a reviewer can check
+the transcription against the doc.
 
 ## Contributing upstream
 

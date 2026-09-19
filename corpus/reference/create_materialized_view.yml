@@ -1,0 +1,54 @@
+# CREATE MATERIALIZED VIEW. The expectations-only column list is the #8508
+# regression lock: the column list may declare expectations without any
+# columns, and the query supplies the types.
+statement: CREATE MATERIALIZED VIEW
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view
+syntax: |
+  { CREATE OR REPLACE MATERIALIZED VIEW | CREATE MATERIALIZED VIEW [ IF NOT EXISTS ] }
+    view_name [ column_list ] [ view_clauses ] AS query
+  column_list:
+    ( { column_name column_type column_properties } [, ...]
+      [ CONSTRAINT expectation_name EXPECT (expectation_expr)
+        [ ON VIOLATION { FAIL UPDATE | DROP ROW } ] ] [, ...]
+      [ , table_constraint ] [...] )
+  view_clauses:
+    { USING { DELTA | ICEBERG } | PARTITIONED BY (col [, ...]) | CLUSTER BY clause
+    | COMMENT view_comment | DEFAULT COLLATION UTF8_BINARY | TBLPROPERTIES clause
+    | REFRESH POLICY refresh_clause | SCHEDULE [ REFRESH ] schedule_clause
+    | schedule | WITH { ROW FILTER clause } } [...]
+cases:
+  - id: create-materialized-view.expectations-only
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE OR REFRESH MATERIALIZED VIEW mv (CONSTRAINT c EXPECT (x IS NOT NULL) ON VIOLATION DROP ROW) AS SELECT x FROM s
+    note: The column list may hold expectations and nothing else; #8508 locked this.
+  - id: create-materialized-view.columns-then-expectation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE MATERIALIZED VIEW mv (a BIGINT, CONSTRAINT c EXPECT (a > 0)) AS SELECT a FROM s
+  - id: create-materialized-view.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE MATERIALIZED VIEW IF NOT EXISTS mv AS SELECT 1 AS a
+  - id: create-materialized-view.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE MATERIALIZED VIEW mv COMMENT 'a view' AS SELECT 1 AS a
+  - id: create-materialized-view.on-violation-without-action
+    verdict: must-reject
+    anchor: "#parameters"
+    from: create-materialized-view.expectations-only
+    omits: "FAIL UPDATE | DROP ROW"
+    sql: |
+      CREATE MATERIALIZED VIEW mv (CONSTRAINT c EXPECT (x IS NOT NULL) ON VIOLATION) AS SELECT x FROM s
+  - id: create-materialized-view.empty-column-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-materialized-view.columns-then-expectation
+    omits: "column_name column_type"
+    sql: |
+      CREATE MATERIALIZED VIEW mv () AS SELECT 1 AS a

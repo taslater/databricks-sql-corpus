@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 .venv/
+.venv-*/
 venv/
 *.egg-info/
 dist/
@@ -8,6 +9,7 @@ build/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
 
 # ANTLR tool jar is fetched, not committed (large binary)
 tools/*.jar

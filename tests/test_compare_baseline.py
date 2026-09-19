@@ -19,14 +19,41 @@ compare_baseline = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(compare_baseline)
 
 
-def report(sources: dict[str, float], rejection: float = 100.0) -> dict:
-    return {
+def report(
+    sources: dict[str, float], rejection: float = 100.0, reference: dict | None = None
+) -> dict:
+    payload = {
         "sources": [
             {"name": n, "expectation": "valid", "total": 10,
              "passed": int(r / 10), "rate": r, "failures": []}
             for n, r in sources.items()
         ],
         "mutation": {"rejection_rate": rejection, "guaranteed_total": 100},
+    }
+    if reference is not None:
+        payload["reference"] = reference
+    return payload
+
+
+def ref_case(id_: str, verdict: str = "must-parse", ok: bool = True) -> dict:
+    return {"id": id_, "verdict": verdict, "ok": ok}
+
+
+def ref_section(cases: list[dict], controls_ok: bool = True) -> dict:
+    must_parse = [c for c in cases if c["verdict"] == "must-parse"]
+    must_reject = [c for c in cases if c["verdict"] == "must-reject"]
+    return {
+        "controls_ok": controls_ok,
+        "must_parse": {
+            "total": len(must_parse),
+            "passed": sum(c["ok"] for c in must_parse),
+        },
+        "must_reject": {
+            "total": len(must_reject),
+            "caught": sum(c["ok"] for c in must_reject),
+            "informative": sum(c["ok"] for c in must_reject),
+        },
+        "cases": cases,
     }
 
 
@@ -106,6 +133,63 @@ def test_rounding_noise_is_not_a_regression(tmp_path):
 @pytest.mark.parametrize("argv", [[], ["one"], ["a", "b", "c"]])
 def test_wrong_argument_count_exits_two(argv):
     assert compare_baseline.main(argv) == 2
+
+
+# --- reference corpus -------------------------------------------------------
+def test_first_reference_report_is_new_coverage_not_a_regression(tmp_path):
+    """The baseline predates the reference corpus. Adding coverage that fails
+    is the corpus working, not an accuracy drop."""
+    new = report({"a": 100.0}, reference=ref_section([ref_case("x", ok=False)]))
+    code, out = run(tmp_path, report({"a": 100.0}), new)
+    assert code == 0
+    assert "New reference corpus" in out
+    assert "1 new case(s), 1 failing on arrival" in out
+    assert "No accuracy regression" in out
+
+
+def test_a_reference_case_flip_is_a_regression(tmp_path):
+    base = report({"a": 100.0}, reference=ref_section([ref_case("x")]))
+    new = report({"a": 100.0}, reference=ref_section([ref_case("x", ok=False)]))
+    code, out = run(tmp_path, base, new)
+    assert code == 1
+    assert "reference case x: conforming -> not" in out
+
+
+def test_a_new_failing_reference_case_is_not_a_regression(tmp_path):
+    base = report({"a": 100.0}, reference=ref_section([ref_case("x")]))
+    new = report(
+        {"a": 100.0},
+        reference=ref_section([ref_case("x"), ref_case("y", ok=False)]),
+    )
+    code, out = run(tmp_path, base, new)
+    assert code == 0
+    assert "failing on arrival: y" in out
+
+
+def test_a_removed_reference_case_is_a_regression(tmp_path):
+    base = report({"a": 100.0}, reference=ref_section([ref_case("x")]))
+    new = report({"a": 100.0}, reference=ref_section([]))
+    code, out = run(tmp_path, base, new)
+    assert code == 1
+    assert "reference case removed: x" in out
+
+
+def test_failed_reference_controls_are_a_regression(tmp_path):
+    base = report({"a": 100.0}, reference=ref_section([ref_case("x")]))
+    new = report(
+        {"a": 100.0},
+        reference=ref_section([ref_case("x")], controls_ok=False),
+    )
+    code, out = run(tmp_path, base, new)
+    assert code == 1
+    assert "reference controls failed" in out
+
+
+def test_a_report_without_a_reference_section_is_ignored(tmp_path):
+    base = report({"a": 100.0}, reference=ref_section([ref_case("x")]))
+    code, out = run(tmp_path, base, report({"a": 100.0}))
+    assert code == 0
+    assert "Reference conformance" not in out
 
 
 # --- corpus hygiene ---------------------------------------------------------

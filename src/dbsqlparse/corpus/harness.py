@@ -274,6 +274,7 @@ def write_json(
     reports: list[SourceReport],
     mutation: dict | None,
     path: pathlib.Path,
+    reference: dict | None = None,
     include_local: bool = False,
 ) -> None:
     """Write the report as JSON.
@@ -313,6 +314,8 @@ def write_json(
         ],
         "mutation": _public_mutation(mutation, include_local),
     }
+    if reference is not None:
+        payload["reference"] = reference
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2))
 

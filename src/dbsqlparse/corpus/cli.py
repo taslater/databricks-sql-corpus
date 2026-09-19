@@ -17,19 +17,29 @@ from .harness import (
     run_valid_corpus,
     write_json,
 )
+from .reference import (
+    MUST_REJECT,
+    ReferenceError,
+    ReferenceReport,
+    format_reference_report,
+    reference_payload,
+    run_reference_corpus,
+    write_reference_json,
+)
 from .runners import get_runner
 
 
-def _add_runner_args(p: argparse.ArgumentParser) -> None:
+def _add_runner_args(p: argparse.ArgumentParser, local: bool = True) -> None:
     p.add_argument(
         "--runner", default="sqlfluff", choices=["sqlfluff", "sqruff", "both"],
         help="which parser to measure (default: sqlfluff)",
     )
     p.add_argument("--dialect", default="databricks")
-    p.add_argument(
-        "--local", action="append", default=[],
-        help="extra local directory of team SQL (repeatable)",
-    )
+    if local:
+        p.add_argument(
+            "--local", action="append", default=[],
+            help="extra local directory of team SQL (repeatable)",
+        )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -50,6 +60,14 @@ def main(argv: list[str] | None = None) -> int:
     _add_runner_args(gaps)
     gaps.add_argument("--limit", type=int, default=40, help="how many groups to show")
 
+    reference = sub.add_parser(
+        "reference", help="check cases transcribed from the Databricks SQL reference"
+    )
+    _add_runner_args(reference, local=False)
+    reference.add_argument(
+        "--json", type=str, default=None, help="also write a JSON report here"
+    )
+
     args = ap.parse_args(argv)
 
     if args.command == "fetch":
@@ -59,6 +77,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "gaps":
         return _gaps(names, args)
+    if args.command == "reference":
+        return _reference(names, args)
 
     exit_code = 0
     for name in names:
@@ -82,9 +102,53 @@ def main(argv: list[str] | None = None) -> int:
         total_files = sum(r.total for r in reports)
         print(f"\nchecked {total_files} files in {elapsed:.1f}s with {name}")
 
+        reference_report = _run_reference(runner)
+        if reference_report is None:
+            exit_code = 1
+        else:
+            if not reference_report.controls_ok:
+                exit_code = 1
+            print()
+            print(format_reference_report(reference_report))
+
         if args.json or name == "sqlfluff":
             out = pathlib.Path(args.json) if args.json else REPORT_DIR / "latest.json"
-            write_json(reports, mutation, out)
+            payload = reference_payload(reference_report) if reference_report else None
+            write_json(reports, mutation, out, payload)
+            print(f"json report: {out}")
+    return exit_code
+
+
+def _run_reference(runner) -> ReferenceReport | None:
+    """Run the reference corpus, or report why it could not be read.
+
+    A broken YAML file is a data error worth naming rather than a traceback,
+    but it must not pass silently: the numbers it would have produced are
+    exactly the ones the scraped corpus cannot see.
+    """
+    try:
+        return run_reference_corpus(runner)
+    except ReferenceError as error:
+        print(f"reference corpus error: {error}", file=sys.stderr)
+        return None
+
+
+def _reference(names: list[str], args) -> int:
+    """The doc-derived corpus on its own -- no fetched corpus required."""
+    exit_code = 0
+    for name in names:
+        runner = get_runner(name, dialect=args.dialect)
+        report = _run_reference(runner)
+        if report is None:
+            return 2
+        if len(names) > 1:
+            print(f"\n{'#' * 78}\n# {name}\n{'#' * 78}")
+        print(format_reference_report(report))
+        if not report.controls_ok:
+            exit_code = 1
+        if args.json or name == "sqlfluff":
+            out = pathlib.Path(args.json) if args.json else REPORT_DIR / "reference.json"
+            write_reference_json(report, out)
             print(f"json report: {out}")
     return exit_code
 
@@ -117,6 +181,8 @@ def _gaps(names: list[str], args) -> int:
                 if name == names[0]:
                     groups[_construct(f, args.dialect)].append(f.path)
         failed_paths[name] = failed
+        if name == names[0]:
+            reference_report = _run_reference(runner)
 
     primary = names[0]
     print(f"{len(groups)} distinct failing constructs under {primary}\n")
@@ -138,6 +204,24 @@ def _gaps(names: list[str], args) -> int:
         print(f"{len(paths):4d}  {construct}{marker}")
         for f in sorted({pathlib.Path(p).name for p in paths})[:3]:
             print(f"        {f}")
+
+    print()
+    print("REFERENCE -- cases transcribed from the Databricks SQL reference")
+    if reference_report is None:
+        return 1
+    if not reference_report.controls_ok:
+        print("  CONTROL FAILED -- the reference numbers are not trustworthy")
+    failures = reference_report.failures
+    if not failures:
+        print("  no divergences")
+    for result in failures[: args.limit]:
+        kind = (
+            "accepted partial form"
+            if result.case.verdict == MUST_REJECT
+            else "documented syntax rejected"
+        )
+        print(f"  {result.case.id}  [{kind}]")
+        print(f"      {result.case.doc}{result.case.anchor}")
     return 0
 
 

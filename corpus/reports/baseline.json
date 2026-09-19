@@ -1003,5 +1003,300 @@
     "guaranteed_rejected": 1322,
     "rejection_rate": 100.0,
     "escapes": []
+  },
+  "reference": {
+    "controls_ok": true,
+    "must_parse": {
+      "total": 22,
+      "passed": 9,
+      "rate": 40.909090909090914
+    },
+    "must_reject": {
+      "total": 9,
+      "caught": 8,
+      "informative": 0,
+      "rate": 88.88888888888889
+    },
+    "cases": [
+      {
+        "id": "create-flow.append-by-name",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FLOW f AS INSERT INTO t BY NAME S...'"
+      },
+      {
+        "id": "create-flow.append-once",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FLOW f AS INSERT ONCE INTO t BY N...'"
+      },
+      {
+        "id": "create-flow.append-with-comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE FLOW f COMMENT 'backfill' AS INSE...\""
+      },
+      {
+        "id": "create-flow.auto-cdc",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-flow.append-replace-using-sequence-by",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FLOW f AS INSERT INTO t BY NAME R...'"
+      },
+      {
+        "id": "create-flow.append-replace-using-multiple-columns",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FLOW f AS INSERT INTO t BY NAME R...'"
+      },
+      {
+        "id": "create-flow.replace-using-without-sequence-by",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#parameters",
+        "message": null
+      },
+      {
+        "id": "create-flow.sequence-by-without-replace-using",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#parameters",
+        "message": null
+      },
+      {
+        "id": "create-flow.replace-using-empty-column-list",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#parameters",
+        "message": null
+      },
+      {
+        "id": "create-flow.append-without-by-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FLOW",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view.expectations-only",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE OR REFRESH MATERIALIZED VIEW mv (...'"
+      },
+      {
+        "id": "create-materialized-view.columns-then-expectation",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view.on-violation-without-action",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#parameters",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view.empty-column-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-streaming-table.plain",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-streaming-table.private",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE PRIVATE STREAMING TABLE t (a BIGI...'"
+      },
+      {
+        "id": "create-streaming-table.private-with-refresh",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE OR REFRESH PRIVATE STREAMING TABL...'"
+      },
+      {
+        "id": "create-streaming-table.inline-insert-flow",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 37: Found unparsable section: 'FLOW INSERT BY NAME SELECT * FROM STREAM...'"
+      },
+      {
+        "id": "create-streaming-table.inline-replace-using-flow",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 37: Found unparsable section: 'FLOW REPLACE USING (c) SEQUENCE BY d BY ...'"
+      },
+      {
+        "id": "create-streaming-table.flow-insert-without-by-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-streaming-table.flow-replace-using-without-sequence-by",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-streaming-table.flow-replace-using-without-by-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-history.table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE HISTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-history.qualified-table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE HISTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-history.desc-abbreviation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE HISTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DESC HISTORY t'"
+      },
+      {
+        "id": "drop-view.plain",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-view.if-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-view.materialized",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP MATERIALIZED VIEW mv'"
+      },
+      {
+        "id": "drop-view.materialized-if-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP MATERIALIZED VIEW IF EXISTS mv'"
+      }
+    ]
   }
 }

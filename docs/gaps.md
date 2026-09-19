@@ -1,8 +1,10 @@
 # SQLFluff Databricks gap queue
 
 The upstream work queue. Every entry is a construct that appears in published
-Databricks SQL and that SQLFluff's `databricks` dialect cannot parse, with a
-minimal reproduction verified against SQLFluff `main`.
+Databricks SQL or in the Databricks SQL reference and that SQLFluff's
+`databricks` dialect cannot parse, with a minimal reproduction verified
+against SQLFluff `main`. Cases in `corpus/reference/` cite the reference page;
+where one pins an entry, its id is named.
 
 This file replaces the `GAPS` inventory that lived in
 `tests/test_databricks_gap.py`, which tracked gaps in this project's own
@@ -26,9 +28,12 @@ Found while reconciling
 [#8460](https://github.com/sqlfluff/sqlfluff/pull/8460) against the merged
 #8509; the corrected grammar already exists on #8460's branch (a two-token
 addition at `dialect_databricks.py:2465`). It lands either through the
-author's reduced rebase or as a follow-up PR. No corpus file exercises it
-yet, so it is recorded from the reference and #8460's fixture rather than
-from a failure count.
+author's reduced rebase or as a follow-up PR. No corpus file exercises it,
+so it is recorded from the reference and #8460's fixture rather than from a
+failure count. The reference corpus now pins both halves:
+`create-flow.append-replace-using-sequence-by` must parse (it does not) and
+`create-flow.replace-using-without-sequence-by` must be rejected (it is
+accepted).
 
 **`DROP MATERIALIZED VIEW`** is unparsable in the `databricks` dialect as of
 SQLFluff 4.3.0. Repro: `DROP MATERIALIZED VIEW mv;`. Found 2026-09-19 by the
@@ -36,7 +41,27 @@ semantic-model tests in `sqlfluff-plugin-conventions`, not by this corpus —
 no corpus file needs it yet, so it is queued rather than claimed. Databricks
 documents the construct, so `DropViewStatementSegment` should accept the
 `MATERIALIZED` keyword the same way `CreateMaterializedViewStatementSegment`
-already exists; belongs in an upstream PR when picked up.
+already exists; belongs in an upstream PR when picked up. Pinned by the
+reference corpus as `drop-view.materialized` and
+`drop-view.materialized-if-exists`.
+
+**Inline `FLOW` clauses on `CREATE STREAMING TABLE` are unparsable.** The
+[CREATE STREAMING TABLE reference](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table)
+gives the statement as
+`CREATE [OR REFRESH] [PRIVATE] STREAMING TABLE table_name [ … ] [ { flow_clause | AS query } ]`,
+with `flow_clause` one of `FLOW { INSERT [ONCE] BY NAME query | AUTO CDC … |
+REPLACE WHERE … | REPLACE USING ( column_name [, …] ) SEQUENCE BY sequence_column BY NAME query }`,
+and its examples use both `FLOW INSERT BY NAME` and
+`FLOW REPLACE USING (…) SEQUENCE BY … BY NAME`. The `databricks` dialect
+rejects every one of them: `PRIVATE` is patched onto
+`CreateTableStatementSegment` and the separate `CreateFlowStatementSegment`
+handles the statement form, so there is no FLOW clause on the table statement
+at all. Repro:
+`CREATE OR REFRESH STREAMING TABLE t FLOW INSERT BY NAME SELECT * FROM STREAM s;`.
+Found 2026-09-19 by the reference corpus
+(`create-streaming-table.inline-insert-flow`) — the first gap it found on its
+own, and exactly the class the scraped corpus cannot see: no published file
+uses the construct, so recall had nothing to fail on.
 
 Everything else the corpus exposed has a pull request against
 `sqlfluff/sqlfluff`; see "Landed" below.

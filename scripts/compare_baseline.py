@@ -30,6 +30,73 @@ def sources_by_name(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {s["name"]: s for s in report.get("sources", [])}
 
 
+def _reference_diff(base: dict[str, Any], new: dict[str, Any]) -> list[str]:
+    """Compare the reference section case by case, and print the summary.
+
+    Case-level rather than rate-level on purpose: a rate can hide a case
+    flipping conforming -> not behind two new cases that happen to fail on
+    arrival. A newly added case that fails is new coverage, like a new source,
+    and is reported rather than gated. A case that used to conform and no
+    longer does is a regression, and so is a case that disappears -- removal
+    is how a check silently stops checking.
+    """
+    new_ref = new.get("reference")
+    if new_ref is None:
+        return []
+    old_ref = base.get("reference") or {}
+    old_cases = {c["id"]: c for c in old_ref.get("cases", [])}
+    new_cases = {c["id"]: c for c in new_ref.get("cases", [])}
+    new_mp, new_mr = new_ref.get("must_parse", {}), new_ref.get("must_reject", {})
+
+    print("\n### Reference conformance\n")
+    if not old_ref:
+        print(
+            f"New reference corpus: {new_mp.get('total', 0)} must-parse and "
+            f"{new_mr.get('total', 0)} must-reject cases."
+        )
+    else:
+        old_mp, old_mr = old_ref.get("must_parse", {}), old_ref.get("must_reject", {})
+        print("| metric | baseline | this run |")
+        print("| --- | ---: | ---: |")
+        print(
+            f"| must-parse passed | {old_mp.get('passed')}/{old_mp.get('total')} | "
+            f"**{new_mp.get('passed')}/{new_mp.get('total')}** |"
+        )
+        print(
+            f"| must-reject caught | {old_mr.get('caught')}/{old_mr.get('total')} | "
+            f"**{new_mr.get('caught')}/{new_mr.get('total')}** "
+            f"({new_mr.get('informative', 0)} informative) |"
+        )
+
+    regressed: list[str] = []
+    if new_ref.get("controls_ok") is False:
+        regressed.append("reference controls failed")
+
+    flips = [
+        cid for cid, case in old_cases.items()
+        if cid in new_cases and case.get("ok") and not new_cases[cid].get("ok")
+    ]
+    added = [cid for cid in new_cases if cid not in old_cases]
+    failing_on_arrival = [cid for cid in added if not new_cases[cid].get("ok")]
+    removed = [cid for cid in old_cases if cid not in new_cases]
+    regressed.extend(f"reference case {cid}: conforming -> not" for cid in flips)
+    regressed.extend(f"reference case removed: {cid}" for cid in removed)
+
+    notes = []
+    if added:
+        line = f"{len(added)} new case(s), {len(failing_on_arrival)} failing on arrival"
+        if failing_on_arrival:
+            line += ": " + ", ".join(failing_on_arrival[:5])
+        notes.append(line)
+    if flips:
+        notes.append("regressed: " + ", ".join(flips))
+    if removed:
+        notes.append("removed: " + ", ".join(removed))
+    for note in notes:
+        print(f"\n- {note}")
+    return regressed
+
+
 def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print(__doc__, file=sys.stderr)
@@ -73,6 +140,8 @@ def main(argv: list[str]) -> int:
         print(f"\n### Rejection\n\n{ob:.1f}% -> **{nb:.1f}%** on {n_tot} guaranteed mutations")
         if nb < ob - EPSILON:
             regressed.append(f"rejection: {ob:.1f}% -> {nb:.1f}%")
+
+    regressed.extend(_reference_diff(base, new))
 
     if regressed:
         print("\n> [!WARNING]")

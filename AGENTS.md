@@ -28,6 +28,7 @@ make venv           # create .venv, install the harness
 make corpus-fetch   # download the pinned corpus (once)
 make corpus         # measure SQLFluff: recall + rejection
 make gaps           # group failures by construct -- the PR queue
+make reference      # cases transcribed from the Databricks SQL reference
 make baseline       # regenerate corpus/reports/baseline.json
 make test
 ```
@@ -40,6 +41,19 @@ fork over the release:
 make gaps
 ```
 
+Each target measures whichever SQLFluff is installed in the venv it runs with,
+so another branch can be measured in parallel by pointing `PY` at a venv that
+has it — useful when a worktree holds the branch you want:
+
+```bash
+make reference PY=.venv-main/bin/python     # e.g. a worktree on main
+make baseline  PY=.venv-release/bin/python  # released SQLFluff only
+```
+
+`make baseline` refuses an editable SQLFluff: the committed baseline must
+reflect what a release does, and an editable fork install would silently
+measure a branch instead.
+
 Nothing here needs Java, and there is no code generation step.
 
 ## Layout
@@ -50,7 +64,9 @@ src/dbsqlparse/corpus/fetch.py      downloads them into corpus/cache/
 src/dbsqlparse/corpus/runners.py    the parsers under test (SQLFluff, sqruff)
 src/dbsqlparse/corpus/harness.py    recall + rejection measurement
 src/dbsqlparse/corpus/mutate.py     valid SQL -> guaranteed-invalid SQL
+src/dbsqlparse/corpus/reference.py  the doc-derived corpus harness
 src/dbsqlparse/corpus/cli.py        `python -m dbsqlparse.corpus`
+corpus/reference/*.yml              cases transcribed from the reference
 src/dbsqlparse/preprocess.py        notebook cells + parameter substitution
 scripts/compare_baseline.py         baseline diff for CI
 docs/gaps.md                        the upstream work queue
@@ -109,6 +125,64 @@ blanks. `harness.py` already skips JSON-wearing-a-.sql-extension and, for
 local sources only, T-SQL.
 
 Adding a source that exposes a gap is **not** a regression.
+
+## The blind spot, and the reference corpus
+
+The 867 files sample **what people publish**, not **what the dialect allows**.
+Recall cannot fail on a construct no corpus file uses, and `mutate.py` derives
+its invalid inputs from corpus SQL, so it cannot invent one either. Both
+measurements are blind in the same place — and a fixture written from the same
+reading of a doc page agrees with whatever that reading got wrong. Four checks,
+one oracle.
+
+That blind spot shipped a defect. SQLFluff #8509 (merged 2026-09-18)
+implemented `[ replace_using_spec ]` as optional-as-a-whole but never bound its
+interior, so `main` accepts `REPLACE USING (c)` and rejects the documented
+`REPLACE USING (c) SEQUENCE BY d`. Nothing here could have caught it: no corpus
+file uses the construct. It was found by diffing a merged PR against someone
+else's older open one. See the entry in `docs/gaps.md`.
+
+**`corpus/reference/` is the fix.** A second, small corpus transcribed from
+the Databricks SQL reference rather than scraped from GitHub: one YAML file
+per reference page, each case carrying the statement, a `must-parse` or
+`must-reject` verdict, the doc URL and anchor, plus, for a partial form, a
+`from:` link to its full-form sibling and the production it `omits:`. The
+loader is strict — unknown keys, duplicate ids and unresolved `from:` links
+are errors — because a mistyped case that silently loads would make the corpus
+agree with the mistake.
+
+The rule that generates the cases is unchanged: **wherever the reference
+brackets an optional multi-token production, the partial forms are explicit
+`must-reject` cases.** The over-accepting half of #8509 is now pinned by
+`create-flow.replace-using-without-sequence-by`, which `main` accepts.
+
+`make reference` needs no fetched corpus. It reports separately from recall and
+rejection, because the oracle is different: a must-parse miss means the
+reference documents syntax that CI would block, and a must-reject miss means
+the parser accepts a form the reference does not define. A must-reject case
+only counts as **informative** when its full-form sibling parses — otherwise
+the rejection may be for an unrelated reason, and the report calls it vacuous.
+Every run also checks two controls built into the harness rather than the data,
+one valid statement that must parse and one structurally invalid statement
+that must not; the `make reference` exit code is non-zero if either misbehaves.
+
+`corpus/reports/baseline.json` carries a `reference` section, and
+`scripts/compare_baseline.py` diffs it case by case: a newly added case that
+fails is new coverage, while a case flipping from conforming to not, or
+disappearing, is a regression.
+
+**Adding a case.** Read the live page, transcribe a minimal skeleton of your
+own construction (never an example body), and record the anchor and production
+precisely enough to review the derivation. Then probe SQLFluff: if it
+disagrees with the reference, either the transcription is wrong (fix it) or
+the parser is (queue it in `docs/gaps.md` with the case id). The first gap the
+corpus found on its own was the inline `FLOW` clause on `CREATE STREAMING
+TABLE` — documented, used in the reference's own examples, and rejected by
+`main` because the grammar has no FLOW clause on the table statement.
+
+This does not replace the scraped corpus — it covers the complement. Published
+SQL tells you what breaks in practice; the reference tells you what the grammar
+is supposed to be.
 
 ## Contributing upstream
 

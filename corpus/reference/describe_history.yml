@@ -1,0 +1,26 @@
+# DESCRIBE HISTORY. The #8510 regression lock: DESC as an abbreviation for
+# DESCRIBE. The reference documents the statement on its own page and the
+# abbreviation under the DESCRIBE statements generally.
+statement: DESCRIBE HISTORY
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history
+syntax: DESCRIBE HISTORY table_name
+cases:
+  - id: describe-history.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE HISTORY t
+  - id: describe-history.qualified-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE HISTORY cat.sch.t
+  - id: describe-history.desc-abbreviation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESC HISTORY t
+    note: |
+      DESC is the documented abbreviation for DESCRIBE, and #8510 made it
+      accepted here. Kept as a lock even though this page spells the statement
+      out in full.
