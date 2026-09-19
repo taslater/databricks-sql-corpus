@@ -1,0 +1,41 @@
+# read_files table-valued function. Tier 1.5 regression-pinning for the
+# file-ingestion surface: the path argument, named option invocation (which
+# the page says is required for option keys), several options and the STREAM
+# form all work today, and the cases are the permanent record against a
+# rewrite. A bare positional option key (`read_files(p, format)`) is not
+# pinned: it parses through the generic function grammar, and whether it is
+# a parse error or an analysis error is not settled by the signature. See
+# docs/reference-corpus-plan.md, "Tier 1.5".
+statement: read_files
+doc: https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files
+checked: 2026-09-19
+syntax: |
+  read_files(path [, option_key => option_value ] [...])
+cases:
+  - id: read-files.path-only
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM read_files('s3://bucket/path')
+  - id: read-files.named-option
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM read_files('s3://bucket/path', format => 'json')
+  - id: read-files.multiple-options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM read_files('s3://bucket/path', format => 'csv', schema => 'a INT')
+  - id: read-files.stream
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM STREAM read_files('s3://bucket/path')
+  - id: read-files.trailing-comma-in-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: read-files.path-only
+    omits: "option_key => option_value"
+    sql: |
+      SELECT * FROM read_files('s3://bucket/path', )
