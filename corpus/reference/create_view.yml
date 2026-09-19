@@ -1,0 +1,219 @@
+# CREATE VIEW. Two productions on the page: the query-backed or metric view,
+# and the temporary view backed by a data source. The column_list, with_clause
+# and schema_binding sub-productions are transcribed with it.
+#
+# The LIVE / STREAMING LIVE pipeline forms restored in SQLFluff #8513 are
+# deliberately absent: no current Databricks reference page shows their
+# production (the legacy live-schema page shows only examples), and nothing
+# unshown goes in. The OR REFRESH rejection below is the durable view-grammar
+# guard: the page brackets OR REPLACE and never mentions OR REFRESH.
+statement: CREATE VIEW
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view
+checked: 2026-09-19
+syntax: |
+  -- Query-backed or metric view
+  CREATE [ OR REPLACE ] [ [ GLOBAL ] TEMPORARY ] VIEW [ IF NOT EXISTS ] view_name
+      [ column_list ]
+      [ with_clause |
+        COMMENT view_comment |
+        DEFAULT COLLATION collation_name |
+        TBLPROPERTIES clause |
+        LANGUAGE YAML ] [...]
+      AS { query | $$ yaml_string $$ }
+
+  -- Temporary view backed by a data source
+  CREATE [ OR REPLACE ] [ GLOBAL ] TEMPORARY VIEW [ IF NOT EXISTS ] view_name
+      [ column_list ]
+      USING data_source [ OPTIONS ( option_key [ = ] option_value [, ...] ) ]
+
+  with_clause
+     WITH { { schema_binding | METRICS } |
+            ( { schema_binding | METRICS } [, ...] } )
+
+  schema_binding
+     WITH SCHEMA { BINDING | COMPENSATION | [ TYPE ] EVOLUTION }
+
+  column_list
+     ( { column_alias [ COMMENT column_comment ] } [, ...] )
+cases:
+  - id: create-view.plain
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v AS SELECT a FROM t
+  - id: create-view.or-replace
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE OR REPLACE VIEW v AS SELECT a FROM t
+  - id: create-view.temporary
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TEMPORARY VIEW v AS SELECT a FROM t
+  - id: create-view.global-temporary
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE GLOBAL TEMPORARY VIEW v AS SELECT a FROM t
+  - id: create-view.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW IF NOT EXISTS v AS SELECT a FROM t
+  - id: create-view.column-list
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v (a COMMENT 'first', b) AS SELECT a, b FROM t
+  - id: create-view.with-schema-binding
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v WITH SCHEMA BINDING AS SELECT a FROM t
+  - id: create-view.with-schema-type-evolution
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v WITH SCHEMA TYPE EVOLUTION AS SELECT a FROM t
+  - id: create-view.with-parenthesised-clause
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v WITH (SCHEMA BINDING) AS SELECT a FROM t
+  - id: create-view.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v COMMENT 'a view' AS SELECT a FROM t
+  - id: create-view.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v DEFAULT COLLATION UTF8_BINARY AS SELECT a FROM t
+  - id: create-view.tblproperties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v TBLPROPERTIES ('k' = 'v') AS SELECT a FROM t
+  - id: create-view.repeated-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v COMMENT 'a view' TBLPROPERTIES ('k' = 'v') AS SELECT a FROM t
+  - id: create-view.metric-yaml
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v WITH METRICS LANGUAGE YAML AS $$ version: 0.1 $$
+    note: The metric-view alternative, whose body is a YAML document.
+  - id: create-view.using-data-source
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TEMPORARY VIEW v USING csv OPTIONS (path '/data', header 'true')
+  - id: create-view.using-data-source-without-options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TEMPORARY VIEW v USING csv
+  - id: create-view.using-data-source-equals
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TEMPORARY VIEW v USING csv OPTIONS (path = '/data')
+  - id: create-view.or-without-replace
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.or-replace
+    omits: "REPLACE"
+    sql: |
+      CREATE OR VIEW v AS SELECT a FROM t
+  - id: create-view.or-refresh
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.or-replace
+    omits: "OR REPLACE"
+    sql: |
+      CREATE OR REFRESH VIEW v AS SELECT a FROM t
+    note: |
+      OR REFRESH belongs to streaming tables and materialized views. The page
+      documents OR REPLACE for a view; #8513 keeps OR REFRESH rejected.
+  - id: create-view.global-without-temporary
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.global-temporary
+    omits: "TEMPORARY"
+    sql: |
+      CREATE GLOBAL VIEW v AS SELECT a FROM t
+  - id: create-view.if-without-not-exists
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.if-not-exists
+    omits: "NOT EXISTS"
+    sql: |
+      CREATE VIEW IF v AS SELECT a FROM t
+  - id: create-view.empty-column-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.column-list
+    omits: "column_alias"
+    sql: |
+      CREATE VIEW v () AS SELECT a FROM t
+  - id: create-view.column-comment-without-text
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.column-list
+    omits: "column_comment"
+    sql: |
+      CREATE VIEW v (a COMMENT) AS SELECT a FROM t
+  - id: create-view.with-without-clause
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.with-schema-binding
+    omits: "schema_binding | METRICS"
+    sql: |
+      CREATE VIEW v WITH AS SELECT a FROM t
+  - id: create-view.schema-type-without-evolution
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.with-schema-type-evolution
+    omits: "EVOLUTION"
+    sql: |
+      CREATE VIEW v WITH SCHEMA TYPE AS SELECT a FROM t
+  - id: create-view.without-as-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.plain
+    omits: "query | $$ yaml_string $$"
+    sql: |
+      CREATE VIEW v AS
+  - id: create-view.using-without-data-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.using-data-source
+    omits: "data_source"
+    sql: |
+      CREATE TEMPORARY VIEW v USING
+  - id: create-view.using-without-temporary
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.using-data-source
+    omits: "TEMPORARY"
+    sql: |
+      CREATE VIEW v USING csv OPTIONS (path '/data')
+    note: In the data-source production TEMPORARY is not bracketed.
+  - id: create-view.empty-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.using-data-source
+    omits: "option_key [ = ] option_value"
+    sql: |
+      CREATE TEMPORARY VIEW v USING csv OPTIONS ()
+  - id: create-view.options-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view.using-data-source
+    omits: "option_value"
+    sql: |
+      CREATE TEMPORARY VIEW v USING csv OPTIONS (path)
