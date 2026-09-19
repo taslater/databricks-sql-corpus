@@ -1,0 +1,44 @@
+# MAP type. Deliberate Tier 1.5 regression-pinning: the grammar works today,
+# and these cases are the permanent record so a future rewrite cannot
+# silently drop it -- the #7405 failure mode. See
+# docs/reference-corpus-plan.md, "Tier 1.5".
+statement: MAP
+doc: https://docs.databricks.com/aws/en/sql/language-manual/data-types/map-type
+checked: 2026-09-19
+syntax: |
+  MAP <keyType, valueType>
+cases:
+  - id: map.key-value
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (m MAP<STRING, INT>)
+  - id: map.nested-value
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (m MAP<STRING, STRUCT<a: INT>>)
+    note: Nested generics end in `>>`; a naive lexer reads a shift operator.
+  - id: map.without-value-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: map.key-value
+    omits: "valueType"
+    sql: |
+      CREATE TABLE t (m MAP<STRING>)
+  - id: map.without-key-and-value-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: map.key-value
+    omits: "keyType, valueType"
+    sql: |
+      CREATE TABLE t (m MAP<>)
+  - id: map.three-types
+    verdict: must-reject
+    anchor: "#syntax"
+    from: map.key-value
+    reason: extra
+    extra: "valueType"
+    sql: |
+      CREATE TABLE t (m MAP<STRING, INT, INT>)
+    note: The bracket takes exactly one keyType and one valueType.
