@@ -1,0 +1,143 @@
+# CREATE CATALOG. Two productions on one page: the plain catalog, whose
+# clause list repeats, and the foreign catalog, whose USING CONNECTION and
+# OPTIONS are both required. MANAGED LOCATION is the #8511 lock.
+statement: CREATE CATALOG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog
+checked: 2026-09-19
+syntax: |
+  CREATE CATALOG [ IF NOT EXISTS ] catalog_name
+      [ USING SHARE provider_name . share_name |
+        MANAGED LOCATION location_path |
+        RETAIN DROPPED FOR number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } |
+        COMMENT comment |
+        DEFAULT COLLATION default_collation_name |
+        OPTIONS ( { option_name = option_value } [ , ... ] ) ] [...]
+
+  CREATE FOREIGN CATALOG [ IF NOT EXISTS ] catalog_name
+      USING CONNECTION connection_name
+      [ COMMENT comment ]
+      OPTIONS ( { option_name = option_value } [ , ... ] )
+cases:
+  - id: create-catalog.plain
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c
+  - id: create-catalog.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG IF NOT EXISTS c
+  - id: create-catalog.using-share
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c USING SHARE provider.share
+  - id: create-catalog.managed-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c MANAGED LOCATION 's3://example-bucket/data'
+    note: Rejected by the databricks dialect on main; the #8511 lock.
+  - id: create-catalog.retain-dropped-days
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c RETAIN DROPPED FOR 30 DAYS
+  - id: create-catalog.retain-dropped-hour
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c RETAIN DROPPED FOR 1 HOUR
+  - id: create-catalog.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c COMMENT 'a catalog'
+  - id: create-catalog.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c DEFAULT COLLATION UTF8_BINARY
+  - id: create-catalog.options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c OPTIONS (k = 'v')
+  - id: create-catalog.repeated-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CATALOG c COMMENT 'a catalog' MANAGED LOCATION 's3://example-bucket/data'
+    note: The trailing ellipsis makes the clause list repeat.
+  - id: create-catalog.foreign
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FOREIGN CATALOG fc USING CONNECTION conn OPTIONS (k = 'v')
+  - id: create-catalog.foreign-if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FOREIGN CATALOG IF NOT EXISTS fc USING CONNECTION conn OPTIONS (k = 'v')
+  - id: create-catalog.foreign-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FOREIGN CATALOG fc USING CONNECTION conn COMMENT 'a catalog' OPTIONS (k = 'v')
+  - id: create-catalog.using-share-without-share-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.using-share
+    omits: "share_name"
+    sql: |
+      CREATE CATALOG c USING SHARE provider
+  - id: create-catalog.managed-location-without-path
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.managed-location
+    omits: "location_path"
+    sql: |
+      CREATE CATALOG c MANAGED LOCATION
+  - id: create-catalog.retain-dropped-without-unit
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.retain-dropped-days
+    omits: "{ HOUR | HOURS | DAY | DAYS | WEEK | WEEKS }"
+    sql: |
+      CREATE CATALOG c RETAIN DROPPED FOR 30
+  - id: create-catalog.default-collation-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.default-collation
+    omits: "default_collation_name"
+    sql: |
+      CREATE CATALOG c DEFAULT COLLATION
+  - id: create-catalog.empty-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.options
+    omits: "option_name = option_value"
+    sql: |
+      CREATE CATALOG c OPTIONS ()
+  - id: create-catalog.options-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.options
+    omits: "option_value"
+    sql: |
+      CREATE CATALOG c OPTIONS (k =)
+  - id: create-catalog.foreign-without-connection
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.foreign
+    omits: "USING CONNECTION connection_name"
+    sql: |
+      CREATE FOREIGN CATALOG fc OPTIONS (k = 'v')
+  - id: create-catalog.foreign-without-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-catalog.foreign
+    omits: "OPTIONS ( { option_name = option_value } [ , ... ] )"
+    sql: |
+      CREATE FOREIGN CATALOG fc USING CONNECTION conn
