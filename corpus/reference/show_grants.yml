@@ -1,0 +1,61 @@
+# SHOW GRANTS. The principal is optional, the ON clause is not, and the
+# securable list is shared with GRANT and REVOKE (see privileges.yml for the
+# full list). #8516 made the statement parse; the principal-optional and
+# ON-required boundaries are what this file locks.
+statement: SHOW GRANTS
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant
+checked: 2026-09-19
+syntax: SHOW GRANTS [ principal ] ON securable_object
+cases:
+  - id: show-grants.on-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON TABLE t
+  - id: show-grants.principal-on-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS p ON SCHEMA s
+  - id: show-grants.backticked-principal
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS `p@example.com` ON TABLE t
+  - id: show-grants.qualified-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON TABLE c.s.t
+  - id: show-grants.on-share
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON SHARE sh
+    note: A share is one of the securables documented on the privileges page.
+  - id: show-grants.on-connection
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON CONNECTION conn
+  - id: show-grants.without-securable
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-grants.principal-on-schema
+    omits: "securable_object"
+    sql: |
+      SHOW GRANTS p ON
+  - id: show-grants.without-on
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-grants.principal-on-schema
+    omits: "ON"
+    sql: |
+      SHOW GRANTS p SCHEMA s
+  - id: show-grants.principal-without-securable
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-grants.principal-on-schema
+    omits: "ON securable_object"
+    sql: |
+      SHOW GRANTS p

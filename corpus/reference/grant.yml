@@ -1,0 +1,86 @@
+# GRANT. The securable list lives on the Unity Catalog privileges page, so the
+# per-securable cases are in privileges.yml and this file exercises the
+# statement's own production: the privilege list and the two required
+# keywords around the securable.
+statement: GRANT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-grant
+checked: 2026-09-19
+syntax: |
+  GRANT privilege_types ON securable_object TO principal
+
+  privilege_types
+    { ALL PRIVILEGES |
+      privilege_type [, ...] }
+cases:
+  - id: grant.all-privileges
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT ALL PRIVILEGES ON TABLE t TO p
+  - id: grant.single-privilege
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT SELECT ON TABLE t TO p
+  - id: grant.multiple-privileges
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT SELECT, MODIFY ON TABLE t TO p
+  - id: grant.read-volume-privilege
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT READ VOLUME ON VOLUME v TO p
+    note: The #8512 lock for a multi-word privilege type.
+  - id: grant.write-volume-privilege
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT WRITE VOLUME ON VOLUME v TO p
+  - id: grant.qualified-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT SELECT ON TABLE c.s.t TO p
+  - id: grant.backticked-principal
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT SELECT ON TABLE t TO `p@example.com`
+  - id: grant.without-privilege-types
+    verdict: must-reject
+    anchor: "#syntax"
+    from: grant.single-privilege
+    omits: "privilege_types"
+    sql: |
+      GRANT ON TABLE t TO p
+  - id: grant.trailing-comma-in-privileges
+    verdict: must-reject
+    anchor: "#syntax"
+    from: grant.multiple-privileges
+    omits: "privilege_type"
+    sql: |
+      GRANT SELECT, ON TABLE t TO p
+  - id: grant.all-privileges-in-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: grant.multiple-privileges
+    omits: "privilege_type"
+    sql: |
+      GRANT ALL PRIVILEGES, SELECT ON TABLE t TO p
+    note: The alternatives are exclusive; ALL PRIVILEGES cannot open a list.
+  - id: grant.without-to
+    verdict: must-reject
+    anchor: "#syntax"
+    from: grant.single-privilege
+    omits: "TO principal"
+    sql: |
+      GRANT SELECT ON TABLE t
+  - id: grant.without-principal
+    verdict: must-reject
+    anchor: "#syntax"
+    from: grant.single-privilege
+    omits: "principal"
+    sql: |
+      GRANT SELECT ON TABLE t TO

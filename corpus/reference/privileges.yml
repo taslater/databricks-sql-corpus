@@ -1,0 +1,163 @@
+# The Unity Catalog securable list. One case per securable alternative in the
+# production, because a grammar that binds some of an enumerated list and
+# silently drops the rest is the quiet over-acceptance failure this corpus
+# exists to find. SQLFluff's AccessObjectSegment is missing SHARE, CONNECTION,
+# EXTERNAL LOCATION, CLEAN ROOM, PROCEDURE and CREDENTIAL forms, so several of
+# these are expected failures recorded in docs/gaps.md. The statements are
+# SHOW GRANTS because it is the shortest statement that takes the production;
+# GRANT and REVOKE share the same segment.
+statement: Securable objects (GRANT / REVOKE / SHOW GRANTS)
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges
+checked: 2026-09-19
+syntax: |
+  securable_object
+    { CATALOG [ catalog_name ] |
+      CONNECTION connection_name |
+      CLEAN ROOM clean_room_name |
+      EXTERNAL LOCATION location_name |
+      EXTERNAL METADATA metadata_name |
+      FUNCTION function_name |
+      METASTORE |
+      PROCEDURE procedure_name |
+      SCHEMA schema_name |
+      SHARE share_name |
+      [ STORAGE | SERVICE ] CREDENTIAL credential_name |
+      [ TABLE ] table_name |
+      MATERIALIZED VIEW view_name |
+      VIEW view_name |
+      VOLUME volume_name
+    }
+cases:
+  - id: privileges.catalog
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON CATALOG c
+  - id: privileges.catalog-without-name
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON CATALOG
+    note: The name is bracketed in the production, so the bare keyword is legal.
+  - id: privileges.connection
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON CONNECTION conn
+  - id: privileges.clean-room
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON CLEAN ROOM cr
+  - id: privileges.external-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON EXTERNAL LOCATION loc
+  - id: privileges.external-metadata
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON EXTERNAL METADATA m
+  - id: privileges.function
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON FUNCTION f
+  - id: privileges.metastore
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON METASTORE
+  - id: privileges.procedure
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON PROCEDURE proc
+  - id: privileges.schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON SCHEMA s
+  - id: privileges.share
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON SHARE sh
+  - id: privileges.storage-credential
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON STORAGE CREDENTIAL sc
+  - id: privileges.service-credential
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON SERVICE CREDENTIAL sc
+  - id: privileges.credential-without-scope
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON CREDENTIAL c
+    note: Both STORAGE and SERVICE are bracketed together, so a bare CREDENTIAL is legal.
+  - id: privileges.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON TABLE t
+  - id: privileges.table-without-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON t
+    note: The TABLE keyword is bracketed in the production.
+  - id: privileges.materialized-view
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON MATERIALIZED VIEW mv
+  - id: privileges.view
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON VIEW v
+  - id: privileges.volume
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON VOLUME vol
+  - id: privileges.storage-credential-without-keyword
+    verdict: must-reject
+    anchor: "#syntax"
+    from: privileges.storage-credential
+    omits: "CREDENTIAL"
+    sql: |
+      SHOW GRANTS ON STORAGE sc
+  - id: privileges.storage-credential-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: privileges.storage-credential
+    omits: "credential_name"
+    sql: |
+      SHOW GRANTS ON STORAGE CREDENTIAL
+  - id: privileges.service-credential-without-keyword
+    verdict: must-reject
+    anchor: "#syntax"
+    from: privileges.service-credential
+    omits: "CREDENTIAL"
+    sql: |
+      SHOW GRANTS ON SERVICE sc
+  - id: privileges.materialized-view-without-view
+    verdict: must-reject
+    anchor: "#syntax"
+    from: privileges.materialized-view
+    omits: "VIEW"
+    sql: |
+      SHOW GRANTS ON MATERIALIZED mv
+  - id: privileges.materialized-view-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: privileges.materialized-view
+    omits: "view_name"
+    sql: |
+      SHOW GRANTS ON MATERIALIZED VIEW

@@ -1,0 +1,65 @@
+# REVOKE. The FROM half of the GRANT/REVOKE pair; the grammar is the same
+# statement with one keyword changed, so the cases mirror grant.yml.
+statement: REVOKE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-revoke
+checked: 2026-09-19
+syntax: |
+  REVOKE privilege_types ON securable_object FROM principal
+
+  privilege_types
+    { ALL PRIVILEGES |
+      privilege_type [, ...] }
+cases:
+  - id: revoke.all-privileges
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE ALL PRIVILEGES ON TABLE t FROM p
+  - id: revoke.single-privilege
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE SELECT ON TABLE t FROM p
+  - id: revoke.multiple-privileges
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE SELECT, MODIFY ON TABLE t FROM p
+  - id: revoke.use-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE USE SCHEMA ON SCHEMA s FROM p
+  - id: revoke.read-volume-privilege
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE READ VOLUME ON VOLUME v FROM p
+  - id: revoke.without-privilege-types
+    verdict: must-reject
+    anchor: "#syntax"
+    from: revoke.single-privilege
+    omits: "privilege_types"
+    sql: |
+      REVOKE ON TABLE t FROM p
+  - id: revoke.trailing-comma-in-privileges
+    verdict: must-reject
+    anchor: "#syntax"
+    from: revoke.multiple-privileges
+    omits: "privilege_type"
+    sql: |
+      REVOKE SELECT, ON TABLE t FROM p
+  - id: revoke.without-from
+    verdict: must-reject
+    anchor: "#syntax"
+    from: revoke.single-privilege
+    omits: "FROM principal"
+    sql: |
+      REVOKE SELECT ON TABLE t
+  - id: revoke.without-principal
+    verdict: must-reject
+    anchor: "#syntax"
+    from: revoke.single-privilege
+    omits: "principal"
+    sql: |
+      REVOKE SELECT ON TABLE t FROM
