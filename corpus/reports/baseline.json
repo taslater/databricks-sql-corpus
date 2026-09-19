@@ -1007,18 +1007,110 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 113,
-      "passed": 43,
-      "rate": 38.05309734513274
+      "total": 170,
+      "passed": 95,
+      "rate": 55.88235294117647
     },
     "must_reject": {
-      "total": 58,
-      "caught": 55,
-      "informative": 20,
-      "vacuous": 35,
-      "rate": 94.82758620689656
+      "total": 83,
+      "caught": 76,
+      "informative": 39,
+      "vacuous": 37,
+      "rate": 91.56626506024097
     },
     "cases": [
+      {
+        "id": "array.element-type",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ARRAY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/array-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "array.nested",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ARRAY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/array-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "array.without-element-type",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "ARRAY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/array-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "array.two-element-types",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ARRAY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/array-type",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "extra",
+        "extra": "elementType"
+      },
+      {
+        "id": "colon-colon.cast-to-int",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": ":: operator",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "colon-colon.variant-field-cast",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": ":: operator",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "colon-colon.cast-to-array",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": ":: operator",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "colon-colon.chained",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": ":: operator",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "colon-colon.without-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": ":: operator",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "colon-colon.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": ":: operator",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
       {
         "id": "convert-to-delta.table",
         "verdict": "must-parse",
@@ -2064,6 +2156,87 @@
         "message": null
       },
       {
+        "id": "from-json.literal-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_json",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-json.invoked-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_json",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-json.with-options",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_json",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-json.complex-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_json",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-json.trailing-comma-in-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "from_json",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-xml.literal-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_xml",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_xml",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-xml.variant-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_xml",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_xml",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-xml.with-options",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "from_xml",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_xml",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "from-xml.trailing-comma-in-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "from_xml",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/from_xml",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "grant.all-privileges",
         "verdict": "must-parse",
         "ok": true,
@@ -2177,6 +2350,204 @@
         "message": null
       },
       {
+        "id": "json-path.identifier",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.bracketed-field",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.index",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.dot-continuation",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.chained-brackets",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.mixed-chain",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.variant",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.star",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 23: Found unparsable section: '*'"
+      },
+      {
+        "id": "json-path.delimited-identifier",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#extract-using-identifier-and-delimiters",
+        "message": "Line 1, Position 11: Found unparsable section: ':`full name`'"
+      },
+      {
+        "id": "json-path.empty",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.empty-brackets",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "json-path.dot-without-field",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "JSON path expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.explode",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.outer",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.table-alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.inline",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.map-columns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.chained",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.without-generator-function",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.outer-without-generator-function",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.argument-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "lateral-view.column-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LATERAL VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "magic-cells.single-line-directive-with-body",
         "verdict": "must-parse",
         "ok": false,
@@ -2184,6 +2555,53 @@
         "doc": "https://docs.databricks.com/aws/en/notebooks/notebooks-code",
         "anchor": "#use-magic-commands",
         "message": "Line 4, Position 1: Found unparsable section: '-- MAGIC Body text on the lines after a ...'"
+      },
+      {
+        "id": "map.key-value",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MAP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/map-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "map.nested-value",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MAP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/map-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "map.without-value-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MAP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/map-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "map.without-key-and-value-type",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "MAP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/map-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "map.three-types",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MAP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/map-type",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "extra",
+        "extra": "valueType"
       },
       {
         "id": "privileges.catalog",
@@ -2402,6 +2820,51 @@
         "message": null
       },
       {
+        "id": "read-files.path-only",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "read_files",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "read-files.named-option",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "read_files",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "read-files.multiple-options",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "read_files",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "read-files.stream",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "read_files",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "read-files.trailing-comma-in-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "read_files",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "revoke.all-privileges",
         "verdict": "must-parse",
         "ok": true,
@@ -2562,6 +3025,287 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "expression.subscript-array",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.subscript-map",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.field-reference",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.field-reference-nested",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.cast",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.collate",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.struct-constructor",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.parenthesised",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.scalar-subquery",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.operator-expression",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.unary-operator",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.subscript-without-index",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "expression.struct-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SQL expression",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.named-field",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.optional-colon",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.multiple-fields",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.nested",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.not-null",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 16: Found unparsable section: '(s STRUCT<a: INT NOT NULL>)'"
+      },
+      {
+        "id": "struct.not-null-with-comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 16: Found unparsable section: \"(s STRUCT<a: INT NOT NULL COMMENT 'c'>)\""
+      },
+      {
+        "id": "struct.collate",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 16: Found unparsable section: '(s STRUCT<a: STRING COLLATE UTF8_BINARY>...'"
+      },
+      {
+        "id": "struct.field-without-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.not-without-null",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.comment-without-string",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "struct.collate-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "STRUCT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "variant.column",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VARIANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/variant-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "variant.cast",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VARIANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/variant-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "variant.in-array",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VARIANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/variant-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "variant.in-struct",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VARIANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/variant-type",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "variant.with-parameters",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "VARIANT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/variant-type",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "extra",
+        "extra": "VARIANT"
       }
     ]
   }
