@@ -1,0 +1,85 @@
+# SQL expression. Tier 1.5 regression-pinning for the expression grammar the
+# semi-structured surface rides on: subscripting, field references, casts,
+# COLLATE and the parenthesised forms. The page's production is a wide
+# exclusive group; the cases cover the alternatives that matter here rather
+# than the literals and column references every other page already pins.
+# The `::` cast operator has its own file (colon_colon_sign.yml). See
+# docs/reference-corpus-plan.md, "Tier 1.5".
+#
+# The brackets in `expr [ expr ]` are actual brackets, not optional syntax.
+statement: SQL expression
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression
+checked: 2026-09-19
+syntax: |
+  { literal |  named_parameter_marker |  unnamed_parameter_marker |  column_reference |  field_reference |  parameter_reference |  CAST expression |  CASE expression |  COLLATE expression |  expr operator expr |  operator expr |  expr [ expr ] |  function_invocation |  ( expr ) |  ( expr, expr [, ... ] ) |  scalar_subquery }scalar_subquery  ( query )
+cases:
+  - id: expression.subscript-array
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a[0] FROM t
+  - id: expression.subscript-map
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT m['k'] FROM t
+  - id: expression.field-reference
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT s.a FROM t
+  - id: expression.field-reference-nested
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT s.a.b FROM t
+  - id: expression.cast
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT CAST(a AS INT) FROM t
+  - id: expression.collate
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a COLLATE UTF8_BINARY FROM t
+  - id: expression.struct-constructor
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT (a, b) FROM t
+  - id: expression.parenthesised
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT (a) FROM t
+  - id: expression.scalar-subquery
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT (SELECT 1)
+  - id: expression.operator-expression
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a + b FROM t
+  - id: expression.unary-operator
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT -a FROM t
+  - id: expression.subscript-without-index
+    verdict: must-reject
+    anchor: "#syntax"
+    from: expression.subscript-array
+    omits: "expr"
+    sql: |
+      SELECT a[] FROM t
+    note: The subscript bracket needs an expression inside it.
+  - id: expression.struct-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: expression.struct-constructor
+    omits: "expr"
+    sql: |
+      SELECT (a, b,) FROM t
