@@ -13,7 +13,15 @@ recorded below.
 
 ## Open
 
-Nothing. Every construct the corpus exposed has a pull request against
+**`DROP MATERIALIZED VIEW`** is unparsable in the `databricks` dialect as of
+SQLFluff 4.3.0. Repro: `DROP MATERIALIZED VIEW mv;`. Found 2026-09-19 by the
+semantic-model tests in `sqlfluff-plugin-conventions`, not by this corpus —
+no corpus file needs it yet, so it is queued rather than claimed. Databricks
+documents the construct, so `DropViewStatementSegment` should accept the
+`MATERIALIZED` keyword the same way `CreateMaterializedViewStatementSegment`
+already exists; belongs in an upstream PR when picked up.
+
+Everything else the corpus exposed has a pull request against
 `sqlfluff/sqlfluff`; see "Landed" below.
 
 What is left is not dialect work:
@@ -28,8 +36,9 @@ What is left is not dialect work:
   deliberately so the three cannot drift apart. Widening it should move all
   three together and needs six or so new keywords. No corpus file needs it
   yet.
-- **The type-aware naming rules**, which belong in a SQLFluff plugin rather
-  than in core.
+- **The type-aware naming rules** — built. They live in the public
+  `sqlfluff-plugin-conventions` repo (18 rules plus arbitrary scorer
+  functions), not in core.
 
 ### Notes on the three that were mis-recorded
 
