@@ -1,0 +1,78 @@
+# LATERAL VIEW clause. Tier 1.5 regression-pinning for the generator surface
+# over ARRAY and MAP columns. The page marks the clause deprecated from
+# Runtime 12.2 but still documents the production, so it stays pinned here.
+# See docs/reference-corpus-plan.md, "Tier 1.5".
+#
+# Deliberately NOT pinned: the sparksql grammar makes the `VIEW` keyword and
+# the `AS` keyword optional (`Ref.keyword("VIEW", optional=True)`,
+# `Ref.keyword("AS", optional=True)` in dialect_sparksql.py), so
+# `LATERAL EXPLODE(a) AS c` and `LATERAL VIEW EXPLODE(a) c` parse while the
+# page brackets neither keyword. Spark's parser may accept the alias-only
+# form, so this is recorded rather than claimed as an over-acceptance; it
+# needs a live engine to settle.
+statement: LATERAL VIEW
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view
+checked: 2026-09-19
+syntax: |
+  LATERAL VIEW [ OUTER ] generator_function ( expression [, ...] ) [ table_identifier ] AS column_identifier [, ...]
+cases:
+  - id: lateral-view.explode
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT c FROM t LATERAL VIEW EXPLODE(a) AS c
+  - id: lateral-view.outer
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT c FROM t LATERAL VIEW OUTER EXPLODE(a) AS c
+  - id: lateral-view.table-alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT c FROM t LATERAL VIEW EXPLODE(a) ta AS c
+  - id: lateral-view.inline
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT c FROM t LATERAL VIEW INLINE(a) AS c
+  - id: lateral-view.map-columns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT k, v FROM t LATERAL VIEW EXPLODE(m) AS k, v
+  - id: lateral-view.chained
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT c1, c2 FROM t
+        LATERAL VIEW EXPLODE(a) AS c1
+        LATERAL VIEW EXPLODE(b) AS c2
+  - id: lateral-view.without-generator-function
+    verdict: must-reject
+    anchor: "#syntax"
+    from: lateral-view.explode
+    omits: "generator_function"
+    sql: |
+      SELECT c FROM t LATERAL VIEW AS c
+  - id: lateral-view.outer-without-generator-function
+    verdict: must-reject
+    anchor: "#syntax"
+    from: lateral-view.outer
+    omits: "generator_function"
+    sql: |
+      SELECT c FROM t LATERAL VIEW OUTER AS c
+  - id: lateral-view.argument-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: lateral-view.explode
+    omits: "expression"
+    sql: |
+      SELECT c FROM t LATERAL VIEW EXPLODE(a,) AS c
+  - id: lateral-view.column-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: lateral-view.explode
+    omits: "column_identifier"
+    sql: |
+      SELECT c FROM t LATERAL VIEW EXPLODE(a) AS c,
