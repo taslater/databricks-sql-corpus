@@ -164,6 +164,77 @@ Doing these first means that when the review queue drains and it is time to
 open the securable-list PR, the reference cases already exist and the PR
 arrives with its evidence attached instead of assembled afterwards.
 
+### Tier 1.5 — semi-structured types: VARIANT, STRUCT, JSON, XML
+
+Added 2026-09-19. This tier jumped the queue because it is load-bearing for
+the Databricks work the corpus exists to support, and because it currently
+has **zero** reference coverage: no case in `corpus/reference/` mentions
+VARIANT, STRUCT, ARRAY, MAP, JSON or XML, and `docs/reference-coverage.md`
+marks the data-types pages `n/a` on the grounds that types are "already
+covered through the table statements". That reasoning holds for `INT` and
+`STRING`. It does not hold here, for three reasons: the complex types have
+their own bracketed generic grammar with its own partial forms; VARIANT
+access (`v:field`, `v:['k']`, `::` casts) is *expression* grammar that no
+statement page covers; and nested generics are a classic parser failure
+(`STRUCT<a: ARRAY<STRUCT<b: INT>>>` ends in `>>>`, which a naive lexer reads
+as shift operators).
+
+**Read this before writing cases: the support is already good.** Probed
+against `main` at `33d8c8459` with a known-bad control in the batch, all of
+the following already parse — `VARIANT` columns and casts, `parse_json`,
+`v:field`, `v:field.sub`, `v:['key']`, `v:field::STRING`, `a::INT`,
+`STRUCT<a: INT, b: STRING>`, `ARRAY<INT>`, `MAP<STRING, INT>`, four-deep
+nesting ending in `>>>>`, `struct()`, `named_struct()`, `from_json`,
+`to_json`, `schema_of_json`, `get_json_object`, `json_tuple`, `xpath`,
+`from_xml`, `schema_of_xml`, `variant_get`, `try_variant_get`,
+`is_variant_null`. The rejection side is in good shape too: `STRUCT<>`,
+`STRUCT<a>`, `STRUCT<a: INT,>`, `ARRAY<>`, `ARRAY<INT, INT>`, `MAP<STRING>`,
+`MAP<STRING, INT, INT>`, `VARIANT<a: INT>`, `SELECT v:` and `SELECT v:[]`
+are all correctly rejected.
+
+So this tier is **mostly regression-pinning, not gap-hunting**, and that
+changes how to write it. The point is not to find bugs today; it is to make
+sure a future rewrite cannot silently drop this surface the way #7405 dropped
+LIVE / STREAMING LIVE views from `CreateViewStatementSegment`. Write the cases
+as the permanent record of behaviour that is currently correct.
+
+**Two real gaps were found, both needing doc verification before they are
+claimed.** Verify each against the live page first — the transcription is
+wrong more often than the parser is:
+
+- **`STRUCT<a: INT NOT NULL>` is rejected.** The data-types page gives the
+  production as `STRUCT < [fieldName : fieldType [NOT NULL][COMMENT str][, …]] >`,
+  so `NOT NULL` is documented per field. `COMMENT` works
+  (`STRUCT<a: INT COMMENT 'c'>` parses); `NOT NULL` does not, alone or
+  combined. This is a small, high-confidence, well-bounded fix — a good
+  candidate for the next upstream PR once the review queue drains.
+- **Bare `OBJECT` as a column type is rejected**, while `CAST(v AS OBJECT)`
+  is accepted — an internal inconsistency. `OBJECT` is documented as a type
+  ("values in a VARIANT with the structure described by a set of fields"),
+  but with no parameterised syntax and marked unsupported across all the
+  language mappings. Treat this one as genuinely uncertain: establish what
+  the reference actually promises before filing anything, and if it stays
+  ambiguous, leave it out. Nothing unshown goes in.
+
+A third, `STRUCT<>`, is ambiguous by construction: the page brackets the
+whole field list, which *could* mean an empty struct is legal. Do not write
+a case in either direction without evidence beyond the brackets.
+
+**Pages for this tier**, in order:
+
+| page | what it pins |
+| --- | --- |
+| Data types | `STRUCT` / `ARRAY` / `MAP` / `VARIANT` / `OBJECT` productions and their partial forms. The anchor page for the tier. |
+| JSON path expression (already `queued`) | `v:field`, `v:['k']`, wildcards, the access grammar VARIANT depends on |
+| SQL expression (already `queued`) | `::` cast, field access, subscripting |
+| LATERAL VIEW clause (already `queued`) | `explode` / `inline` over ARRAY and MAP columns |
+| `read_files` / `from_json` / `from_xml` signatures | the JSON and XML ingestion surface, to the extent the reference gives productions rather than function prose |
+
+When this tier is done, flip the data-types rows in
+`docs/reference-coverage.md` from `n/a` to `done` and correct the legend —
+the current wording ("type/format reference already covered through the table
+statements") is the assumption this tier disproves.
+
 ### Tier 2 — dense optional productions
 
 This is where the bracket rule earns the most, because these pages are
@@ -249,6 +320,14 @@ A batch of pages is finished when all of these hold:
 - **Do not add cases for constructs SQLFluff already handles just to raise
   the count.** A case that has never been red and never will be is noise in
   the baseline diff. Cases exist to catch something.
+
+  **The exception is deliberate regression-pinning on a high-value surface.**
+  #7405 rewrote `CreateViewStatementSegment` from scratch and silently lost
+  LIVE / STREAMING LIVE views; nothing caught it for months. A green case over
+  a construct that matters is worth its place when it is guarding against that
+  — a rewrite quietly dropping support — rather than padding a count. Say so
+  in the file's header comment when that is the reason, so the next reader can
+  tell the two apart. Tier 1.5 is written under this exception.
 - **Do not batch ten pages into one commit.** The baseline diff is the
   review surface; make it readable.
 - **Do not fix SQLFluff and the corpus in the same change.** The corpus is
