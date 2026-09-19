@@ -1,0 +1,60 @@
+# CONVERT TO DELTA. The table_name may be a table identifier or a path, and
+# both trailing clauses are bracketed. #8517 widened the target past the
+# file-only reference the dialect used to take; the table case is its lock.
+statement: CONVERT TO DELTA
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta
+checked: 2026-09-19
+syntax: CONVERT TO DELTA table_name [ NO STATISTICS ] [ PARTITIONED BY clause ]
+cases:
+  - id: convert-to-delta.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CONVERT TO DELTA t
+    note: Rejected by the databricks dialect on main; the #8517 lock.
+  - id: convert-to-delta.qualified-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CONVERT TO DELTA c.s.t
+  - id: convert-to-delta.path
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CONVERT TO DELTA parquet.`s3://example-bucket/data`
+  - id: convert-to-delta.no-statistics
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CONVERT TO DELTA t NO STATISTICS
+  - id: convert-to-delta.partitioned-by
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CONVERT TO DELTA t PARTITIONED BY (d DATE)
+  - id: convert-to-delta.no-statistics-partitioned-by
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CONVERT TO DELTA t NO STATISTICS PARTITIONED BY (d DATE)
+  - id: convert-to-delta.without-table-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: convert-to-delta.table
+    omits: "table_name"
+    sql: |
+      CONVERT TO DELTA
+  - id: convert-to-delta.no-without-statistics
+    verdict: must-reject
+    anchor: "#syntax"
+    from: convert-to-delta.no-statistics
+    omits: "STATISTICS"
+    sql: |
+      CONVERT TO DELTA t NO
+  - id: convert-to-delta.partitioned-without-by
+    verdict: must-reject
+    anchor: "#syntax"
+    from: convert-to-delta.partitioned-by
+    omits: "BY clause"
+    sql: |
+      CONVERT TO DELTA t PARTITIONED
