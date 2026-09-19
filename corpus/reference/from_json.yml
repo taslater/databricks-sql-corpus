@@ -1,0 +1,41 @@
+# from_json function. Tier 1.5 regression-pinning for the JSON ingestion
+# surface: the signature, the schema invocation and the options map all work
+# today, and the cases are the permanent record so a rewrite cannot drop
+# them. The empty and arity-less calls (`from_json()`, `from_json(c)`) are
+# not pinned: SQLFluff's generic function grammar accepts any argument count,
+# and whether that is a parse error or an analysis error is not settled by
+# the signature. See docs/reference-corpus-plan.md, "Tier 1.5".
+statement: from_json
+doc: https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json
+checked: 2026-09-19
+syntax: |
+  from_json(jsonStr, schema [, options])
+cases:
+  - id: from-json.literal-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT from_json(c, 'a INT') FROM t
+  - id: from-json.invoked-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT from_json(c, schema_of_json(s)) FROM t
+  - id: from-json.with-options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT from_json(c, 'a INT', map('k', 'v')) FROM t
+  - id: from-json.complex-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT from_json(c, 'a INT, b ARRAY<STRUCT<c: INT>>') FROM t
+    note: The schema string carries the complex-type grammar.
+  - id: from-json.trailing-comma-in-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: from-json.literal-schema
+    omits: "options"
+    sql: |
+      SELECT from_json(c, 'a INT', ) FROM t
