@@ -180,6 +180,23 @@ corpus found on its own was the inline `FLOW` clause on `CREATE STREAMING
 TABLE` — documented, used in the reference's own examples, and rejected by
 `main` because the grammar has no FLOW clause on the table statement.
 
+**To do: the inline `FLOW` gap, and the bar for a PR.** This is a SQLFluff bug
+that has not been followed up yet. `CREATE [OR REFRESH] [PRIVATE] STREAMING
+TABLE t FLOW …` is documented on the CREATE STREAMING TABLE page, and the
+dialect has no FLOW clause there: `PRIVATE`/`STREAMING` are patched onto
+`CreateTableStatementSegment` while `CreateFlowStatementSegment` serves only
+the standalone statement. Do **not** open a PR until it has been tested
+thoroughly — #8509 is the cautionary tale, a grammar change merged without its
+interior bound. Before proposing anything: read the CREATE STREAMING TABLE and
+AUTO CDC reference pages; confirm every alternative binds its required tokens
+(`INSERT [ONCE] BY NAME query`, `AUTO CDC auto_cdc_flow_spec`, `REPLACE WHERE
+predicate BY NAME query`, `REPLACE USING ( column_name [, …] ) SEQUENCE BY
+sequence_column BY NAME query`); add full-form fixtures *and* the partial-form
+rejections, which the reference corpus already carries as
+`create-streaming-table.flow-*`; run the whole `test/dialects/` directory
+rather than a filtered subset; and measure `make corpus` and `make reference`
+on the branch. Only then is it a pull request.
+
 This does not replace the scraped corpus — it covers the complement. Published
 SQL tells you what breaks in practice; the reference tells you what the grammar
 is supposed to be.
