@@ -1,0 +1,69 @@
+# CREATE VOLUME. Completes the volume story started in #8512: the statement
+# itself is plain DDL, and the LOCATION clause is the boundary that makes a
+# volume external. The trailing clause list does not repeat on this page.
+statement: CREATE VOLUME
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume
+checked: 2026-09-19
+syntax: |
+  CREATE [ EXTERNAL ] VOLUME [ IF NOT EXISTS ] volume_name
+      [ LOCATION location_path ]
+      [ COMMENT comment ]
+cases:
+  - id: create-volume.managed
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VOLUME v
+  - id: create-volume.external
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL VOLUME v LOCATION 's3://example-bucket/data'
+  - id: create-volume.qualified-name
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VOLUME c.s.v
+  - id: create-volume.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VOLUME IF NOT EXISTS v
+  - id: create-volume.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VOLUME v COMMENT 'a volume'
+  - id: create-volume.external-all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL VOLUME IF NOT EXISTS c.s.v LOCATION 's3://example-bucket/data' COMMENT 'a volume'
+  - id: create-volume.external-without-keyword
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-volume.external
+    omits: "VOLUME"
+    sql: |
+      CREATE EXTERNAL v LOCATION 's3://example-bucket/data'
+  - id: create-volume.if-without-not-exists
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-volume.if-not-exists
+    omits: "NOT EXISTS"
+    sql: |
+      CREATE VOLUME IF v
+  - id: create-volume.location-without-path
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-volume.external
+    omits: "location_path"
+    sql: |
+      CREATE EXTERNAL VOLUME v LOCATION
+  - id: create-volume.comment-without-text
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-volume.comment
+    omits: "comment"
+    sql: |
+      CREATE VOLUME v COMMENT
