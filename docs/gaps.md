@@ -100,6 +100,20 @@ and `create-view.using-data-source-equals`. The parenthesised clause list
 `WITH ( SCHEMA BINDING )` from the `with_clause` production is rejected too
 (`create-view.with-parenthesised-clause`). No pull request covers either.
 
+**Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
+[STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
+gives the field production as
+`fieldName [:] fieldType [NOT NULL] [COLLATE collationName] [COMMENT str]`,
+inside `STRUCT < [ … ] >`. `COMMENT str` parses; `NOT NULL` and
+`COLLATE collationName` do not. Repros:
+`CREATE TABLE t (s STRUCT<a: INT NOT NULL>)` and
+`CREATE TABLE t (s STRUCT<a: STRING COLLATE UTF8_BINARY>)`. Pinned by the
+reference corpus as `struct.not-null`, `struct.not-null-with-comment` and
+`struct.collate`; the partial forms `STRUCT<a: INT NOT>` and
+`STRUCT<a: STRING COLLATE>` are pinned too, but report vacuous until the gap
+closes. Found 2026-09-19 by the Tier 1.5 batch; no corpus file uses either
+clause, so it is recorded from the reference.
+
 **Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
 [GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)
 gives `privilege_types` as `{ ALL PRIVILEGES | privilege_type [, ...] }` —

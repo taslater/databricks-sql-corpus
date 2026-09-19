@@ -1,0 +1,93 @@
+# STRUCT type. This file is deliberate regression-pinning, the Tier 1.5
+# exception to "do not add cases for constructs SQLFluff already handles":
+# #7405 rewrote CreateViewStatementSegment from scratch and silently dropped
+# LIVE / STREAMING LIVE views for months. A green case here is the permanent
+# record that the complex-type grammar works, so a future rewrite cannot drop
+# it unnoticed. See docs/reference-corpus-plan.md, "Tier 1.5".
+#
+# Two documented per-field clauses do not parse today and are filed in
+# docs/gaps.md: `NOT NULL` and `COLLATE collationName`. The partial forms
+# below that sit on those siblings report vacuous until the gap closes.
+statement: STRUCT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type
+checked: 2026-09-19
+syntax: |
+  STRUCT < [fieldName [:] fieldType [NOT NULL] [COLLATE collationName] [COMMENT str] [, …] ] >
+cases:
+  - id: struct.named-field
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT>)
+  - id: struct.optional-colon
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (s STRUCT<a INT>)
+    note: The colon between the field name and its type is bracketed.
+  - id: struct.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT COMMENT 'c'>)
+  - id: struct.multiple-fields
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT CAST(NULL AS STRUCT<a: INT, b: STRING>)
+  - id: struct.nested
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT CAST(NULL AS STRUCT<a: ARRAY<STRUCT<b: INT>>>)
+    note: Nested generics end in `>>>`; a naive lexer reads shift operators.
+  - id: struct.not-null
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT NOT NULL>)
+  - id: struct.not-null-with-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT NOT NULL COMMENT 'c'>)
+  - id: struct.collate
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: STRING COLLATE UTF8_BINARY>)
+  - id: struct.field-without-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: struct.named-field
+    omits: "fieldType"
+    sql: |
+      CREATE TABLE t (s STRUCT<a>)
+  - id: struct.trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: struct.multiple-fields
+    omits: "fieldName [:] fieldType"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT,>)
+  - id: struct.not-without-null
+    verdict: must-reject
+    anchor: "#syntax"
+    from: struct.not-null
+    omits: "NULL"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT NOT>)
+  - id: struct.comment-without-string
+    verdict: must-reject
+    anchor: "#syntax"
+    from: struct.comment
+    omits: "str"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: INT COMMENT>)
+  - id: struct.collate-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: struct.collate
+    omits: "collationName"
+    sql: |
+      CREATE TABLE t (s STRUCT<a: STRING COLLATE>)
