@@ -9,17 +9,20 @@ Generated 2026-09-19 from the
 and the [Pipeline SQL language reference](https://docs.databricks.com/aws/en/ldp/developer/sql-ref).
 A page appears once even when the index links it from several sections.
 
-- **done** — a file in `corpus/reference/` transcribes this page
+- **done** — a file in `corpus/reference/` transcribes this page, or, for a
+  catalogue page like Data types, its per-type pages
 - **queued** — statement or clause syntax still to transcribe
-- **n/a** — not a statement-grammar surface: concepts, function
-  catalogues, configuration parameters, Runtime-only I/O commands, and
-  type/format reference already covered through the table statements
+- **n/a** — not a statement-grammar surface: concepts, function catalogues,
+  configuration parameters, Runtime-only I/O commands, and prose-only
+  reference. Type syntax is not covered "through the table statements";
+  the Tier 1.5 batch disproved that and the per-type pages have their own
+  files
 
 The notebook magic-cell cases (`magic_cells.yml`) come from outside both
 indexes; the Unity Catalog privileges reference supplies the privilege
 names for the GRANT-family cases. Both are listed below.
 
-## General reference (1 done, 5 queued, 45 n/a)
+## General reference (4 done, 3 queued, 44 n/a)
 
 | page | status |
 | --- | --- |
@@ -29,15 +32,15 @@ names for the GRANT-family cases. Both are listed below.
 | [Identifiers](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers) | n/a |
 | [Names](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names) | n/a |
 | [IDENTIFIER clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause) | queued |
-| [SQL expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression) | queued |
+| [SQL expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression) | done |
 | [NULL semantics](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-null-semantics) | n/a |
 | [Parameter markers](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-parameter-marker) | n/a |
 | [Variables](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-variables) | n/a |
 | [Name resolution](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-name-resolution) | n/a |
-| [JSON path expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression) | queued |
+| [JSON path expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-json-path-expression) | done |
 | [Collation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-collation) | n/a |
 | [Partitions](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-partition) | n/a |
-| [Data types](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datatypes) | n/a |
+| [Data types](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datatypes) | done |
 | [SQL data type rules](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datatype-rules) | n/a |
 | [Datetime patterns](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-datetime-pattern) | n/a |
 | [Configuration parameters](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-parameters) | n/a |
@@ -74,6 +77,12 @@ names for the GRANT-family cases. Both are listed below.
 | [OpenSharing](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-sharing) | n/a |
 | [Federated queries (Lakehouse Federation)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-federated-queries) | n/a |
 | [Information schema](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-information-schema) | n/a |
+
+Data types is covered page by page: `array_type.yml`, `map_type.yml`,
+`struct_type.yml` and `variant_type.yml` transcribe its per-type pages.
+`OBJECT` is deliberately uncovered: its page documents
+`OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
+writes the type as input, so a case would have to invent the position.
 
 ## DDL statements (5 done, 54 queued, 0 n/a)
 
@@ -148,7 +157,7 @@ names for the GRANT-family cases. Both are listed below.
 | [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | queued |
 | [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | queued |
 
-## Data retrieval statements (0 done, 29 queued, 0 n/a)
+## Data retrieval statements (1 done, 28 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -174,7 +183,7 @@ names for the GRANT-family cases. Both are listed below.
 | [MATCH_RECOGNIZE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize) | queued |
 | [PIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot) | queued |
 | [UNPIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot) | queued |
-| [LATERAL VIEW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view) | queued |
+| [LATERAL VIEW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view) | done |
 | [TABLESAMPLE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling) | queued |
 | [Table-valued function (TVF) invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf) | queued |
 | [Common table expression (CTE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte) | queued |
@@ -326,3 +335,7 @@ names for the GRANT-family cases. Both are listed below.
 | --- | --- |
 | [Work with code cells](https://docs.databricks.com/aws/en/notebooks/notebooks-code) | done |
 | [Unity Catalog privileges reference](https://docs.databricks.com/aws/en/data-governance/unity-catalog/access-control/privileges-reference) | done |
+| [`::` (colon colon sign) operator](https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign) | done |
+| [`from_json` function](https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json) | done |
+| [`from_xml` function](https://docs.databricks.com/aws/en/sql/language-manual/functions/from_xml) | done |
+| [`read_files` table-valued function](https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files) | done |

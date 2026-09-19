@@ -202,6 +202,22 @@ and one new over-acceptance (`GRANT ALL PRIVILEGES, SELECT` parses). Vacuous
 rejections are expected while a whole statement is an open PR — on `main` the
 `SHOW GRANTS` rejections prove nothing until #8516 merges.
 
+**Tier 1.5, the semi-structured surface, landed the same day.** Eleven pages
+and eighty-two cases — `struct_type`, `array_type`, `map_type` and
+`variant_type`, `json_path_expression`, `sql_expression`, `colon_colon_sign`,
+`lateral_view`, and the `from_json` / `from_xml` / `read_files` signatures —
+take the corpus from 16 pages / 171 cases to 27 / 253. On `main` at
+`33d8c8459` it now reads `104/170 must-parse, 81/83 must-reject (48
+informative, 33 vacuous)`, controls ok. Most of it is deliberate
+regression-pinning under the plan's exception for a surface a rewrite could
+silently drop, and the batch still found four gaps, all in `docs/gaps.md`:
+per-field `NOT NULL` and `COLLATE` on `STRUCT`, the JSON path `[ * ]`
+wildcard, and delimited identifiers in a JSON path. `OBJECT` was left
+uncovered on purpose — its page documents `OBJECT < … >` but no statement
+writes the type as input. The data-types row in `docs/reference-coverage.md`
+is now `done` and its legend no longer claims types are covered through the
+table statements.
+
 **Adding a case.** Read the live page, transcribe a minimal skeleton of your
 own construction (never an example body), and record the anchor and production
 precisely enough to review the derivation. Then probe SQLFluff: if it
