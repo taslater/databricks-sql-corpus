@@ -1,0 +1,47 @@
+# :: (colon colon sign) operator. Tier 1.5 regression-pinning: VARIANT and
+# JSON paths are cast with this operator, and SQLFluff parses it today, so
+# the cases are the permanent record against a rewrite that drops it. The
+# `?::` try-cast variant is a separate page and is not covered here. See
+# docs/reference-corpus-plan.md, "Tier 1.5".
+statement: ":: operator"
+doc: https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign
+checked: 2026-09-19
+syntax: |
+  expr :: type
+cases:
+  - id: colon-colon.cast-to-int
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a::INT FROM t
+  - id: colon-colon.variant-field-cast
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT v:field::STRING FROM t
+    note: The VARIANT access-and-cast chain the JSON path page documents.
+  - id: colon-colon.cast-to-array
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT v::ARRAY<INT> FROM t
+    note: The type production includes the complex types.
+  - id: colon-colon.chained
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a::INT::STRING FROM t
+  - id: colon-colon.without-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: colon-colon.cast-to-int
+    omits: "type"
+    sql: |
+      SELECT a:: FROM t
+  - id: colon-colon.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: colon-colon.cast-to-int
+    omits: "expr"
+    sql: |
+      SELECT ::INT FROM t
