@@ -147,12 +147,17 @@ the Databricks SQL reference rather than scraped from GitHub: one YAML file
 per reference page, each case carrying the statement, a `must-parse` or
 `must-reject` verdict, the doc URL and anchor, plus, for a partial form, a
 `from:` link to its full-form sibling and the production it `omits:`. Each
-file also carries `syntax:` (the page's production, verbatim) and `checked:`
-(the date the page was read); both are required. The loader is strict —
-unknown keys, duplicate ids, unresolved `from:` links, a must-reject without
-`omits:`, and an `omits:` that does not appear in the file's `syntax:` block
-are all errors — because a mistyped case that silently loads would make the
-corpus agree with the mistake.
+file also carries `syntax:` (the page's production, verbatim) and
+`checked:` (the date the page was read); both are required. Every must-reject
+case carries a `reason:` — `omission` (the default) for a partial form, or
+`exclusive-alternative` for a statement that mixes alternatives the reference
+makes exclusive. An omission quotes the missing production in `omits:`; an
+exclusive-alternative names both mixed alternatives in `conflicts:`. The
+loader is strict — unknown keys, duplicate ids, unresolved `from:` links, an
+unknown `reason:`, a must-reject missing the field its reason requires, and an
+`omits:` or `conflicts:` entry that does not appear in the file's `syntax:`
+block are all errors — because a mistyped case that silently loads would make
+the corpus agree with the mistake.
 
 The rule that generates the cases is unchanged: **wherever the reference
 brackets an optional multi-token production, the partial forms are explicit

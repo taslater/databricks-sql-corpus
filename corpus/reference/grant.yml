@@ -66,7 +66,8 @@ cases:
     verdict: must-reject
     anchor: "#syntax"
     from: grant.multiple-privileges
-    omits: "privilege_type"
+    reason: exclusive-alternative
+    conflicts: [ "ALL PRIVILEGES", "privilege_type" ]
     sql: |
       GRANT ALL PRIVILEGES, SELECT ON TABLE t TO p
     note: The alternatives are exclusive; ALL PRIVILEGES cannot open a list.

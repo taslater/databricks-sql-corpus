@@ -90,6 +90,8 @@ def make_case(
     from_id: str = "",
     sql: str = "SELECT 1",
     omits: str = "",
+    reason: str = reference.OMISSION,
+    conflicts: tuple[str, ...] = (),
 ) -> ReferenceCase:
     return ReferenceCase(
         id=id_,
@@ -100,6 +102,8 @@ def make_case(
         statement="S",
         from_id=from_id,
         omits=omits,
+        reason=reason,
+        conflicts=conflicts,
     )
 
 
@@ -145,10 +149,12 @@ def test_a_valid_file_loads_with_its_metadata(tmp_path):
     assert full.anchor == "#syntax"
     assert full.sql == FULL_SQL  # the block scalar's trailing newline is stripped
     assert (full.from_id, full.omits, full.note) == ("", "", "")
+    assert (full.reason, full.conflicts) == (reference.OMISSION, ())
     assert partial.from_id == FULL_FORM
     assert partial.omits == "SEQUENCE BY sequence_column"
     assert partial.note == "The pair is not separable."
     assert partial.verdict == MUST_REJECT
+    assert (partial.reason, partial.conflicts) == (reference.OMISSION, ())
 
 
 def test_yaml_extension_loads_and_other_files_are_ignored(tmp_path):
@@ -320,6 +326,50 @@ def test_the_omission_check_ignores_case_and_whitespace(tmp_path):
     assert [c.id for c in load_reference(tmp_path)] == ["full", "partial"]
 
 
+def test_an_exclusive_alternative_case_names_both_alternatives(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: mixed\nverdict: must-reject\nanchor: '#s'\nsql: SELECT ALL, DISTINCT a FROM t\n"
+            "from: full\nreason: exclusive-alternative\nconflicts: [ ALL, DISTINCT ]",
+            syntax="SELECT { ALL | DISTINCT } a FROM t",
+        ),
+    )
+    mixed = load_reference(tmp_path)[1]
+    assert mixed.reason == reference.EXCLUSIVE_ALTERNATIVE
+    assert mixed.conflicts == ("ALL", "DISTINCT")
+    assert mixed.omits == ""
+
+
+def test_a_conflicting_alternative_must_be_in_the_syntax_block(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: mixed\nverdict: must-reject\nanchor: '#s'\nsql: SELECT ALL, INVENTED a FROM t\n"
+            "from: full\nreason: exclusive-alternative\nconflicts: [ ALL, INVENTED ]",
+            syntax="SELECT { ALL | DISTINCT } a FROM t",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="conflicts alternative 'INVENTED' does not appear"):
+        load_reference(tmp_path)
+
+
+def test_the_conflicts_check_ignores_case_and_whitespace(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: mixed\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a FROM t\n"
+            "from: full\nreason: exclusive-alternative\n"
+            "conflicts: [ 'all', 'distinct   on ( a )' ]",
+            syntax="SELECT { ALL | DISTINCT ON ( a ) } a FROM t",
+        ),
+    )
+    assert load_reference(tmp_path)[1].conflicts == ("all", "distinct   on ( a )")
+
+
 # --- case schema ------------------------------------------------------------
 VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
 
@@ -371,6 +421,59 @@ VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
             "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
             "omits: SELECT 1\nnote: [1]",
             "note must be a string",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "omits: SELECT 1\nreason: invented",
+            "reason must be one of",
+        ),
+        (
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\nreason: omission",
+            "only a must-reject case may carry `reason:`",
+        ),
+        (
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\nconflicts: [ a, b ]",
+            "only a must-reject case may carry `conflicts:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "omits: SELECT 1\nconflicts: [ a, b ]",
+            "`conflicts:` is only for `reason: exclusive-alternative`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative",
+            "needs `conflicts:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nomits: SELECT 1\nconflicts: [ a, b ]",
+            "records `conflicts:`, not `omits:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nconflicts: SELECT",
+            "conflicts must be a list of exactly two non-empty alternatives",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nconflicts: [ a ]",
+            "conflicts must be a list of exactly two non-empty alternatives",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nconflicts: [ a, b, c ]",
+            "conflicts must be a list of exactly two non-empty alternatives",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nconflicts: [ 1, b ]",
+            "conflicts must be a list of exactly two non-empty alternatives",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "reason: exclusive-alternative\nconflicts: [ '', b ]",
+            "conflicts must be a list of exactly two non-empty alternatives",
         ),
     ],
 )
@@ -594,6 +697,29 @@ def test_reference_gaps_prints_only_failures_in_gaps_shape():
     assert "CONTROL FAILED" not in out
 
 
+def test_reference_gaps_names_the_conflicting_alternatives():
+    report = ReferenceReport(
+        results=[
+            CaseResult(make_case("full", MUST_PARSE), parsed=True),
+            CaseResult(
+                make_case(
+                    "mixed", MUST_REJECT, from_id="full",
+                    reason=reference.EXCLUSIVE_ALTERNATIVE,
+                    conflicts=("ALL", "DISTINCT"),
+                ),
+                parsed=True,
+            ),
+        ],
+        controls=[CaseResult(c, parsed=c.verdict == MUST_PARSE) for c in CONTROLS],
+    )
+    out = format_reference_gaps(report)
+    assert "## mixed" in out
+    assert "exclusive alternatives mixed by the parser" in out
+    assert "conflicts: ALL, DISTINCT" in out
+    assert "from: full" in out
+    assert "omits:" not in out
+
+
 def test_reference_gaps_on_a_clean_report_says_zero():
     report = ReferenceReport(
         results=[CaseResult(make_case("a", MUST_PARSE), parsed=True)],
@@ -655,6 +781,23 @@ def test_the_payload_carries_per_case_results_so_a_baseline_diff_can_tell_regres
     }
     assert payload["cases"][1]["ok"] is False
     assert payload["cases"][1]["message"] == "accepted anyway"
+
+
+def test_the_payload_carries_the_reason_only_when_it_is_not_the_default():
+    """So widening the model did not rewrite every must-reject baseline entry."""
+    omission = make_case("omission", MUST_REJECT, from_id="full")
+    mixed = make_case(
+        "mixed", MUST_REJECT, from_id="full",
+        reason=reference.EXCLUSIVE_ALTERNATIVE, conflicts=("ALL", "DISTINCT"),
+    )
+    payload = reference_payload(ReferenceReport(results=[
+        CaseResult(omission, parsed=False),
+        CaseResult(mixed, parsed=True),
+    ]))
+    assert "reason" not in payload["cases"][0]
+    assert "conflicts" not in payload["cases"][0]
+    assert payload["cases"][1]["reason"] == reference.EXCLUSIVE_ALTERNATIVE
+    assert payload["cases"][1]["conflicts"] == ["ALL", "DISTINCT"]
 
 
 def test_the_standalone_json_report_creates_its_parent(tmp_path):

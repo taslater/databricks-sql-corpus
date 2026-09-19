@@ -88,11 +88,28 @@ on every `must-reject` and forbidden on every `must-parse`:
       DROP MATERIALIZED mv
 ```
 
+Every must-reject case also carries a `reason:` — `omission` (the default)
+for a partial form, or `exclusive-alternative` for a statement that mixes
+two alternatives the reference makes exclusive. An `exclusive-alternative`
+case records both mixed alternatives in `conflicts: [ FIRST, SECOND ]`
+instead of `omits:`, and each is checked against the `syntax:` block:
+
+```yaml
+  - id: grant.all-privileges-in-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: grant.multiple-privileges
+    reason: exclusive-alternative
+    conflicts: [ "ALL PRIVILEGES", "privilege_type" ]
+    sql: |
+      GRANT ALL PRIVILEGES, SELECT ON TABLE t TO p
+```
+
 Conventions the loader does not enforce but that reviews should:
 
-- **`omits:` on every must-reject**, quoting the production text verbatim
-  from the `syntax:` block. It is technically optional; treat it as
-  required. It is what makes the case reviewable.
+- **`omits:` on every omission**, quoting the production text verbatim
+  from the `syntax:` block. It is what makes the case reviewable; the loader
+  checks it against the block, and `conflicts:` the same way.
 - **One file per reference page**, named after the statement in
   `snake_case.yml`; ids in `kebab-case` prefixed with the statement.
 - **Ids are permanent.** `baseline.json` diffs case by case, so renaming an
@@ -118,8 +135,10 @@ half-transcribe them.
    for each partial form — the bracket with its interior half-supplied.
    Point `from:` at the full-form must-parse sibling and quote the missing
    text in `omits:`. Also cover: empty parenthesised lists where at least
-   one item is required, and clauses used without the keyword that gates
-   them (the `PRIVATE`-without-`STREAMING` shape).
+   one item is required, clauses used without the keyword that gates them
+   (the `PRIVATE`-without-`STREAMING` shape), and mixed exclusive
+   alternatives (`{ A | B }` written as `A, B`), which use
+   `reason: exclusive-alternative` and `conflicts:` instead of `omits:`.
 5. **Run it:** `make reference PY=.venv-main/bin/python` for the worktree on
    `main`, or `make reference` for whatever the default venv holds. It needs
    no fetched corpus and takes seconds.
@@ -264,11 +283,12 @@ goal; coverage of *bracketed optional productions* is.
 ## Harness improvements worth making
 
 These make the corpus better as an instrument, not just bigger. Roughly in
-value order.
+value order. All six landed with the Tier 1 batch; item 1 was widened after
+review into the `reason:` / `omits:` / `conflicts:` model above, because
+`omits:` was being stretched to cover a case that omits nothing.
 
 1. **Require `omits:` on must-reject cases**, in `_load_case`. It is the
-   field that makes a case reviewable and it is currently optional. One
-   `if` and a test.
+   field that makes a case reviewable. One `if` and a test.
 2. **Check that `omits:` is a substring of the file's `syntax:` block.** A
    cheap mechanical proof that the omission is real and not invented —
    catches a whole class of transcription error automatically. Requires
@@ -303,8 +323,8 @@ A batch of pages is finished when all of these hold:
 - Every new must-parse case that SQLFluff rejects has been **re-verified
   against the live page** and either fixed or filed in `docs/gaps.md` with
   its case id.
-- Every new must-reject case carries `from:` and `omits:`, and `omits:`
-  quotes the `syntax:` block.
+- Every new must-reject case carries `from:` and, according to its `reason:`,
+  either an `omits:` or a `conflicts:` that quotes the `syntax:` block.
 - No case contains a body copied from a doc example.
 - `baseline.json` regenerated from a release install, diff read, and the
   new-coverage-versus-regression split stated in the commit message.
