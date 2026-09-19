@@ -28,6 +28,7 @@ make venv           # create .venv, install the harness
 make corpus-fetch   # download the pinned corpus (once)
 make corpus         # measure SQLFluff: recall + rejection
 make gaps           # group failures by construct -- the PR queue
+make diff           # advisory: sqlfluff vs sqlglot disagreements (not scored)
 make reference      # cases transcribed from the Databricks SQL reference
 make baseline       # regenerate corpus/reports/baseline.json
 make test
@@ -61,15 +62,19 @@ Nothing here needs Java, and there is no code generation step.
 ```
 src/dbsqlparse/corpus/sources.py    the 14 pinned sources -- pinned to exact commits
 src/dbsqlparse/corpus/fetch.py      downloads them into corpus/cache/
-src/dbsqlparse/corpus/runners.py    the parsers under test (SQLFluff, sqruff)
+src/dbsqlparse/corpus/runners.py    the parsers under test (SQLFluff, sqruff, sqlglot)
 src/dbsqlparse/corpus/harness.py    recall + rejection measurement
 src/dbsqlparse/corpus/mutate.py     valid SQL -> guaranteed-invalid SQL
 src/dbsqlparse/corpus/reference.py  the doc-derived corpus harness
+src/dbsqlparse/corpus/constructs.py how a failure is normalised into a construct
+src/dbsqlparse/corpus/differential.py  advisory sqlfluff-vs-sqlglot triage
 src/dbsqlparse/corpus/cli.py        `python -m dbsqlparse.corpus`
 corpus/reference/*.yml              cases transcribed from the reference
 src/dbsqlparse/preprocess.py        notebook cells + parameter substitution
 scripts/compare_baseline.py         baseline diff for CI
+scripts/probe_sqlglot_fixtures.py   discovery probe over sqlglot's dialect tests
 docs/gaps.md                        the upstream work queue
+docs/sqlglot-plan.md                the advisory second parser, and its limits
 docs/design-notes.md                history, including the retired parser
 ```
 
@@ -105,6 +110,15 @@ that something deliberately broken is still rejected. Three separate times, a
 harness bug made failure look like success — once via stderr, once via
 SQLFluff's `All Finished!` banner printing on failure, once via an over-narrow
 pytest filter. A control catches all three.
+
+**sqlglot is advisory, never scored.** `make diff` compares SQLFluff with
+sqlglot and reports the disagreements; nothing it produces goes into `recall`,
+`rejection`, `baseline.json` or `compare_baseline.py`. Its leniency is
+documented ("a transpiler, not a validator"): the runner treats a top-level
+`Command` fallback as failure, because otherwise its acceptance of an
+unmodelled statement would fabricate agreement, and its *rejections* are the
+signal while its *acceptances* are not. The version is pinned and recorded in
+the report. Detail and the first run's numbers: `docs/sqlglot-plan.md`.
 
 **The corpus cache is not committed**, because every source is pinned to an
 exact revision and the cache is reproducible from `sources.py` alone.
@@ -262,7 +276,10 @@ verified against SQLFluff `main`. The workflow that works:
 4. **Run the whole `test/dialects/` directory**, not a filtered subset —
    `databricks_test.py` holds hand-written rejection tests that a
    `dialects_test.py -k databricks` filter never runs. That gap let a genuinely
-   wrong change look green.
+   wrong change look green. Run it with `-n auto`: `pytest-xdist` is already
+   installed in the fork's venv and the suite parallelises cleanly — 11:06
+   serial versus 2:04 on eight cores, identical 7030 passed. Reach for that
+   rather than for a filter when the run feels slow.
 5. Check the vendor documentation before removing a rule someone wrote on
    purpose. An existing test asserting a constraint usually means the
    constraint is real.
