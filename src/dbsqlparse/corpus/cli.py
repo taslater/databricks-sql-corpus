@@ -21,6 +21,7 @@ from .reference import (
     MUST_REJECT,
     ReferenceError,
     ReferenceReport,
+    format_reference_gaps,
     format_reference_report,
     reference_payload,
     run_reference_corpus,
@@ -68,6 +69,12 @@ def main(argv: list[str] | None = None) -> int:
         "--json", type=str, default=None, help="also write a JSON report here"
     )
 
+    reference_gaps = sub.add_parser(
+        "reference-gaps",
+        help="print the reference divergences as paste-ready gaps.md entries",
+    )
+    _add_runner_args(reference_gaps, local=False)
+
     args = ap.parse_args(argv)
 
     if args.command == "fetch":
@@ -79,6 +86,8 @@ def main(argv: list[str] | None = None) -> int:
         return _gaps(names, args)
     if args.command == "reference":
         return _reference(names, args)
+    if args.command == "reference-gaps":
+        return _reference_gaps(names, args)
 
     exit_code = 0
     for name in names:
@@ -150,6 +159,23 @@ def _reference(names: list[str], args) -> int:
             out = pathlib.Path(args.json) if args.json else REPORT_DIR / "reference.json"
             write_reference_json(report, out)
             print(f"json report: {out}")
+    return exit_code
+
+
+def _reference_gaps(names: list[str], args) -> int:
+    """Only the divergences, shaped for `docs/gaps.md` -- no rates, no cases
+    that conformed. The triage step of the reference workflow, automated."""
+    exit_code = 0
+    for name in names:
+        runner = get_runner(name, dialect=args.dialect)
+        report = _run_reference(runner)
+        if report is None:
+            return 2
+        if len(names) > 1:
+            print(f"\n{'#' * 78}\n# {name}\n{'#' * 78}")
+        print(format_reference_gaps(report))
+        if not report.controls_ok:
+            exit_code = 1
     return exit_code
 
 

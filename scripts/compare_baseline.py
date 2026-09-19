@@ -47,6 +47,7 @@ def _reference_diff(base: dict[str, Any], new: dict[str, Any]) -> list[str]:
     old_cases = {c["id"]: c for c in old_ref.get("cases", [])}
     new_cases = {c["id"]: c for c in new_ref.get("cases", [])}
     new_mp, new_mr = new_ref.get("must_parse", {}), new_ref.get("must_reject", {})
+    old_mp, old_mr = old_ref.get("must_parse", {}), old_ref.get("must_reject", {})
 
     print("\n### Reference conformance\n")
     if not old_ref:
@@ -55,7 +56,6 @@ def _reference_diff(base: dict[str, Any], new: dict[str, Any]) -> list[str]:
             f"{new_mr.get('total', 0)} must-reject cases."
         )
     else:
-        old_mp, old_mr = old_ref.get("must_parse", {}), old_ref.get("must_reject", {})
         print("| metric | baseline | this run |")
         print("| --- | ---: | ---: |")
         print(
@@ -65,7 +65,8 @@ def _reference_diff(base: dict[str, Any], new: dict[str, Any]) -> list[str]:
         print(
             f"| must-reject caught | {old_mr.get('caught')}/{old_mr.get('total')} | "
             f"**{new_mr.get('caught')}/{new_mr.get('total')}** "
-            f"({new_mr.get('informative', 0)} informative) |"
+            f"({new_mr.get('informative', 0)} informative, "
+            f"{new_mr.get('vacuous', 0)} vacuous) |"
         )
 
     regressed: list[str] = []
@@ -92,6 +93,9 @@ def _reference_diff(base: dict[str, Any], new: dict[str, Any]) -> list[str]:
         notes.append("regressed: " + ", ".join(flips))
     if removed:
         notes.append("removed: " + ", ".join(removed))
+    old_vacuous, new_vacuous = old_mr.get("vacuous", 0), new_mr.get("vacuous", 0)
+    if old_ref and old_vacuous != new_vacuous:
+        notes.append(f"vacuous rejections: {old_vacuous} -> {new_vacuous}")
     for note in notes:
         print(f"\n- {note}")
     return regressed

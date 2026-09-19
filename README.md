@@ -53,6 +53,7 @@ make corpus-fetch     # ~22 MB from 14 pinned public repositories
 make corpus           # recall + rejection + reference conformance
 make gaps             # failures grouped by construct
 make reference        # doc-derived cases only -- no fetched corpus needed
+make reference-gaps   # just the divergences, shaped for docs/gaps.md
 ```
 
 To measure an **unmerged** SQLFluff branch, install a fork checkout over the

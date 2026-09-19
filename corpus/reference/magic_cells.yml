@@ -8,6 +8,7 @@
 # cell semantics rather than a syntax line from the reference.
 statement: Notebook magic cell
 doc: https://docs.databricks.com/aws/en/notebooks/notebooks-code
+checked: 2026-09-19
 syntax: |
   A notebook cell can only have one cell magic command, and it must be the
   first line of the cell; the remaining lines are the command's body.

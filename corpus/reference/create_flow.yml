@@ -6,10 +6,13 @@
 # that would have caught it before merge.
 statement: CREATE FLOW
 doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow
+checked: 2026-09-19
 syntax: |
   CREATE FLOW flow_name [COMMENT comment] AS
   { AUTO CDC [ONCE] INTO target_table create_auto_cdc_flow_spec
   | INSERT [ONCE] INTO target_table BY NAME [ replace_using_spec ] query }
+  replace_using_spec
+    REPLACE USING ( column_name [, ...] ) SEQUENCE BY sequence_column
 cases:
   - id: create-flow.append-by-name
     verdict: must-parse

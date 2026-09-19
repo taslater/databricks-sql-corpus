@@ -4,6 +4,7 @@
 # cases below are what record it until an upstream fix lands.
 statement: CREATE STREAMING TABLE
 doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table
+checked: 2026-09-19
 syntax: |
   CREATE [OR REFRESH] [PRIVATE] STREAMING TABLE table_name
     [ table_specification ] [ table_clauses ] [ { flow_clause | AS query } ]

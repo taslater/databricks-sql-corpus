@@ -39,7 +39,7 @@ def ref_case(id_: str, verdict: str = "must-parse", ok: bool = True) -> dict:
     return {"id": id_, "verdict": verdict, "ok": ok}
 
 
-def ref_section(cases: list[dict], controls_ok: bool = True) -> dict:
+def ref_section(cases: list[dict], controls_ok: bool = True, vacuous: int = 0) -> dict:
     must_parse = [c for c in cases if c["verdict"] == "must-parse"]
     must_reject = [c for c in cases if c["verdict"] == "must-reject"]
     return {
@@ -52,6 +52,7 @@ def ref_section(cases: list[dict], controls_ok: bool = True) -> dict:
             "total": len(must_reject),
             "caught": sum(c["ok"] for c in must_reject),
             "informative": sum(c["ok"] for c in must_reject),
+            "vacuous": vacuous,
         },
         "cases": cases,
     }
@@ -183,6 +184,22 @@ def test_failed_reference_controls_are_a_regression(tmp_path):
     code, out = run(tmp_path, base, new)
     assert code == 1
     assert "reference controls failed" in out
+
+
+def test_vacuous_rejection_trend_is_reported_but_not_gated(tmp_path):
+    """Vacuity should fall as gaps close. A rise is worth seeing, but it can
+    be honest new coverage whose full form is an open gap, so it is a note."""
+    base = report(
+        {"a": 100.0},
+        reference=ref_section([ref_case("x", "must-reject")], vacuous=1),
+    )
+    new = report(
+        {"a": 100.0},
+        reference=ref_section([ref_case("x", "must-reject")], vacuous=0),
+    )
+    code, out = run(tmp_path, base, new)
+    assert code == 0
+    assert "vacuous rejections: 1 -> 0" in out
 
 
 def test_a_report_without_a_reference_section_is_ignored(tmp_path):

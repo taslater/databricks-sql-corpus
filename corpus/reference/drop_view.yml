@@ -3,6 +3,7 @@
 # recorded in docs/gaps.md.
 statement: DROP VIEW
 doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view
+checked: 2026-09-19
 syntax: DROP [ MATERIALIZED ] VIEW [ IF EXISTS ] view_name
 cases:
   - id: drop-view.plain

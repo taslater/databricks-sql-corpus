@@ -20,6 +20,7 @@ from dbsqlparse.corpus.reference import (
     ReferenceCase,
     ReferenceError,
     ReferenceReport,
+    format_reference_gaps,
     format_reference_report,
     load_reference,
     reference_payload,
@@ -38,7 +39,10 @@ FULL_SQL = (
 VALID_FILE = f"""
 statement: CREATE FLOW
 doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow
-syntax: INSERT [ONCE] INTO t BY NAME [ replace_using_spec ] query
+checked: 2026-09-19
+syntax: |
+  CREATE FLOW f AS INSERT [ONCE] INTO t BY NAME
+    [ REPLACE USING ( column_name [, ...] ) SEQUENCE BY sequence_column ] query
 cases:
   - id: {FULL_FORM}
     verdict: must-parse
@@ -62,9 +66,17 @@ def write(root: pathlib.Path, name: str, body: str) -> pathlib.Path:
     return path
 
 
-def case_list(*bodies: str, statement: str = "S", doc: str = "https://example.com/ref") -> str:
+def case_list(
+    *bodies: str,
+    statement: str = "S",
+    doc: str = "https://example.com/ref",
+    syntax: str = "SELECT 1",
+) -> str:
     items = "\n".join("  - " + b.replace("\n", "\n" + " " * 4) for b in bodies)
-    return f"statement: {statement}\ndoc: {doc}\ncases:\n{items}\n"
+    return (
+        f"statement: {statement}\ndoc: {doc}\n"
+        f"checked: 2026-09-19\nsyntax: {syntax}\ncases:\n{items}\n"
+    )
 
 
 def one_case(body: str, statement: str = "S", doc: str = "https://example.com/ref") -> str:
@@ -77,6 +89,7 @@ def make_case(
     *,
     from_id: str = "",
     sql: str = "SELECT 1",
+    omits: str = "",
 ) -> ReferenceCase:
     return ReferenceCase(
         id=id_,
@@ -86,6 +99,7 @@ def make_case(
         anchor="#syntax",
         statement="S",
         from_id=from_id,
+        omits=omits,
     )
 
 
@@ -127,6 +141,7 @@ def test_a_valid_file_loads_with_its_metadata(tmp_path):
     assert full.verdict == MUST_PARSE
     assert full.statement == "CREATE FLOW"
     assert full.doc.startswith("https://docs.databricks.com/")
+    assert full.checked == "2026-09-19"
     assert full.anchor == "#syntax"
     assert full.sql == FULL_SQL  # the block scalar's trailing newline is stripped
     assert (full.from_id, full.omits, full.note) == ("", "", "")
@@ -189,21 +204,120 @@ def test_a_case_may_carry_omits_and_note_that_are_empty(tmp_path):
         ),
         ("doc: https://x\ncases: []\n", "missing required key 'statement'"),
         ("statement: S\ncases: []\n", "missing required key 'doc'"),
-        ("statement: S\ndoc: https://x\n", "missing required key 'cases'"),
-        ("statement: [1]\ndoc: https://x\ncases: []\n", "statement must be a non-empty string"),
-        ("statement: ''\ndoc: https://x\ncases: []\n", "statement must be a non-empty string"),
-        ("statement: S\ndoc: [1]\ncases: []\n", "doc must be a non-empty string"),
-        ("statement: S\ndoc: ''\ncases: []\n", "doc must be a non-empty string"),
-        ("statement: S\ndoc: not-a-url\ncases: []\n", "doc must be a URL"),
-        ("statement: S\ndoc: https://x\nsyntax: [1]\ncases: []\n", "syntax must be a string"),
-        ("statement: S\ndoc: https://x\ncases: 3\n", "cases must be a non-empty list"),
-        ("statement: S\ndoc: https://x\ncases: []\n", "cases must be a non-empty list"),
+        (
+            "statement: S\ndoc: https://x\ncases: []\n",
+            "missing required key 'syntax'",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\ncases: []\n",
+            "missing required key 'checked'",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: 2026-09-19\n",
+            "missing required key 'cases'",
+        ),
+        (
+            "statement: [1]\ndoc: https://x\nsyntax: S\nchecked: 2026-09-19\ncases: []\n",
+            "statement must be a non-empty string",
+        ),
+        (
+            "statement: ''\ndoc: https://x\nsyntax: S\nchecked: 2026-09-19\ncases: []\n",
+            "statement must be a non-empty string",
+        ),
+        (
+            "statement: S\ndoc: [1]\nsyntax: S\nchecked: 2026-09-19\ncases: []\n",
+            "doc must be a non-empty string",
+        ),
+        (
+            "statement: S\ndoc: ''\nsyntax: S\nchecked: 2026-09-19\ncases: []\n",
+            "doc must be a non-empty string",
+        ),
+        (
+            "statement: S\ndoc: not-a-url\nsyntax: S\nchecked: 2026-09-19\ncases: []\n",
+            "doc must be a URL",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: [1]\nchecked: 2026-09-19\ncases: []\n",
+            "syntax must be a non-empty string",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: ''\nchecked: 2026-09-19\ncases: []\n",
+            "syntax must be a non-empty string",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: 3\ncases: []\n",
+            "checked must be a YYYY-MM-DD date",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: never\ncases: []\n",
+            "checked must be a YYYY-MM-DD date",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: \"2026-13-45\"\ncases: []\n",
+            "checked must be a YYYY-MM-DD date",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: 2026-13-45\ncases: []\n",
+            "not valid YAML",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: 20260919\ncases: []\n",
+            "checked must be a YYYY-MM-DD date",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: 2026-09-19\ncases: 3\n",
+            "cases must be a non-empty list",
+        ),
+        (
+            "statement: S\ndoc: https://x\nsyntax: S\nchecked: 2026-09-19\ncases: []\n",
+            "cases must be a non-empty list",
+        ),
     ],
 )
 def test_invalid_file_schemas_are_rejected(tmp_path, body, fragment):
     write(tmp_path, "case.yml", body)
     with pytest.raises(ReferenceError, match=re.escape(fragment)):
         load_reference(tmp_path)
+
+
+def test_a_checked_date_may_be_a_yaml_timestamp_or_a_quoted_string(tmp_path):
+    """YAML resolves unquoted dates and timestamps into objects, so the loader
+    accepts what the file gives it and normalises to the date."""
+    for checked, expected in (
+        ("2026-09-19T10:00:00", "2026-09-19"),
+        ('"2026-09-19"', "2026-09-19"),
+    ):
+        body = case_list(VALID_CASE).replace("checked: 2026-09-19", f"checked: {checked}")
+        write(tmp_path, "case.yml", body)
+        assert load_reference(tmp_path)[0].checked == expected
+
+
+def test_an_omission_must_be_a_substring_of_the_syntax_block(tmp_path):
+    """The mechanical proof that `omits` is transcribed, not invented."""
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a t\n"
+            "from: full\nomits: INVENTED CLAUSE",
+            syntax="SELECT [ ALL | DISTINCT ] a FROM t",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="does not appear in the syntax block"):
+        load_reference(tmp_path)
+
+
+def test_the_omission_check_ignores_case_and_whitespace(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
+            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a FROM t\n"
+            "from: full\nomits: 'all  |  distinct'",
+            syntax="SELECT [ ALL | DISTINCT ] a FROM t",
+        ),
+    )
+    assert [c.id for c in load_reference(tmp_path)] == ["full", "partial"]
 
 
 # --- case schema ------------------------------------------------------------
@@ -238,6 +352,14 @@ VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
             "a must-reject case needs `from:`",
         ),
         (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y",
+            "a must-reject case needs `omits:`",
+        ),
+        (
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\nomits: ''",
+            "a must-reject case needs `omits:`",
+        ),
+        (
             "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\nfrom: y",
             "only a must-reject case may carry `from:`",
         ),
@@ -246,7 +368,8 @@ VALID_CASE = "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1"
             "omits must be a string",
         ),
         (
-            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\nnote: [1]",
+            "id: x\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: y\n"
+            "omits: SELECT 1\nnote: [1]",
             "note must be a string",
         ),
     ],
@@ -275,7 +398,8 @@ def test_from_must_resolve_within_the_same_file(tmp_path):
     write(
         tmp_path, "b.yml",
         one_case(
-            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: full"
+            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\n"
+            "from: full\nomits: SELECT 1"
         ),
     )
     with pytest.raises(ReferenceError, match="not a case in the same file"):
@@ -286,8 +410,10 @@ def test_from_must_point_at_a_must_parse_case(tmp_path):
     write(
         tmp_path, "a.yml",
         case_list(
-            "id: one\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\nfrom: two",
-            "id: two\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 2\nfrom: one",
+            "id: one\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\n"
+            "from: two\nomits: SELECT 1",
+            "id: two\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 2\n"
+            "from: one\nomits: SELECT 1",
         ),
     )
     with pytest.raises(ReferenceError, match="not a must-parse case"):
@@ -429,6 +555,77 @@ def test_a_clean_report_with_no_failures_has_no_extra_sections():
     assert "CONTROL FAILED" not in out
 
 
+def test_reference_gaps_prints_only_failures_in_gaps_shape():
+    report = ReferenceReport(
+        results=[
+            CaseResult(make_case("full", MUST_PARSE), parsed=True),
+            CaseResult(
+                make_case("missing", MUST_PARSE, sql="DROP MATERIALIZED VIEW mv"),
+                parsed=False,
+                message="syntax error\nsecond line",
+            ),
+            CaseResult(
+                make_case(
+                    "partial", MUST_REJECT, from_id="full",
+                    sql="SELECT a", omits="SEQUENCE BY d",
+                ),
+                parsed=True,
+            ),
+            CaseResult(make_case("silent", MUST_PARSE), parsed=False),
+        ],
+        controls=[CaseResult(c, parsed=c.verdict == MUST_PARSE) for c in CONTROLS],
+    )
+    out = format_reference_gaps(report)
+    assert "reference gaps: 3" in out
+    assert "## missing" in out
+    assert "documented syntax rejected by the parser" in out
+    assert "doc: https://docs.databricks.com/x#syntax" in out
+    assert "sql: DROP MATERIALIZED VIEW mv" in out
+    assert "message: syntax error" in out
+    assert "second line" not in out
+    assert "## partial" in out
+    assert "partial form accepted by the parser" in out
+    assert "from: full" in out
+    assert "omits: SEQUENCE BY d" in out
+    assert "## full" not in out
+    assert "## silent" in out
+    assert "message: None" not in out
+    assert "vacuous" not in out
+    assert "CONTROL FAILED" not in out
+
+
+def test_reference_gaps_on_a_clean_report_says_zero():
+    report = ReferenceReport(
+        results=[CaseResult(make_case("a", MUST_PARSE), parsed=True)],
+        controls=[CaseResult(c, parsed=c.verdict == MUST_PARSE) for c in CONTROLS],
+    )
+    out = format_reference_gaps(report)
+    assert "reference gaps: 0" in out
+    assert "##" not in out
+
+
+def test_reference_gaps_separates_vacuous_cases_and_shouts_failed_controls():
+    report = ReferenceReport(
+        results=[
+            CaseResult(make_case("full", MUST_PARSE), parsed=False),
+            CaseResult(make_case("partial", MUST_REJECT, from_id="full"), parsed=False),
+            CaseResult(make_case("good", MUST_PARSE), parsed=True),
+            CaseResult(make_case("linked_ok", MUST_REJECT, from_id="good"), parsed=False),
+        ],
+        controls=[
+            CaseResult(CONTROLS[0], parsed=True),
+            CaseResult(CONTROLS[1], parsed=True),
+        ],
+    )
+    out = format_reference_gaps(report)
+    assert "reference gaps: 1" in out
+    assert "vacuous (1)" in out
+    assert "  partial" in out
+    assert "  linked_ok" not in out
+    assert "## partial" not in out
+    assert "CONTROL FAILED -- do not trust this list" in out
+
+
 # --- serialisation ----------------------------------------------------------
 def test_the_payload_carries_per_case_results_so_a_baseline_diff_can_tell_regressions():
     report = ReferenceReport(
@@ -445,7 +642,7 @@ def test_the_payload_carries_per_case_results_so_a_baseline_diff_can_tell_regres
     assert payload["controls_ok"] is True
     assert payload["must_parse"] == {"total": 1, "passed": 1, "rate": 100.0}
     assert payload["must_reject"] == {
-        "total": 1, "caught": 0, "informative": 0, "rate": 0.0
+        "total": 1, "caught": 0, "informative": 0, "vacuous": 0, "rate": 0.0
     }
     assert payload["cases"][0] == {
         "id": "full",
@@ -502,6 +699,37 @@ def test_the_reference_command_names_a_broken_corpus(monkeypatch, capsys):
     monkeypatch.setattr(cli, "get_runner", lambda name, dialect: FakeRunner())
     monkeypatch.setattr(cli, "run_reference_corpus", broken)
     assert cli.main(["reference"]) == 2
+    assert "reference corpus error" in capsys.readouterr().err
+
+
+def test_the_reference_gaps_command_prints_the_divergences(monkeypatch, capsys):
+    report = ReferenceReport(
+        results=[
+            CaseResult(make_case("missing", MUST_PARSE), parsed=False, message="boom")
+        ],
+        controls=[CaseResult(c, parsed=c.verdict == MUST_PARSE) for c in CONTROLS],
+    )
+    _bare_cli(monkeypatch, report)
+    assert cli.main(["reference-gaps"]) == 0
+    out = capsys.readouterr().out
+    assert "reference gaps: 1" in out
+    assert "## missing" in out
+
+
+def test_the_reference_gaps_command_fails_when_a_control_fails(monkeypatch, capsys):
+    report = ReferenceReport(controls=[CaseResult(CONTROLS[1], parsed=True)])
+    _bare_cli(monkeypatch, report)
+    assert cli.main(["reference-gaps"]) == 1
+    assert "CONTROL FAILED" in capsys.readouterr().out
+
+
+def test_the_reference_gaps_command_names_a_broken_corpus(monkeypatch, capsys):
+    def broken(runner):
+        raise ReferenceError("no reference corpus at /nowhere")
+
+    monkeypatch.setattr(cli, "get_runner", lambda name, dialect: FakeRunner())
+    monkeypatch.setattr(cli, "run_reference_corpus", broken)
+    assert cli.main(["reference-gaps"]) == 2
     assert "reference corpus error" in capsys.readouterr().err
 
 

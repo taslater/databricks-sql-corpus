@@ -3,6 +3,7 @@
 # abbreviation under the DESCRIBE statements generally.
 statement: DESCRIBE HISTORY
 doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history
+checked: 2026-09-19
 syntax: DESCRIBE HISTORY table_name
 cases:
   - id: describe-history.table

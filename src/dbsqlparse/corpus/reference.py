@@ -21,7 +21,14 @@ Databricks SQL reference rather than scraped from GitHub. Each case carries
     doc/anchor  where the transcription came from
     from        for a must-reject case, the full-form sibling whose production
                 it partially omits
-    omits       the omitted production, quoted from the reference
+    omits       the omitted production, quoted from the reference; required on
+                every must-reject case, and checked against the file's syntax
+                block, so an invented omission cannot load
+
+Each file carries `syntax` (the reference's production, verbatim) and
+`checked` (the date the page was read), both required: the syntax block is
+what a reviewer diffs the cases against, and the date is what tells a stale
+transcription from a fresh one on a page Databricks has since revised.
 
 The rule that generates the cases: **wherever the reference brackets an
 optional multi-token production, the partial forms are explicit must-reject
@@ -48,8 +55,10 @@ look like success; a control catches all three.
 """
 from __future__ import annotations
 
+import datetime
 import json
 import pathlib
+import re
 from dataclasses import dataclass, field
 
 import yaml
@@ -63,7 +72,7 @@ MUST_PARSE = "must-parse"
 MUST_REJECT = "must-reject"
 VERDICTS = (MUST_PARSE, MUST_REJECT)
 
-_FILE_KEYS = frozenset({"statement", "doc", "syntax", "cases"})
+_FILE_KEYS = frozenset({"statement", "doc", "syntax", "checked", "cases"})
 _CASE_KEYS = frozenset({"id", "verdict", "anchor", "sql", "from", "omits", "note"})
 
 
@@ -81,6 +90,7 @@ class ReferenceCase:
     doc: str
     anchor: str
     statement: str
+    checked: str = ""
     from_id: str = ""
     omits: str = ""
     note: str = ""
@@ -161,6 +171,16 @@ class ReferenceReport:
         )
 
     @property
+    def must_reject_vacuous(self) -> int:
+        """Caught rejections whose full form does not parse, so they prove
+        nothing about the partial form. The count should fall as gaps close;
+        it is the corpus's own health metric."""
+        return sum(
+            1 for r in self.of(MUST_REJECT)
+            if r.conforms and not self.sibling_parsed(r)
+        )
+
+    @property
     def failures(self) -> list[CaseResult]:
         return [r for r in self.results if not r.conforms]
 
@@ -236,31 +256,64 @@ def load_reference(root: pathlib.Path | None = None) -> list[ReferenceCase]:
 def _load_file(path: pathlib.Path) -> list[ReferenceCase]:
     try:
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except yaml.YAMLError as error:
+    except (yaml.YAMLError, ValueError) as error:
+        # ValueError covers YAML resolvers that build values eagerly, such as
+        # an impossible date in `checked: 2026-13-45`.
         raise ReferenceError(f"{path.name}: not valid YAML: {error}") from error
     if not isinstance(raw, dict):
         raise ReferenceError(f"{path.name}: expected a mapping at the top level")
     unknown = sorted(set(raw) - _FILE_KEYS)
     if unknown:
         raise ReferenceError(f"{path.name}: unknown keys {unknown}")
-    for key in ("statement", "doc", "cases"):
+    for key in ("statement", "doc", "syntax", "checked", "cases"):
         if key not in raw:
             raise ReferenceError(f"{path.name}: missing required key {key!r}")
-    statement, doc, cases = raw["statement"], raw["doc"], raw["cases"]
-    for label, value in (("statement", statement), ("doc", doc)):
+    statement, doc, syntax, cases = (
+        raw["statement"], raw["doc"], raw["syntax"], raw["cases"]
+    )
+    for label, value in (("statement", statement), ("doc", doc), ("syntax", syntax)):
         if not isinstance(value, str) or not value.strip():
             raise ReferenceError(f"{path.name}: {label} must be a non-empty string")
     if not doc.startswith(("http://", "https://")):
         raise ReferenceError(f"{path.name}: doc must be a URL, got {doc!r}")
-    if "syntax" in raw and not isinstance(raw["syntax"], str):
-        raise ReferenceError(f"{path.name}: syntax must be a string")
+    checked = _checked_date(path, raw["checked"])
     if not isinstance(cases, list) or not cases:
         raise ReferenceError(f"{path.name}: cases must be a non-empty list")
-    return [_load_case(path, case, statement, doc) for case in cases]
+    file_cases = [_load_case(path, case, statement, doc, checked) for case in cases]
+    block = " ".join(syntax.split()).casefold()
+    for case in file_cases:
+        quoted = " ".join(case.omits.split()).casefold()
+        if case.verdict == MUST_REJECT and quoted not in block:
+            raise ReferenceError(
+                f"{path.name}: case {case.id!r}: omits {case.omits!r} does not "
+                "appear in the syntax block"
+            )
+    return file_cases
+
+
+def _checked_date(path: pathlib.Path, value: object) -> str:
+    """The date the page was read, as ISO text.
+
+    YAML resolves a bare `2026-09-19` to a date and a timestamp to a datetime,
+    so accept what YAML hands back rather than demanding a quoted string. Any
+    other shape is a transcription error worth naming.
+    """
+    if isinstance(value, datetime.datetime):
+        return value.date().isoformat()
+    if isinstance(value, datetime.date):
+        return value.isoformat()
+    if isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value.strip()):
+        try:
+            return datetime.date.fromisoformat(value.strip()).isoformat()
+        except ValueError:
+            pass
+    raise ReferenceError(
+        f"{path.name}: checked must be a YYYY-MM-DD date, got {value!r}"
+    )
 
 
 def _load_case(
-    path: pathlib.Path, raw: object, statement: str, doc: str
+    path: pathlib.Path, raw: object, statement: str, doc: str, checked: str
 ) -> ReferenceCase:
     if not isinstance(raw, dict):
         raise ReferenceError(f"{path.name}: every case must be a mapping")
@@ -291,9 +344,16 @@ def _load_case(
         )
     if verdict == MUST_PARSE and from_id:
         raise ReferenceError(f"{label}: only a must-reject case may carry `from:`")
-    for key in ("omits", "note"):
-        if key in raw and not isinstance(raw[key], str):
-            raise ReferenceError(f"{label}: {key} must be a string")
+    omits = raw.get("omits", "")
+    if not isinstance(omits, str):
+        raise ReferenceError(f"{label}: omits must be a string")
+    if verdict == MUST_REJECT and not omits.strip():
+        raise ReferenceError(
+            f"{label}: a must-reject case needs `omits:`, the production text "
+            "it leaves out"
+        )
+    if "note" in raw and not isinstance(raw["note"], str):
+        raise ReferenceError(f"{label}: note must be a string")
     return ReferenceCase(
         id=case_id,
         verdict=verdict,
@@ -301,8 +361,9 @@ def _load_case(
         doc=doc,
         anchor=anchor,
         statement=statement,
+        checked=checked,
         from_id=from_id,
-        omits=raw.get("omits", ""),
+        omits=omits,
         note=raw.get("note", ""),
     )
 
@@ -342,6 +403,7 @@ def reference_payload(report: ReferenceReport) -> dict:
             "total": report.must_reject_total,
             "caught": report.must_reject_caught,
             "informative": report.must_reject_informative,
+            "vacuous": report.must_reject_vacuous,
             "rate": report.must_reject_rate,
         },
         "cases": [
@@ -377,7 +439,8 @@ def format_reference_report(report: ReferenceReport) -> str:
     lines.append(
         f"must-reject  {report.must_reject_caught:3d}/{report.must_reject_total:<3d} "
         f"{report.must_reject_rate:6.1f}%  partial forms the parser rejects "
-        f"({report.must_reject_informative} informative)"
+        f"({report.must_reject_informative} informative, "
+        f"{report.must_reject_vacuous} vacuous)"
     )
     lines.append(f"controls:    {'ok' if report.controls_ok else 'FAILED'}")
     if report.failures:
@@ -409,4 +472,44 @@ def format_reference_report(report: ReferenceReport) -> str:
         for result in report.controls:
             if not result.conforms:
                 lines.append(f"  {result.case.id}: {result.message or 'parsed'}")
+    return "\n".join(lines)
+
+
+def format_reference_gaps(report: ReferenceReport) -> str:
+    """The failing cases as paste-ready `docs/gaps.md` entries.
+
+    The triage step after a run is manual copying; this is that step with the
+    transcription already attached -- case id, verdict, the doc link, and a
+    one-line repro. Only failures appear. A vacuous rejection is not a
+    failure, it is a check whose proof is not in yet, and printing it as a gap
+    would send someone upstream with a repro that parses.
+    """
+    lines: list[str] = []
+    lines.append(f"reference gaps: {len(report.failures)}")
+    for result in report.failures:
+        case = result.case
+        lines.append("")
+        lines.append(f"## {case.id}")
+        if case.verdict == MUST_REJECT:
+            lines.append("partial form accepted by the parser")
+            lines.append(f"from: {case.from_id}")
+            lines.append(f"omits: {case.omits}")
+        else:
+            lines.append("documented syntax rejected by the parser")
+        lines.append(f"doc: {case.doc}{case.anchor}")
+        lines.append(f"sql: {' '.join(case.sql.split())}")
+        if result.message:
+            lines.append(f"message: {result.message.splitlines()[0]}")
+    if report.must_reject_vacuous:
+        lines.append("")
+        lines.append(
+            f"vacuous ({report.must_reject_vacuous}) -- not gaps yet, "
+            "the full form does not parse either:"
+        )
+        for result in report.of(MUST_REJECT):
+            if result.conforms and not report.sibling_parsed(result):
+                lines.append(f"  {result.case.id}")
+    if not report.controls_ok:
+        lines.append("")
+        lines.append("CONTROL FAILED -- do not trust this list")
     return "\n".join(lines)

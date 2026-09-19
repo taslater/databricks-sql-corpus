@@ -8,7 +8,7 @@
 #     make corpus PY=.venv-release/bin/python
 PY ?= .venv/bin/python
 
-.PHONY: help venv test coverage corpus corpus-fetch gaps reference baseline clean
+.PHONY: help venv test coverage corpus corpus-fetch gaps reference reference-gaps baseline clean
 
 help:
 	@echo "make venv          create .venv and install the harness"
@@ -16,6 +16,7 @@ help:
 	@echo "make corpus        measure SQLFluff against the corpus"
 	@echo "make gaps          group the failures by construct (the PR queue)"
 	@echo "make reference     cases transcribed from the Databricks SQL reference"
+	@echo "make reference-gaps  the reference divergences as gaps.md-shaped entries"
 	@echo "make baseline      regenerate corpus/reports/baseline.json"
 	@echo "make test          run the test suite (gates reference.py at 100%)"
 	@echo "make coverage      report coverage for the whole package"
@@ -43,6 +44,11 @@ gaps:
 # it was transcribed from.
 reference:
 	$(PY) -m dbsqlparse.corpus reference $(CORPUS_ARGS)
+
+# The triage step: only the divergences, with case id, doc link and a
+# one-line repro, in the shape a docs/gaps.md entry wants.
+reference-gaps:
+	$(PY) -m dbsqlparse.corpus reference-gaps $(CORPUS_ARGS)
 
 # The committed baseline tracks RELEASED SQLFluff, not a fork checkout, so it
 # reflects what a user actually gets. Read the diff before committing it. An
