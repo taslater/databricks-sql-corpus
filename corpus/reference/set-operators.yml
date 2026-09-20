@@ -1,6 +1,6 @@
 statement: Set operators
 doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops
-checked: 2026-09-19
+checked: 2026-09-20
 syntax: |
   { UNION | INTERSECT | EXCEPT } [ ALL | DISTINCT ] subquery2 } [...]
 cases:
@@ -11,6 +11,31 @@ cases:
     note: |
       `[ ALL | DISTINCT ]` is in the production and DISTINCT is the documented
       default; the page's examples spell it for INTERSECT and UNION.
+  - id: set-operators.minus-distinct
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: SELECT c FROM number1 MINUS DISTINCT SELECT c FROM number2
+    note: |
+      The EXCEPT section documents MINUS as "a syntax alternative for EXCEPT",
+      so the same `[ ALL | DISTINCT ]` qualifier applies; Spark's page spells
+      the production out as `EXCEPT | MINUS [ ALL | DISTINCT ]`. Fails on main
+      at 33d8c8459; fixed by sqlfluff#8523.
+  - id: set-operators.minus
+    verdict: must-parse
+    anchor: "#examples"
+    sql: SELECT c FROM number1 MINUS SELECT c FROM number2
+    note: |
+      MINUS is documented as a syntax alternative for EXCEPT, and the page's
+      first MINUS example is the bare form. Parses on 2026-09-20 -- a
+      regression pin rather than new coverage.
+  - id: set-operators.minus-all
+    verdict: must-parse
+    anchor: "#examples"
+    sql: SELECT c FROM number1 MINUS ALL SELECT c FROM number2
+    note: |
+      The same alias with the `ALL` qualifier; the page's examples use
+      `MINUS ALL (SELECT ...)`. Parses on 2026-09-20 -- a regression pin;
+      the scraped corpus covers it first (Spark's except-all.sql).
   - id: set-operators.except-all
     verdict: must-parse
     anchor: "#syntax"
