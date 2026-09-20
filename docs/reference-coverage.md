@@ -84,7 +84,7 @@ Data types is covered page by page: `array_type.yml`, `map_type.yml`,
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.
 
-## DDL statements (46 done, 12 queued, 4 n/a)
+## DDL statements (57 done, 0 queued, 5 n/a)
 
 | page | status |
 | --- | --- |
@@ -138,18 +138,18 @@ writes the type as input, so a case would have to invent the position.
 | [DROP VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable) | done |
 | [DROP VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view) | done |
 | [DROP VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-volume) | done |
-| [COMMENT ON](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment) | queued |
-| [DECLARE VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable) | queued |
-| [REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table) | queued |
-| [REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign) | queued |
-| [REFRESH (MATERIALIZED VIEW or STREAMING TABLE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full) | queued |
-| [SET TAG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag) | queued |
-| [TRUNCATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-truncate-table) | queued |
-| [UNDROP](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table) | queued |
-| [UNSET TAG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag) | queued |
-| [USE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog) | queued |
-| [USE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-usedb) | queued |
-| [USE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema) | queued |
+| [COMMENT ON](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment) | done |
+| [DECLARE VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable) | done |
+| [REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table) | done |
+| [REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign) | done |
+| [REFRESH (MATERIALIZED VIEW or STREAMING TABLE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full) | done |
+| [SET TAG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag) | done |
+| [TRUNCATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-truncate-table) | done |
+| [UNDROP](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table) | done |
+| [UNSET TAG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag) | done |
+| [USE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog) | done |
+| [USE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-usedb) | n/a |
+| [USE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema) | done |
 
 ALTER TABLE's syntax block only names its clause productions; each lives on a
 sub-page, which is still queued and where the clause's partial forms belong

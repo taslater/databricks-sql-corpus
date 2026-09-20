@@ -1,0 +1,39 @@
+# COMMENT ON. Every documented securable parses; this page pins them.
+statement: COMMENT ON
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment
+checked: 2026-09-20
+syntax: |
+  COMMENT ON
+      { CATALOG catalog_name |
+        COLUMN relation_name . column_name |
+        CONNECTION connection_name |
+        PROVIDER provider_name |
+        RECIPIENT recipient_name |
+        { SCHEMA | DATABASE } schema_name |
+        SHARE share_name |
+        TABLE relation_name |
+        VOLUME volume_name }
+      IS comment
+cases:
+  - id: comment-on.catalog
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COMMENT ON CATALOG c IS 'x'
+  - id: comment-on.column
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COMMENT ON COLUMN t.c1 IS 'x'
+  - id: comment-on.connection
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COMMENT ON CONNECTION c IS 'x'
+  - id: comment-on.without-comment
+    verdict: must-reject
+    anchor: "#syntax"
+    from: comment-on.catalog
+    omits: "comment"
+    sql: |
+      COMMENT ON TABLE t IS

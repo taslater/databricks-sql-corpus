@@ -1,0 +1,40 @@
+# UNSET TAG. The statement is unsupported by the databricks dialect, so the
+# must-parse cases are gaps and the partial rejection is vacuous until a
+# grammar lands.
+statement: UNSET TAG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag
+checked: 2026-09-20
+syntax: |
+  UNSET TAG ON
+      { CATALOG catalog_name |
+        COLUMN relation_name . column_name |
+        EXTERNAL METADATA external_metadata_name |
+        { FUNCTION | PROCEDURE } function_name |
+        { SCHEMA | DATABASE } schema_name |
+        TABLE relation_name |
+        VIEW  relation_name |
+        VOLUME volume_name }
+      tag_key
+cases:
+  - id: unset-tag.catalog
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UNSET TAG ON CATALOG c cost_center
+  - id: unset-tag.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UNSET TAG ON TABLE t cost_center
+  - id: unset-tag.column
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UNSET TAG ON COLUMN t.ssn pii
+  - id: unset-tag.without-key
+    verdict: must-reject
+    anchor: "#syntax"
+    from: unset-tag.table
+    omits: "tag_key"
+    sql: |
+      UNSET TAG ON TABLE t

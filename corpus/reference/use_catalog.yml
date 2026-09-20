@@ -1,0 +1,33 @@
+# USE CATALOG. USE/SET with a name, a quoted name, or IDENTIFIER, and the
+# bare form, all parse; this page pins them.
+statement: USE CATALOG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog
+checked: 2026-09-20
+syntax: |
+  { USE | SET } CATALOG [ catalog_name | ' catalog_name ' ]
+cases:
+  - id: use-catalog.use
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      USE CATALOG c
+  - id: use-catalog.set
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET CATALOG c
+  - id: use-catalog.quoted
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      USE CATALOG 'c'
+  - id: use-catalog.identifier
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      USE CATALOG IDENTIFIER(mycat)
+  - id: use-catalog.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      USE CATALOG

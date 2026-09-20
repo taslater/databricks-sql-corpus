@@ -413,6 +413,23 @@ by `drop-table.*`. `DROP CATALOG`, `DROP FUNCTION`, `DROP SCHEMA` and
 `CREATE TABLE CLONE` also parse and are pinned. Recorded 2026-09-20 by the
 DDL batch.
 
+**`REFRESH FOREIGN`, both `REFRESH` forms, `SET TAG`, `UNSET TAG` and
+`UNDROP` are unsupported, with four partial forms.** Each of these has no
+grammar in the `databricks` dialect, so every documented form is rejected:
+`REFRESH FOREIGN` (`refresh-foreign.*`), `REFRESH MATERIALIZED VIEW` /
+`REFRESH [STREAMING] TABLE` (`refresh.*`), `SET TAG` (`set-tag.*`),
+`UNSET TAG` (`unset-tag.*`) and `UNDROP` (`undrop.*`). Four statements are
+partial: `DECLARE a, b INT` is rejected while the single-name and no-type
+forms parse (`declare-variable.*`); `REPAIR TABLE t` is rejected while
+`MSCK REPAIR TABLE t` parses, but `MSCK REPAIR TABLE t SYNC METADATA` does
+not (`repair-table.*`); `SET CATALOG c` is rejected while `USE CATALOG c`
+parses (`use-catalog.*`). Two over-acceptances are pinned: `REFRESH FOREIGN`
+alone parses with `FOREIGN` taken as an alias
+(`refresh-foreign.without-type`), and `USE SCHEMA` without a name parses
+(`use-schema.without-name`). `COMMENT ON` and `TRUNCATE TABLE` parse
+throughout. `USE DATABASE` is a documented alias of `USE SCHEMA` with no
+syntax block, so it is `n/a`. Recorded 2026-09-20 by the DDL batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

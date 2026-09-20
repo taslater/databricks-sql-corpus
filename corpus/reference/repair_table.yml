@@ -1,0 +1,38 @@
+# REPAIR TABLE. The statement, MSCK prefix, partition options and SYNC
+# METADATA parse; this page pins them.
+statement: REPAIR TABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table
+checked: 2026-09-20
+syntax: |
+  [ MSCK ] REPAIR TABLE table_name
+  {
+      [ {ADD | DROP | SYNC} PARTITIONS] | SYNC METADATA
+  }
+cases:
+  - id: repair-table.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REPAIR TABLE t
+  - id: repair-table.msck
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MSCK REPAIR TABLE t
+  - id: repair-table.sync-metadata
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      MSCK REPAIR TABLE t SYNC METADATA
+  - id: repair-table.add-partitions
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REPAIR TABLE t ADD PARTITIONS
+  - id: repair-table.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: repair-table.basic
+    omits: "table_name"
+    sql: |
+      REPAIR TABLE

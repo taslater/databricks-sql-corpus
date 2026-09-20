@@ -1,0 +1,40 @@
+# SET TAG. The statement is unsupported by the databricks dialect, so the
+# must-parse cases are gaps and the partial rejection is vacuous until a
+# grammar lands.
+statement: SET TAG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag
+checked: 2026-09-20
+syntax: |
+  SET TAG ON
+      { CATALOG catalog_name |
+        COLUMN relation_name . column_name |
+        EXTERNAL METADATA external_metadata_name |
+        { FUNCTION | PROCEDURE } function_name |
+        { SCHEMA | DATABASE } schema_name |
+        TABLE relation_name |
+        VIEW  relation_name |
+        VOLUME volume_name }
+      tag_key [ = tag_value ]
+cases:
+  - id: set-tag.catalog
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET TAG ON CATALOG c `cost_center` = `hr`
+  - id: set-tag.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET TAG ON TABLE t cost_center = hr
+  - id: set-tag.column
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET TAG ON COLUMN t.ssn pii
+  - id: set-tag.without-key
+    verdict: must-reject
+    anchor: "#syntax"
+    from: set-tag.table
+    omits: "tag_key"
+    sql: |
+      SET TAG ON TABLE t

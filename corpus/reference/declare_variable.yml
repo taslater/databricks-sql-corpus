@@ -1,0 +1,31 @@
+# DECLARE VARIABLE. The statement and its default forms parse; this page pins
+# them.
+statement: DECLARE VARIABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable
+checked: 2026-09-20
+syntax: |
+  DECLARE [ OR REPLACE ] [ VARIABLE ] variable_name [, ...]
+      [ data_type ] [ { DEFAULT | = } default_expression ]
+cases:
+  - id: declare-variable.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DECLARE VARIABLE v INT DEFAULT 5
+  - id: declare-variable.without-type
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DECLARE v
+  - id: declare-variable.multiple
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DECLARE a, b INT
+  - id: declare-variable.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: declare-variable.basic
+    omits: "variable_name"
+    sql: |
+      DECLARE

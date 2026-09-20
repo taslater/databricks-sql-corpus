@@ -1,0 +1,25 @@
+# USE SCHEMA. The statement with and without the SCHEMA keyword parses; this
+# page pins them.
+statement: USE SCHEMA
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema
+checked: 2026-09-20
+syntax: |
+  USE [SCHEMA] schema_name
+cases:
+  - id: use-schema.with-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      USE SCHEMA s
+  - id: use-schema.without-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      USE s
+  - id: use-schema.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: use-schema.with-keyword
+    omits: "schema_name"
+    sql: |
+      USE SCHEMA
