@@ -1000,17 +1000,18 @@
   },
   "reference": {
     "controls_ok": true,
+    "out_of_scope": 2,
     "must_parse": {
       "total": 823,
       "passed": 491,
       "rate": 59.65978128797084
     },
     "must_reject": {
-      "total": 396,
-      "caught": 333,
+      "total": 393,
+      "caught": 332,
       "informative": 176,
-      "vacuous": 157,
-      "rate": 84.0909090909091
+      "vacuous": 156,
+      "rate": 84.47837150127226
     },
     "cases": [
       {
@@ -7268,7 +7269,8 @@
         "statement": "Hints",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
         "anchor": "#syntax",
-        "message": null
+        "message": null,
+        "disposition": "out-of-scope"
       },
       {
         "id": "hints.broadcast-without-table",
@@ -7277,7 +7279,8 @@
         "statement": "Hints",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
         "anchor": "#syntax",
-        "message": null
+        "message": null,
+        "disposition": "out-of-scope"
       },
       {
         "id": "identifier-clause.use-catalog",
@@ -10990,15 +10993,6 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline",
         "anchor": "#syntax",
         "message": "Line 1, Position 1: Found unparsable section: 'TABLE t |> SELECT a'"
-      },
-      {
-        "id": "sql-pipeline.without-operation",
-        "verdict": "must-reject",
-        "ok": true,
-        "statement": "SQL Pipeline Syntax",
-        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline",
-        "anchor": "#syntax",
-        "message": null
       },
       {
         "id": "star.basic",
