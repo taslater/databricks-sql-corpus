@@ -108,6 +108,22 @@ class ReferenceError(ValueError):
 
 
 @dataclass(frozen=True)
+class ReferenceFile:
+    """The page one file of cases was transcribed from, cases not loaded.
+
+    `drift.py` diffs `syntax` against the live page and reads `checked` for
+    staleness -- both are properties of the page, not of any one case, and the
+    page is what goes stale when Databricks revises the reference.
+    """
+
+    path: pathlib.Path
+    statement: str
+    doc: str
+    syntax: str
+    checked: str
+
+
+@dataclass(frozen=True)
 class ReferenceCase:
     """One transcribed statement and the reference's verdict on it."""
 
@@ -252,13 +268,9 @@ def load_reference(root: pathlib.Path | None = None) -> list[ReferenceCase]:
     parameter rather than a monkeypatchable default so tests can point it at
     fixtures without touching the committed corpus.
     """
-    root = REFERENCE_DIR if root is None else root
-    if not root.is_dir():
-        raise ReferenceError(f"no reference corpus at {root}")
-
     cases: list[ReferenceCase] = []
     origins: dict[str, str] = {}
-    for path in sorted([*root.rglob("*.yml"), *root.rglob("*.yaml")]):
+    for path in _reference_paths(root):
         file_cases = _load_file(path)
         by_id = {c.id: c for c in file_cases}
         for case in file_cases:
@@ -283,13 +295,47 @@ def load_reference(root: pathlib.Path | None = None) -> list[ReferenceCase]:
     return cases
 
 
-def _load_file(path: pathlib.Path) -> list[ReferenceCase]:
+def load_reference_files(root: pathlib.Path | None = None) -> list[ReferenceFile]:
+    """The file-level metadata of every reference page, without its cases.
+
+    Shares `_file_fields` with the case loader, so a file that would not load
+    as cases does not load here either: drift must not bless a page whose
+    transcription the corpus itself would reject. `root` is a parameter for
+    the same reason it is on `load_reference` -- tests point it at fixtures.
+    """
+    files: list[ReferenceFile] = []
+    for path in _reference_paths(root):
+        raw = _read_yaml(path)
+        statement, doc, syntax, _cases, checked = _file_fields(path, raw)
+        files.append(
+            ReferenceFile(
+                path=path, statement=statement, doc=doc, syntax=syntax, checked=checked
+            )
+        )
+    return files
+
+
+def _reference_paths(root: pathlib.Path | None) -> list[pathlib.Path]:
+    root = REFERENCE_DIR if root is None else root
+    if not root.is_dir():
+        raise ReferenceError(f"no reference corpus at {root}")
+    return sorted([*root.rglob("*.yml"), *root.rglob("*.yaml")])
+
+
+def _read_yaml(path: pathlib.Path) -> object:
     try:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
     except (yaml.YAMLError, ValueError) as error:
         # ValueError covers YAML resolvers that build values eagerly, such as
         # an impossible date in `checked: 2026-13-45`.
         raise ReferenceError(f"{path.name}: not valid YAML: {error}") from error
+
+
+def _file_fields(
+    path: pathlib.Path, raw: object
+) -> tuple[str, str, str, list, str]:
+    """Validate and return the file-level fields: statement, doc, syntax,
+    cases, checked. Shared by the case loader and the drift reader."""
     if not isinstance(raw, dict):
         raise ReferenceError(f"{path.name}: expected a mapping at the top level")
     unknown = sorted(set(raw) - _FILE_KEYS)
@@ -309,6 +355,12 @@ def _load_file(path: pathlib.Path) -> list[ReferenceCase]:
     checked = _checked_date(path, raw["checked"])
     if not isinstance(cases, list) or not cases:
         raise ReferenceError(f"{path.name}: cases must be a non-empty list")
+    return statement, doc, syntax, cases, checked
+
+
+def _load_file(path: pathlib.Path) -> list[ReferenceCase]:
+    raw = _read_yaml(path)
+    statement, doc, syntax, cases, checked = _file_fields(path, raw)
     file_cases = [_load_case(path, case, statement, doc, checked) for case in cases]
     block = _normalise_for_check(syntax)
     for case in file_cases:

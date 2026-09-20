@@ -17,7 +17,9 @@ syntax: |
       alter_add_model |
       REMOVE MODEL model_name |
       RENAME TO to_share_name |
-      [ SET ] OWNER TO principal }
+    [ SET ] OWNER TO principal }
+  alter_add_materialized_view
+    { { ALTER | ADD } MATERIALIZED VIEW mat_view_name [ COMMENT comment ] [ AS mat_view_share_name ]
   alter_add_table
     { { ALTER | ADD } [ TABLE ] table_name [ COMMENT comment ]
           [ PARTITION clause ] [ AS table_share_name ]

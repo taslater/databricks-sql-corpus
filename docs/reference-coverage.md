@@ -22,6 +22,13 @@ The notebook magic-cell cases (`magic_cells.yml`) come from outside both
 indexes; the Unity Catalog privileges reference supplies the privilege
 names for the GRANT-family cases. Both are listed below.
 
+This file was generated from the index pages, and the index pages do not link
+every documented statement. `make index-check` compares the docs sitemap
+against the transcribed pages and reports the difference, and
+`docs/reference-drift.md` is the ledger of what it found and how each page was
+dispositioned. A page that appears there and not here is a page the index
+never linked.
+
 ## General reference (7 done, 0 queued, 44 n/a)
 
 | page | status |

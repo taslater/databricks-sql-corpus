@@ -1,0 +1,9 @@
+# URL substrings the page-set check (`make index-check`) should not report.
+#
+# The check already watches only the statement/clause families in
+# `src/dbsqlparse/corpus/drift.py` (`DEFAULT_INDEX_FAMILIES`), and treats every
+# URL in `docs/reference-coverage.md` as dispositioned. So a page belongs here
+# only when it is inside a watched family, is not in the ledger, and is known
+# to be a landing page or an alias rather than a statement of its own.
+#
+# One substring per line; `#` starts a comment.

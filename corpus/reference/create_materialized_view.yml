@@ -7,16 +7,24 @@ checked: 2026-09-19
 syntax: |
   { CREATE OR REPLACE MATERIALIZED VIEW | CREATE MATERIALIZED VIEW [ IF NOT EXISTS ] }
     view_name [ column_list ] [ view_clauses ] AS query
-  column_list:
+  column_list
     ( { column_name column_type column_properties } [, ...]
       [ CONSTRAINT expectation_name EXPECT (expectation_expr)
         [ ON VIOLATION { FAIL UPDATE | DROP ROW } ] ] [, ...]
-      [ , table_constraint ] [...] )
-  view_clauses:
+    [ , table_constraint ] [...] )
+  column_properties
+    { NOT NULL | COMMENT column_comment | column_constraint | MASK clause } [ ... ]
+  view_clauses
     { USING { DELTA | ICEBERG } | PARTITIONED BY (col [, ...]) | CLUSTER BY clause
     | COMMENT view_comment | DEFAULT COLLATION UTF8_BINARY | TBLPROPERTIES clause
     | REFRESH POLICY refresh_clause | SCHEDULE [ REFRESH ] schedule_clause
     | schedule | WITH { ROW FILTER clause } } [...]
+  schedule
+    { SCHEDULE [ REFRESH ] schedule_clause |
+      TRIGGER ON UPDATE [ AT MOST EVERY trigger_interval ] }
+  schedule_clause
+    { EVERY number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } |
+      CRON cron_string [ AT TIME ZONE timezone_id ] }
 cases:
   - id: create-materialized-view.expectations-only
     verdict: must-parse

@@ -27,10 +27,10 @@ syntax: |
       COMMENT function_comment |
       [CONTAINS SQL | READS SQL DATA] |
       DEFAULT COLLATION default_collation_name } |
-      environment
+      environment }
 
   environment
-    ENVIRONMENT ( { environment_key = environment_value } [, ...] )
+      ENVIRONMENT ( { environment_key = environment_value } [, ...] )
 cases:
   - id: create-function.sql-scalar
     verdict: must-parse

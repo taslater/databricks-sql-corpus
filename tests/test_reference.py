@@ -981,3 +981,33 @@ def test_the_controls_are_what_they_claim():
     report = run_reference_corpus(SqlFluffRunner(), cases=[])
     assert report.controls_ok
     assert report.results == []
+
+
+# --- file-level metadata (read by drift.py) ---------------------------------
+def test_load_reference_files_reads_the_page_metadata(tmp_path):
+    write(tmp_path, "a.yml", VALID_FILE)
+    files = reference.load_reference_files(tmp_path)
+    assert len(files) == 1
+    page = files[0]
+    assert page.statement == "CREATE FLOW"
+    assert page.doc.startswith("https://docs.databricks.com")
+    assert "CREATE FLOW f AS" in page.syntax
+    assert page.checked == "2026-09-19"
+    assert page.path.name == "a.yml"
+
+
+def test_load_reference_files_missing_root(tmp_path):
+    with pytest.raises(ReferenceError):
+        reference.load_reference_files(tmp_path / "nope")
+
+
+def test_load_reference_files_shares_file_validation(tmp_path):
+    write(tmp_path, "bad.yml", VALID_FILE.replace("2026-09-19", "2026-13-45"))
+    with pytest.raises(ReferenceError):
+        reference.load_reference_files(tmp_path)
+
+
+def test_load_reference_files_on_the_committed_corpus():
+    files = reference.load_reference_files()
+    assert files
+    assert all(f.statement and f.doc and f.syntax and f.checked for f in files)

@@ -30,6 +30,10 @@ make corpus         # measure SQLFluff: recall + rejection
 make gaps           # group failures by construct -- the PR queue
 make diff           # advisory: sqlfluff vs sqlglot disagreements (not scored)
 make reference      # cases transcribed from the Databricks SQL reference
+make stale          # reference pages last checked too long ago (no network)
+make drift          # has each reference page changed under its transcription?
+make index-check    # documented statement pages with no file; files whose page is gone
+make sources-check  # how far each pinned corpus source is behind its repo
 make baseline       # regenerate corpus/reports/baseline.json
 make test
 ```
@@ -66,6 +70,8 @@ src/dbsqlparse/corpus/runners.py    the parsers under test (SQLFluff, sqruff, sq
 src/dbsqlparse/corpus/harness.py    recall + rejection measurement
 src/dbsqlparse/corpus/mutate.py     valid SQL -> guaranteed-invalid SQL
 src/dbsqlparse/corpus/reference.py  the doc-derived corpus harness
+src/dbsqlparse/corpus/drift.py      does a reference page still match its transcription?
+src/dbsqlparse/corpus/sources_check.py  how far a pinned source is behind
 src/dbsqlparse/corpus/constructs.py how a failure is normalised into a construct
 src/dbsqlparse/corpus/differential.py  advisory sqlfluff-vs-sqlglot triage
 src/dbsqlparse/corpus/cli.py        `python -m dbsqlparse.corpus`
@@ -74,6 +80,8 @@ src/dbsqlparse/preprocess.py        notebook cells + parameter substitution
 scripts/compare_baseline.py         baseline diff for CI
 scripts/probe_sqlglot_fixtures.py   discovery probe over sqlglot's dialect tests
 docs/gaps.md                        the upstream work queue
+docs/reference-drift.md             the drift ledger: page changes, pages with no file
+docs/maintenance.md                 the cadence for staying current
 docs/sqlglot-plan.md                the advisory second parser, and its limits
 docs/design-notes.md                history, including the retired parser
 ```
@@ -263,6 +271,32 @@ corpus` and `make reference` on the branch. Only then is it a pull request.
 This does not replace the scraped corpus — it covers the complement. Published
 SQL tells you what breaks in practice; the reference tells you what the grammar
 is supposed to be.
+
+### Keeping the reference current
+
+The reference moves, so the transcriptions have to be watched. `drift.py` does
+that and **reports only — it never edits `corpus/reference/`.** That restraint
+is the point: a transcription is a reading of the page plus the judgement about
+which partial forms to pin, and a tool that rewrote it from the live page would
+make the corpus mirror the page instead of measuring against it.
+
+- `make stale` reads the `checked:` dates (no network) — the scheduler.
+- `make drift` fetches each `doc:` and reports `same` / `changed` / `moved` /
+  `uncertain` / `fetch-error`. The comparison ignores whitespace and case,
+  because the reference renders a production across inline spans and drops the
+  line breaks, and matches a production split across several blocks by joining
+  the page's production blocks. A `changed` verdict carries a token diff.
+- `make index-check` diffs `sitemap.xml` against the transcribed pages for the
+  statement/clause families, and treats `docs/reference-coverage.md` as the
+  disposition ledger.
+- `make sources-check` reports how far each pinned scraped source is behind.
+- `docs/reference-drift.md` is the ledger; `docs/maintenance.md` is the cadence,
+  including the manual step that *is* automated nowhere: on each SQLFluff
+  release, `make baseline PY=.venv-release/bin/python` and read the diff.
+
+`drift.py` carries the same 100% coverage gate as `reference.py`. When it
+reports `changed`, re-read the page, update `syntax:` and the cases, and bump
+`checked:` — the ledger records the disposition.
 
 ## Contributing upstream
 

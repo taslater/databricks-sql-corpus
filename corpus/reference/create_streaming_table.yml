@@ -8,12 +8,29 @@ checked: 2026-09-19
 syntax: |
   CREATE [OR REFRESH] [PRIVATE] STREAMING TABLE table_name
     [ table_specification ] [ table_clauses ] [ { flow_clause | AS query } ]
-  flow_clause:
-    FLOW { INSERT [ONCE] BY NAME query
-         | AUTO CDC auto_cdc_flow_spec
-         | REPLACE WHERE predicate BY NAME query
-         | REPLACE USING ( column_name [, ...] ) SEQUENCE BY sequence_column
-           BY NAME query }
+  table_specification
+    ( { column_identifier column_type [column_properties] } [, ...]
+      [ column_constraint ] [, ...]
+      [ , table_constraint ] [...] )
+  column_properties
+    { NOT NULL | GENERATED ALWAYS AS ( expr ) | GENERATED { ALWAYS | BY DEFAULT }
+      AS IDENTITY [ ( [ START WITH start | INCREMENT BY step ] [ ...] ) ]
+      | DEFAULT default_expression | COMMENT column_comment | column_constraint
+      | MASK clause } [ ... ]
+  table_clauses
+    { USING DELTA
+      PARTITIONED BY (col [, ...]) |
+      CLUSTER BY clause |
+      LOCATION path |
+      COMMENT view_comment |
+      TBLPROPERTIES clause |
+      WITH { ROW FILTER clause } } [ ... ]
+    } [ ... ]
+  flow_clause
+    FLOW { { INSERT [ONCE] BY NAME query } |
+           { AUTO CDC auto_cdc_flow_spec } |
+           { REPLACE WHERE predicate BY NAME query } |
+           { REPLACE USING ( column_name [, ...] ) SEQUENCE BY sequence_column BY NAME query } }
 cases:
   - id: create-streaming-table.plain
     verdict: must-parse

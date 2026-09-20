@@ -8,7 +8,10 @@
 #     make corpus PY=.venv-release/bin/python
 PY ?= .venv/bin/python
 
-.PHONY: help venv test coverage corpus corpus-fetch gaps diff reference reference-gaps baseline audit clean
+# A page not re-read in this many days is a candidate for `make drift`.
+STALE_DAYS ?= 90
+
+.PHONY: help venv test coverage corpus corpus-fetch gaps diff reference reference-gaps baseline stale drift index-check sources-check audit clean
 
 help:
 	@echo "make venv          create .venv and install the harness"
@@ -19,7 +22,11 @@ help:
 	@echo "make reference     cases transcribed from the Databricks SQL reference"
 	@echo "make reference-gaps  the reference divergences as gaps.md-shaped entries"
 	@echo "make baseline      regenerate corpus/reports/baseline.json"
-	@echo "make test          run the test suite (gates reference.py at 100%)"
+	@echo "make stale         reference pages last checked too long ago"
+	@echo "make drift         has each reference page changed under its transcription?"
+	@echo "make index-check   documented pages with no file, and files whose page is gone"
+	@echo "make sources-check how far each pinned corpus source is behind its repo"
+	@echo "make test          run the test suite (gates reference.py and drift.py)"
 	@echo "make coverage      report coverage for the whole package"
 	@echo "make audit AUDIT_REF=<ref>  measure an unmerged branch end to end"
 	@echo ""
@@ -69,12 +76,31 @@ baseline:
 		sys.exit(0 if 'site-packages' in str(p) else 'refusing: not a released SQLFluff')"
 	$(PY) -m dbsqlparse.corpus run --json corpus/reports/baseline.json
 
+# Keeping the reference corpus current. `stale` reads the `checked:` dates and
+# needs no network; `drift` fetches every doc page and reports changed, moved,
+# uncertain and errored transcriptions; `index-check` diffs the sitemap against
+# the transcribed pages. The monthly workflow (`.github/workflows/drift.yml`)
+# runs all four and opens one rolling issue. Nothing here edits the corpus: a
+# finding is re-read and updated by hand, which is what keeps it an oracle.
+stale:
+	$(PY) -m dbsqlparse.corpus stale --days $(STALE_DAYS)
+
+drift:
+	$(PY) -m dbsqlparse.corpus drift
+
+index-check:
+	$(PY) -m dbsqlparse.corpus index-check
+
+sources-check:
+	$(PY) -m dbsqlparse.corpus sources-check
+
 # The reference harness reads the oracle the scraped corpus cannot see, so a
-# silent bug in it writes wrong numbers into the confidence. It is held at
-# 100% line and branch coverage. The rest of the package predates that bar and
-# is reported, not gated, by `make coverage`.
+# silent bug in it writes wrong numbers into the confidence. `drift.py` guards
+# the same oracle against the page going stale, so it carries the same bar. Both
+# are held at 100% line and branch coverage. The rest of the package predates
+# that bar and is reported, not gated, by `make coverage`.
 test:
-	$(PY) -m pytest -q --cov=dbsqlparse.corpus.reference \
+	$(PY) -m pytest -q --cov=dbsqlparse.corpus.reference --cov=dbsqlparse.corpus.drift \
 		--cov-report=term-missing --cov-fail-under=100
 
 coverage:

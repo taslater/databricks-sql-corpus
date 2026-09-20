@@ -1,8 +1,11 @@
-"""CLI: python -m dbsqlparse.corpus [fetch|run|gaps|diff|reference|reference-gaps]"""
+"""CLI: python -m dbsqlparse.corpus [fetch|run|gaps|diff|reference|reference-gaps|
+stale|drift|index-check|sources-check]"""
 from __future__ import annotations
 
 import argparse
 import collections
+import json
+import os
 import pathlib
 import sys
 import time
@@ -13,6 +16,17 @@ from .differential import (
     format_differential,
     run_differential,
     write_differential_json,
+)
+from .drift import (
+    DEFAULT_INDEX_FAMILIES,
+    format_drift_report,
+    format_index_report,
+    format_stale_report,
+    load_index_ignore,
+    run_drift,
+    run_index_check,
+    stale_files,
+    write_drift_json,
 )
 from .harness import (
     REPORT_DIR,
@@ -32,6 +46,11 @@ from .reference import (
     write_reference_json,
 )
 from .runners import get_runner
+from .sources_check import (
+    format_sources_check,
+    run_sources_check,
+    sources_payload,
+)
 
 
 def _add_runner_args(p: argparse.ArgumentParser, local: bool = True) -> None:
@@ -96,12 +115,50 @@ def main(argv: list[str] | None = None) -> int:
     diff.add_argument("--limit", type=int, default=30, help="how many per section")
     diff.add_argument("--json", type=str, default=None, help="also write a JSON report here")
 
+    stale = sub.add_parser(
+        "stale", help="reference pages last checked longer than --days ago"
+    )
+    stale.add_argument("--days", type=int, default=90)
+
+    drift = sub.add_parser(
+        "drift", help="check each reference page against its live doc (fetches)"
+    )
+    drift.add_argument("--json", type=str, default=None, help="also write a JSON report here")
+
+    sub.add_parser(
+        "index-check",
+        help="documented pages with no file, and files whose page has gone",
+    )
+
+    sources_check = sub.add_parser(
+        "sources-check", help="how far each pinned corpus source is behind its repo"
+    )
+    sources_check.add_argument(
+        "--json", type=str, default=None, help="also write a JSON report here"
+    )
+
     args = ap.parse_args(argv)
 
     if args.command == "fetch":
         return fetch_mod.main()
     if args.command == "diff":
         return _diff(args)
+    if args.command == "stale":
+        print(format_stale_report(stale_files(args.days)))
+        return 0
+    if args.command == "drift":
+        return _drift(args)
+    if args.command == "index-check":
+        print(
+            format_index_report(
+                run_index_check(),
+                DEFAULT_INDEX_FAMILIES,
+                load_index_ignore(),
+            )
+        )
+        return 0
+    if args.command == "sources-check":
+        return _sources_check(args)
 
     if args.runner == "both":
         names = ["sqlfluff", "sqruff"]
@@ -276,6 +333,37 @@ def _gaps(names: list[str], args) -> int:
         )
         print(f"  {result.case.id}  [{kind}]")
         print(f"      {result.case.doc}{result.case.anchor}")
+    return 0
+
+
+def _drift(args) -> int:
+    """Fetch every reference page and report which transcriptions moved.
+
+    Findings are not an error: a changed page is the check working. The exit
+    code is non-zero only when the controls misbehave, because that is what
+    makes the verdicts untrustworthy.
+    """
+    def progress(done: int, total: int, file) -> None:
+        print(f"  [{done:3d}/{total}] {file.path.name}", file=sys.stderr)
+
+    report = run_drift(progress=progress)
+    print(format_drift_report(report))
+    if args.json:
+        write_drift_json(report, pathlib.Path(args.json))
+        print(f"json report: {args.json}")
+    return 0 if report.controls_ok else 1
+
+
+def _sources_check(args) -> int:
+    """Report how far each pinned source has fallen behind its repo."""
+    token = os.environ.get("GITHUB_TOKEN") or None
+    statuses = run_sources_check(token=token)
+    print(format_sources_check(statuses))
+    if args.json:
+        out = pathlib.Path(args.json)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(sources_payload(statuses), indent=2), encoding="utf-8")
+        print(f"json report: {args.json}")
     return 0
 
 
