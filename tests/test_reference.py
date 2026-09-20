@@ -1110,6 +1110,13 @@ def test_out_of_scope_is_excluded_and_parser_limitation_is_counted():
     # The limitation is counted (the parser does not satisfy it) but split out.
     assert [r.case.id for r in report.acknowledged_failures] == ["lim"]
     assert [r.case.id for r in report.unexpected_failures] == ["bad"]
+    # Both are reported separately from the scored failures.
+    out = format_reference_report(report)
+    assert "out of scope: 1 case(s) excluded" in out
+    assert "Acknowledged parser limitations (counted, not surprises)" in out
+    assert "[not parsed] lim" in out
+    assert "[accepted but must be rejected] oos" not in out
+    assert "[accepted but must be rejected] bad" in out
 
 
 def test_a_disposition_is_carried_into_the_report_payload(tmp_path):
