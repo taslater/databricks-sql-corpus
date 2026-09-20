@@ -177,7 +177,7 @@
         {
           "path": "corpus/cache/spark-sql-tests/inputs/identifier-clause.sql",
           "errors": [
-            "Line 7, Position 12: Found unparsable section: \":colname = 'c';\\nSELECT IDENTIFIER(${coln...\""
+            "Line 7, Position 12: Found unparsable section: \":colname = 'c';\\nSELECT IDENTIFIER(colnam...\""
           ]
         },
         {
@@ -528,16 +528,10 @@
       "name": "dbx-dlt-notebooks",
       "expectation": "valid",
       "total": 19,
-      "passed": 14,
+      "passed": 15,
       "skipped_dialect": 1,
-      "rate": 73.68421052631578,
+      "rate": 78.94736842105263,
       "failures": [
-        {
-          "path": "corpus/cache/dbx-dlt-notebooks/divvy-bike-demo/dbsql-divvybike-dashboard-sql.sql",
-          "errors": [
-            "Undefined jinja template variable: 'date_and_time'"
-          ]
-        },
         {
           "path": "corpus/cache/dbx-dlt-notebooks/financial-services-examples/Personalization/02 - DLT APPLY CHANGES.sql",
           "errors": [
@@ -575,13 +569,13 @@
         {
           "path": "corpus/cache/dbx-devrel/sessions/2020-05-28 | Slowly Changing Dimensions (SCD) Type 2/SCD Type 2 Blog Demo.sql",
           "errors": [
-            "Unable to lex characters: '$db.custom...'"
+            "Line 3, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC ## Overview\\n-- MAGIC ...'"
           ]
         },
         {
           "path": "corpus/cache/dbx-devrel/sessions/2020-08-25 | Generating Surrogate Keys for your Data Lakehouse with Spark SQL and Delta Lake/Generating Surrogate Keys.sql",
           "errors": [
-            "Unable to lex characters: '${test.nro...'"
+            "Line 3, Position 1: Found unparsable section: '-- MAGIC \\n-- MAGIC 1. History of Surroga...'"
           ]
         }
       ]
@@ -805,7 +799,7 @@
         {
           "path": "corpus/cache/dbx-packt-cookbook/Chapter08/Clean Up.sql",
           "errors": [
-            "Line 8, Position 1: Found unparsable section: 'USE SCHEMA ${schema};\\n\\n-- COMMAND ------...'"
+            "Line 8, Position 1: Found unparsable section: 'USE SCHEMA schema;\\n\\n-- COMMAND ---------...'"
           ]
         },
         {
@@ -964,13 +958,13 @@
         "tier": "guaranteed"
       },
       "unterminated-string": {
-        "total": 169,
-        "rejected": 169,
+        "total": 170,
+        "rejected": 170,
         "tier": "guaranteed"
       },
       "double-comma": {
-        "total": 229,
-        "rejected": 229,
+        "total": 228,
+        "rejected": 228,
         "tier": "guaranteed"
       },
       "dangling-operator": {
@@ -979,13 +973,13 @@
         "tier": "guaranteed"
       },
       "dangling-boolean-operator": {
-        "total": 219,
-        "rejected": 219,
+        "total": 220,
+        "rejected": 220,
         "tier": "weak"
       },
       "unclosed-comment": {
-        "total": 241,
-        "rejected": 241,
+        "total": 240,
+        "rejected": 240,
         "tier": "guaranteed"
       },
       "delete-keyword": {
@@ -995,30 +989,408 @@
       },
       "delete-comma": {
         "total": 228,
-        "rejected": 140,
+        "rejected": 143,
         "tier": "weak"
       }
     },
-    "guaranteed_total": 1322,
-    "guaranteed_rejected": 1322,
+    "guaranteed_total": 1321,
+    "guaranteed_rejected": 1321,
     "rejection_rate": 100.0,
     "escapes": []
   },
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 177,
-      "passed": 98,
-      "rate": 55.367231638418076
+      "total": 258,
+      "passed": 161,
+      "rate": 62.4031007751938
     },
     "must_reject": {
-      "total": 83,
-      "caught": 76,
-      "informative": 39,
-      "vacuous": 37,
-      "rate": 91.56626506024097
+      "total": 120,
+      "caught": 107,
+      "informative": 64,
+      "vacuous": 43,
+      "rate": 89.16666666666667
     },
     "cases": [
+      {
+        "id": "alter-table.rename-to",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.add-columns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.alter-column-comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.alter-column-multi",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 41: Found unparsable section: \", b COMMENT 'y'\""
+      },
+      {
+        "id": "alter-table.alter-column-after",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.alter-column-set-default",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.rename-column",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t DEFAULT COLLATION UTF8_BIN...'"
+      },
+      {
+        "id": "alter-table.drop-feature",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.drop-feature-truncate",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.add-partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.add-partition-multi",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.drop-partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.partition-set-location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.rename-partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.recover-partitions",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.drop-row-filter",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.set-tblproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.unset-tblproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.set-serde",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.set-serde-properties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.set-location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.set-external",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t SET EXTERNAL'"
+      },
+      {
+        "id": "alter-table.set-external-dry-run",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t SET EXTERNAL DRY RUN'"
+      },
+      {
+        "id": "alter-table.set-managed",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t SET MANAGED'"
+      },
+      {
+        "id": "alter-table.set-managed-truncate",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t SET MANAGED TRUNCATE UNIFO...'"
+      },
+      {
+        "id": "alter-table.set-managed-move",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t SET MANAGED MOVE'"
+      },
+      {
+        "id": "alter-table.set-managed-copy",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t SET MANAGED COPY'"
+      },
+      {
+        "id": "alter-table.unset-managed",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t UNSET MANAGED'"
+      },
+      {
+        "id": "alter-table.unset-managed-truncate",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t UNSET MANAGED TRUNCATE UNI...'"
+      },
+      {
+        "id": "alter-table.set-owner-to",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.owner-to",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.set-tags",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.unset-tags",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.replace-partitioned-cluster",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t REPLACE PARTITIONED BY WIT...'"
+      },
+      {
+        "id": "alter-table.replace-partitioned-cluster-auto",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER TABLE t REPLACE PARTITIONED BY WIT...'"
+      },
+      {
+        "id": "alter-table.predictive-enable",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.predictive-disable",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.predictive-inherit",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.no-table-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.replace-partitioned-without-cluster",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-table.predictive-without-optimization",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table",
+        "anchor": "#syntax",
+        "message": null
+      },
       {
         "id": "array-sort.lambda-keyword-parameters",
         "verdict": "must-parse",
@@ -1535,6 +1907,204 @@
         "message": null
       },
       {
+        "id": "create-schema.plain",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'DEFAULT COLLATION UTF8_BINARY'"
+      },
+      {
+        "id": "create-schema.location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.managed-location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.retain-dropped-days",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'RETAIN DROPPED FOR 14 DAYS'"
+      },
+      {
+        "id": "create-schema.retain-dropped-hours",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'RETAIN DROPPED FOR 0 HOURS'"
+      },
+      {
+        "id": "create-schema.retain-dropped-week",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'RETAIN DROPPED FOR 1 WEEK'"
+      },
+      {
+        "id": "create-schema.dbproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.dbproperties-multi",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.clause-list-repeats",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.if-not-without-exists",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.if-exists-without-not",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.comment-without-text",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.default-collation-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.location-without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.managed-location-without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.retain-dropped-without-unit",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.retain-dropped-without-number",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.empty-dbproperties",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-schema.dbproperties-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "create-streaming-table.plain",
         "verdict": "must-parse",
         "ok": true,
@@ -1605,6 +2175,502 @@
         "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "create-table.columns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.columns-multi",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.using",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.as-query",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.using-and-as",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.external",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.temp",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.temporary",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.replace-temp",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.replace-bare-temp",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.column-comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.column-not-null",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.column-collate",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.generated-expression",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.identity-always",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.identity-by-default",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.identity-options",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.default-expression",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.table-comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.tblproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.partitioned-by",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.cluster-by",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.clustered-by",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.clustered-sorted",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.location-credential",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 57: Found unparsable section: 'WITH (CREDENTIAL cred)'"
+      },
+      {
+        "id": "create-table.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 27: Found unparsable section: 'DEFAULT COLLATION UTF8_BINARY'"
+      },
+      {
+        "id": "create-table.clause-list-repeats",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.table-constraint",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.if-not-without-exists",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.if-exists-without-not",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.column-without-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.empty-column-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.using-without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.as-without-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.collate-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.generated-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.identity-without-always",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.identity-without-step",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.default-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.column-comment-without-text",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.clustered-without-into",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.clustered-without-buckets",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.clustered-without-columns",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.sorted-without-column",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.sorted-without-buckets",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.location-without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.location-without-credential",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.default-collation-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.constraint-without-column",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table.external-temp",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "EXTERNAL",
+          "TEMP | TEMPORARY"
+        ]
+      },
+      {
+        "id": "create-table.replace-with-if-not-exists",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE TABLE [USING]",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "REPLACE",
+          "IF NOT EXISTS"
+        ]
       },
       {
         "id": "create-view.plain",
