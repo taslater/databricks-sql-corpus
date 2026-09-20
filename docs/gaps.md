@@ -235,6 +235,27 @@ production and its fifteen partial forms as `copy-into.*`. The partial
 rejections report vacuous until the statement lands. Recorded 2026-09-20 by
 the Tier 2 batch.
 
+**`OPTIMIZE … FULL` is rejected.** The
+[OPTIMIZE reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize)
+gives `OPTIMIZE table_name [FULL] [WHERE predicate] [ZORDER BY (col_name1
+[, ...])]`. The databricks dialect parses the bare statement, `WHERE` and
+`ZORDER BY` — including a multi-column list and a `WHERE … ZORDER BY` pair —
+but rejects `FULL`: `OPTIMIZE events FULL` fails, and therefore
+`OPTIMIZE events FULL WHERE date >= '2025-01-01'` (the documented replacement
+for a bare `WHERE` on a liquid-clustering table, DBR 18.1+) and the
+all-clauses combination. Pinned as `optimize.full`, `optimize.full-where` and
+`optimize.all-clauses`. The five `FULL`-free cases parse and are pinned green.
+Recorded 2026-09-20 by the Tier 2 batch.
+
+**`VACUUM … FULL` and `VACUUM … LITE` are rejected.** The
+[VACUUM reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum)
+gives `VACUUM table_name { { FULL | LITE } | DRY RUN } [...]` for Iceberg
+tables (DBR 16.1+), with a plain `VACUUM table_name` form for other tables.
+The dialect parses `VACUUM t` and `VACUUM t DRY RUN` but rejects the two
+modes: `VACUUM t FULL` and `VACUUM t LITE`. Pinned as `vacuum.full` and
+`vacuum.lite`; the two partial rejections that mix the alternatives report
+vacuous until the modes land. Recorded 2026-09-20 by the Tier 2 batch.
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as

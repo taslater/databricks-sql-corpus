@@ -1,0 +1,86 @@
+# OPTIMIZE. Bare, WHERE and ZORDER BY parse; the FULL clause (DBR 16.0+) is
+# a gap, including its combination with WHERE for liquid-clustering tables.
+statement: OPTIMIZE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize
+checked: 2026-09-20
+syntax: |
+  OPTIMIZE table_name [FULL] [WHERE predicate]  [ZORDER BY (col_name1 [, ...] ) ]
+cases:
+  - id: optimize.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events
+  - id: optimize.where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events WHERE date >= '2017-01-01'
+  - id: optimize.zorder
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events ZORDER BY (eventType)
+  - id: optimize.zorder-multiple-columns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events ZORDER BY (a, b)
+  - id: optimize.where-and-zorder
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events WHERE date >= current_timestamp() - INTERVAL 1 day ZORDER BY (eventType)
+  - id: optimize.full
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events FULL
+    note: Rejected by the databricks dialect on main; the FULL clause has no grammar.
+  - id: optimize.full-where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events FULL WHERE date >= '2025-01-01'
+    note: Rejected by the databricks dialect on main; the FULL clause has no grammar.
+  - id: optimize.all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      OPTIMIZE events FULL WHERE date >= '2025-01-01' ZORDER BY (a)
+    note: Rejected by the databricks dialect on main; the FULL clause has no grammar.
+  - id: optimize.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: optimize.bare
+    omits: "table_name"
+    sql: |
+      OPTIMIZE
+  - id: optimize.where-without-predicate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: optimize.where
+    omits: "predicate"
+    sql: |
+      OPTIMIZE events WHERE
+  - id: optimize.full-where-without-predicate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: optimize.full-where
+    omits: "predicate"
+    sql: |
+      OPTIMIZE events FULL WHERE
+  - id: optimize.empty-zorder-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: optimize.zorder
+    omits: "col_name1"
+    sql: |
+      OPTIMIZE events ZORDER BY ()
+  - id: optimize.zorder-list-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: optimize.zorder
+    omits: "col_name1"
+    sql: |
+      OPTIMIZE events ZORDER BY (a, )
