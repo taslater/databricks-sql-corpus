@@ -54,9 +54,13 @@ make venv
 make corpus-fetch     # ~22 MB from 14 pinned public repositories
 make corpus           # recall + rejection + reference conformance
 make gaps             # failures grouped by construct
+make diff             # advisory: sqlfluff vs sqlglot disagreements (not scored)
 make reference        # doc-derived cases only -- no fetched corpus needed
 make reference-gaps   # just the divergences, shaped for docs/gaps.md
 ```
+
+`make diff` is triage only: the reference corpus stays the oracle and nothing
+it prints is scored. Its limits are documented in `docs/sqlglot-plan.md`.
 
 To measure an **unmerged** SQLFluff branch, install a fork checkout over the
 release:

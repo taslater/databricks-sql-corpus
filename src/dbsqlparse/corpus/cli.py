@@ -1,15 +1,19 @@
-"""CLI: python -m dbsqlparse.corpus [fetch|run|gaps]"""
+"""CLI: python -m dbsqlparse.corpus [fetch|run|gaps|diff|reference|reference-gaps]"""
 from __future__ import annotations
 
 import argparse
 import collections
-import functools
 import pathlib
-import re
 import sys
 import time
 
 from . import fetch as fetch_mod
+from .constructs import construct
+from .differential import (
+    format_differential,
+    run_differential,
+    write_differential_json,
+)
 from .harness import (
     REPORT_DIR,
     format_report,
@@ -32,8 +36,12 @@ from .runners import get_runner
 
 def _add_runner_args(p: argparse.ArgumentParser, local: bool = True) -> None:
     p.add_argument(
-        "--runner", default="sqlfluff", choices=["sqlfluff", "sqruff", "both"],
-        help="which parser to measure (default: sqlfluff)",
+        "--runner", default="sqlfluff",
+        choices=["sqlfluff", "sqruff", "sqlglot", "both", "all"],
+        help=(
+            "which parser to measure (default: sqlfluff); 'both' is "
+            "sqlfluff+sqruff, 'all' adds sqlglot"
+        ),
     )
     p.add_argument("--dialect", default="databricks")
     if local:
@@ -75,12 +83,32 @@ def main(argv: list[str] | None = None) -> int:
     )
     _add_runner_args(reference_gaps, local=False)
 
+    diff = sub.add_parser(
+        "diff",
+        help="differential triage: sqlfluff vs an independent second parser",
+    )
+    diff.add_argument("--against", default="sqlglot", choices=["sqlglot", "sqruff"])
+    diff.add_argument("--dialect", default="databricks")
+    diff.add_argument(
+        "--local", action="append", default=[],
+        help="extra local directory of team SQL (repeatable)",
+    )
+    diff.add_argument("--limit", type=int, default=30, help="how many per section")
+    diff.add_argument("--json", type=str, default=None, help="also write a JSON report here")
+
     args = ap.parse_args(argv)
 
     if args.command == "fetch":
         return fetch_mod.main()
+    if args.command == "diff":
+        return _diff(args)
 
-    names = ["sqlfluff", "sqruff"] if args.runner == "both" else [args.runner]
+    if args.runner == "both":
+        names = ["sqlfluff", "sqruff"]
+    elif args.runner == "all":
+        names = ["sqlfluff", "sqruff", "sqlglot"]
+    else:
+        names = [args.runner]
 
     if args.command == "gaps":
         return _gaps(names, args)
@@ -205,14 +233,14 @@ def _gaps(names: list[str], args) -> int:
                     continue
                 failed.add(f.path)
                 if name == names[0]:
-                    groups[_construct(f, args.dialect)].append(f.path)
+                    groups[construct(f, args.dialect)].append(f.path)
         failed_paths[name] = failed
         if name == names[0]:
             reference_report = _run_reference(runner)
 
     primary = names[0]
     print(f"{len(groups)} distinct failing constructs under {primary}\n")
-    for construct, paths in sorted(groups.items(), key=lambda kv: -len(kv[1]))[: args.limit]:
+    for label, paths in sorted(groups.items(), key=lambda kv: -len(kv[1]))[: args.limit]:
         marker = ""
         if len(names) > 1:
             other = names[1]
@@ -227,7 +255,7 @@ def _gaps(names: list[str], args) -> int:
                 marker = f"  [{other}: also fails all]"
             else:
                 marker = f"  [{other}: also fails {also}/{len(paths)}]"
-        print(f"{len(paths):4d}  {construct}{marker}")
+        print(f"{len(paths):4d}  {label}{marker}")
         for f in sorted({pathlib.Path(p).name for p in paths})[:3]:
             print(f"        {f}")
 
@@ -251,57 +279,37 @@ def _gaps(names: list[str], args) -> int:
     return 0
 
 
-@functools.lru_cache(maxsize=1)
-def _keywords(dialect: str = "databricks") -> frozenset[str]:
-    """Every keyword the dialect knows, used to tell syntax from identifiers."""
-    from sqlfluff.core.dialects import dialect_selector
+def _diff(args) -> int:
+    """Advisory triage: where SQLFluff and an independent parser disagree.
 
-    d = dialect_selector(dialect)
-    words: set[str] = set()
-    for key in ("reserved_keywords", "unreserved_keywords"):
-        try:
-            words |= set(d.sets(key))
-        except (KeyError, AttributeError):
-            pass
-    return frozenset(words)
-
-
-_IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-_STRING = re.compile(r"""('[^']*'|"[^"]*")""")
-
-
-def _normalise(line: str, dialect: str) -> str:
-    """Replace identifiers and literals so the same construct groups together.
-
-    Without this, three materialized views that fail on the same missing
-    grammar appear as three separate findings purely because the table names
-    differ. Keywords come from the dialect under test rather than a hand-kept
-    list, so this stays right as the dialect grows.
+    Nothing here is scored and nothing is written to the baseline; the JSON is
+    a triage artefact you keep, not a number anyone gates on. Exit code is
+    non-zero only when a parser's control misbehaves, because that is the one
+    failure that makes the whole report untrustworthy.
     """
-    # A comment's prose is never the construct that failed. Collapsing to the
-    # marker plus its first word groups every `-- MAGIC` line together, which
-    # is the actual finding.
-    if line.startswith("--"):
-        head = line.split()[:2]
-        return " ".join(head) + (" ..." if len(line.split()) > 2 else "")
-    kw = _keywords(dialect)
-    line = _STRING.sub("'...'", line)
-    return _IDENT.sub(
-        lambda m: m.group(0) if m.group(0).upper() in kw else "<id>", line
-    )
-
-
-def _construct(f, dialect: str = "databricks") -> str:
-    """The failing source line, normalised enough to group on."""
-    try:
-        lines = pathlib.Path(f.path).read_text(encoding="utf-8", errors="replace").splitlines()
-    except OSError:
-        return f.errors[0] if f.errors else "unknown"
-    if f.line and 0 < f.line <= len(lines):
-        raw = lines[f.line - 1].strip()
-        if raw:
-            return _normalise(raw, dialect)[:88]
-    return f.errors[0][:88] if f.errors else "unknown"
+    primary = get_runner("sqlfluff", dialect=args.dialect)
+    second = get_runner(args.against, dialect=args.dialect)
+    report = run_differential(primary, second, local_dirs=args.local)
+    if not report.files and not report.cases:
+        print(
+            "no corpus found -- run: python -m dbsqlparse.corpus fetch",
+            file=sys.stderr,
+        )
+        return 1
+    if not report.files_compared:
+        # The reference corpus is committed, so a diff is still useful without
+        # the fetched corpus -- say so rather than printing "0 files compared"
+        # as if something had broken.
+        print(
+            "note: no fetched corpus -- comparing the reference cases only; "
+            "run `make corpus-fetch` for the file-level diff",
+            file=sys.stderr,
+        )
+    print(format_differential(report, limit=args.limit))
+    if args.json:
+        write_differential_json(report, pathlib.Path(args.json))
+        print(f"\njson report: {args.json}")
+    return 0 if report.controls_ok else 1
 
 
 if __name__ == "__main__":

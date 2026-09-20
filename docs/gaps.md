@@ -138,6 +138,93 @@ identifier, with or without characters that need escaping:
 identifier parses. Pinned by `json-path.delimited-identifier`. Also found
 2026-09-19 by the Tier 1.5 batch.
 
+**`DESCRIBE history.tbl` is rejected while `DESCRIBE TABLE` is accepted.**
+A qualified table whose first part is `history` collides with the
+`DESCRIBE HISTORY` statement prefix. The
+[reserved words reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words)
+states Databricks "does not formally disallow any specific literals from being
+used as identifiers", and `history` is not in the alias-only exception list, so
+the rejection is a false positive on a legal table name. Repros on `main` at
+`33d8c8459`:
+
+| form | result |
+| --- | --- |
+| `DESCRIBE history.tbl;` | rejected at position 1 |
+| `DESCRIBE TABLE history.tbl;` | parses |
+| ``DESCRIBE `history`.tbl;`` | parses |
+| `DESCRIBE HISTORY tbl;` | parses (the statement, #8510) |
+
+Found 2026-09-19 by the sqlglot differential (`make diff`), which reproduces
+sqlglot's own fixture `tests/dialects/test_databricks.py:38`; verified against
+`main` in the `.venv-main` worktree. Pinned by the reference corpus as
+`describe-table.qualified-history` once the identifiers page is transcribed.
+
+**`SELECT * FROM stream` is rejected for a table named `stream`.** `STREAM` is
+part of the `FROM STREAM <function>` relation spelling, and the dialect
+reserves it in table position, but the
+[reserved words reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words)
+does not list it among the words that need backticks. Repros on `main` at
+`33d8c8459`:
+
+| form | result |
+| --- | --- |
+| `SELECT * FROM stream;` | rejected at `FROM stream` |
+| `SELECT * FROM \`stream\`;` | parses |
+| `SELECT 1 FROM t AS stream;` | parses (alias position is fine) |
+
+Same discovery path as the entry above (sqlglot fixture
+`tests/dialects/test_databricks.py:33`). The fix belongs with the `STREAM`
+keyword handling that #8509 touched, not in the lexer.
+
+**`left` and `right` are globally reserved in `databricks`, undoing a merged
+`sparksql` fix.** #8050 (merged 2026-07-07) treats LEFT/RIGHT as
+non-reserved in `sparksql` so they can be lambda variables (#5004), with the
+comment that `JoinTypeKeywordsGrammar` still matches them so `LEFT|RIGHT
+[OUTER] JOIN` keeps working. `databricks` never got it: the dialect clears the
+inherited set and installs its own, `databricks_dialect.sets(
+"reserved_keywords").clear()` / `.update(RESERVED_KEYWORDS)`
+(`dialect_databricks.py:54-55`), and that list contains `LEFT` and `RIGHT`
+(`dialect_databricks_keywords.py:15,19`). The
+[reserved words reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words)
+puts them only in the alias-only list -- they need backticks *as a table
+alias*, not everywhere. Repros on `main` at `33d8c8459`:
+
+| form | databricks | sparksql |
+| --- | --- | --- |
+| `SELECT array_sort(ARRAY(3, 1), (left, right) -> CASE WHEN left < right THEN -1 ELSE 1 END);` | rejected | parses |
+| `SELECT left FROM t;` | rejected | parses |
+| `SELECT * FROM left;` | rejected | parses |
+| `SELECT * FROM t AS left;` | rejected (correct -- alias needs backticks) | rejected |
+
+Found 2026-09-19 by `scripts/fuzz_variants.py keywords`, with the regression
+confirmed by the databricks-vs-sparksql comparison. The fix is to drop
+LEFT/RIGHT from `RESERVED_KEYWORDS` and enforce the alias restriction where
+aliases are parsed. Pinned by the reference corpus as
+`array-sort.lambda-keyword-parameters`.
+
+**Parenthesised set-operation operands are rejected.** The
+[set operators reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops)
+shows `(SELECT c FROM number1) INTERSECT (SELECT c FROM number2)` in its own
+examples, and the scraped corpus fails it too (Spark's `q87.sql`, the
+`EXCEPT DISTINCT` entries). Repro on `main` at `33d8c8459`:
+`(SELECT c FROM number1) EXCEPT (SELECT c FROM number2);` is rejected, while
+the same query without per-operand parentheses parses.
+[#8523](https://github.com/sqlfluff/sqlfluff/pull/8523) (open, 2026-09-19)
+adds the `DISTINCT` qualifier on `EXCEPT`/`MINUS` but not parenthesised
+operands, so this is unclaimed. Found by the sqlglot round-trip probe; pinned
+by `set-operators.parenthesised-operands`.
+
+**`KEYS`, `PIVOT` and `WINDOW` are rejected as unquoted column aliases.** The
+[reserved words reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words)
+lists only seventeen words that cannot be an unquoted table alias, and none of
+these is among them; Spark's grammar declares all three non-reserved, and
+sqlglot parses all three as aliases. Repros on `main` at `33d8c8459`:
+`SELECT a AS KEYS FROM t;`, `SELECT a AS PIVOT FROM t;`,
+`SELECT a AS WINDOW FROM t;` are all rejected at `AS`, while `FETCH` and
+`OVERLAPS` behave the same way. Found 2026-09-19 by
+`scripts/fuzz_variants.py keywords`; no upstream issue found for the alias
+position.
+
 **Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
 [GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)
 gives `privilege_types` as `{ ALL PRIVILEGES | privilege_type [, ...] }` —

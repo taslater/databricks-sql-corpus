@@ -8,13 +8,14 @@
 #     make corpus PY=.venv-release/bin/python
 PY ?= .venv/bin/python
 
-.PHONY: help venv test coverage corpus corpus-fetch gaps reference reference-gaps baseline clean
+.PHONY: help venv test coverage corpus corpus-fetch gaps diff reference reference-gaps baseline clean
 
 help:
 	@echo "make venv          create .venv and install the harness"
 	@echo "make corpus-fetch  download the pinned public SQL corpus"
 	@echo "make corpus        measure SQLFluff against the corpus"
 	@echo "make gaps          group the failures by construct (the PR queue)"
+	@echo "make diff          advisory: sqlfluff vs sqlglot disagreements (not scored)"
 	@echo "make reference     cases transcribed from the Databricks SQL reference"
 	@echo "make reference-gaps  the reference divergences as gaps.md-shaped entries"
 	@echo "make baseline      regenerate corpus/reports/baseline.json"
@@ -39,6 +40,13 @@ corpus:
 
 gaps:
 	$(PY) -m dbsqlparse.corpus gaps $(CORPUS_ARGS)
+
+# Advisory triage against an independent parser (sqlglot by default). A
+# disagreement is a candidate, not a verdict: the docs-derived reference is
+# the oracle. Nothing here is scored and nothing lands in the baseline.
+# See docs/sqlglot-plan.md.
+diff:
+	$(PY) -m dbsqlparse.corpus diff $(CORPUS_ARGS)
 
 # No fetched corpus needed: the cases are committed, each citing the doc page
 # it was transcribed from.

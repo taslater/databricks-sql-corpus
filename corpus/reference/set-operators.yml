@@ -1,0 +1,29 @@
+statement: Set operators
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops
+checked: 2026-09-19
+syntax: |
+  { UNION | INTERSECT | EXCEPT } [ ALL | DISTINCT ] subquery2 } [...]
+cases:
+  - id: set-operators.except-distinct
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: SELECT c FROM number1 EXCEPT DISTINCT SELECT c FROM number2
+    note: |
+      `[ ALL | DISTINCT ]` is in the production and DISTINCT is the documented
+      default; the page's examples spell it for INTERSECT and UNION.
+  - id: set-operators.except-all
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: SELECT c FROM number1 EXCEPT ALL SELECT c FROM number2
+    note: |
+      Same production; the page's examples use `EXCEPT ALL (SELECT ...)` and
+      `MINUS ALL`. Parses on 2026-09-19 -- a regression pin rather than new
+      coverage; found by the scraped corpus first (Spark's except-all.sql).
+  - id: set-operators.parenthesised-operands
+    verdict: must-parse
+    anchor: "#examples"
+    sql: (SELECT c FROM number1) EXCEPT (SELECT c FROM number2)
+    note: |
+      A skeleton of the page's own example shape: both operands are
+      parenthesised `subquery` clauses. Neither dialect parses this on
+      2026-09-19; found by the sqlglot round-trip probe.

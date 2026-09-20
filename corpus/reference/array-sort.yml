@@ -1,0 +1,18 @@
+statement: array_sort function
+doc: https://docs.databricks.com/aws/en/sql/language-manual/functions/array_sort
+checked: 2026-09-19
+syntax: |
+  array_sort(array, func)
+cases:
+  - id: array-sort.lambda-keyword-parameters
+    verdict: must-parse
+    anchor: "#examples"
+    sql: SELECT array_sort(ARRAY(3, 1), (left, right) -> CASE WHEN left < right THEN -1 ELSE 1 END)
+    note: |
+      `func` is documented as "a lambda function" whose two arguments
+      "represent two elements", and the page's own examples name them `left`
+      and `right`. Identifiers may be any literal except the reserved-words
+      page's alias-only list, so the parameter names are legal. sparksql
+      parses this on 2026-09-19 and databricks does not: its keyword file
+      re-reserves LEFT/RIGHT after #8050 removed them from sparksql. Pins that
+      regression; see docs/gaps.md.
