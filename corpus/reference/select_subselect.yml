@@ -1,0 +1,67 @@
+# SELECT (subselect). FROM with one or more table references, LATERAL VIEW,
+# named expressions, the star clause and EXCEPT all parse; this page pins
+# them.
+statement: SELECT (subselect)
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select
+checked: 2026-09-20
+syntax: |
+  SELECT clause
+  FROM table_reference [, ...]
+  [ LATERAL VIEW clause ]
+  [ WHERE clause ]
+  [ GROUP BY clause ]
+  [ HAVING clause]
+  [ QUALIFY clause ]
+  named_expression
+     expression [ column_alias ]
+  star_clause
+     [ { table_name | view_name } . ] * [ except_clause ]
+  except_clause
+     EXCEPT ( { column_name | field_name } [, ...] )
+cases:
+  - id: subselect.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t
+  - id: subselect.multiple-from
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t, u
+  - id: subselect.lateral-view
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t LATERAL VIEW explode(x) AS y
+  - id: subselect.named-expression
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a AS b FROM t
+  - id: subselect.star-except
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * EXCEPT (c4) FROM t
+  - id: subselect.from-without-reference
+    verdict: must-reject
+    anchor: "#syntax"
+    from: subselect.basic
+    omits: "table_reference"
+    sql: |
+      SELECT a FROM
+  - id: subselect.except-empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: subselect.star-except
+    omits: "column_name"
+    sql: |
+      SELECT * EXCEPT () FROM t
+  - id: subselect.except-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: subselect.star-except
+    omits: "column_name"
+    sql: |
+      SELECT * EXCEPT (c1, ) FROM t

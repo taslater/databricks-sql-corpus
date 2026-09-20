@@ -1,0 +1,45 @@
+# VALUES clause. Tuples, bare scalars and a table alias all parse; this page
+# pins them.
+statement: VALUES clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values
+checked: 2026-09-20
+syntax: |
+  VALUES {expression | ( expression [, ...] ) } [, ...] [table_alias]
+  SELECT expression [, ...] [table_alias]
+cases:
+  - id: values.tuples
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      VALUES (1), (2)
+  - id: values.scalars
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      VALUES 1, 2, 3
+  - id: values.table-alias
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      VALUES (1, 2) AS t(a, b)
+  - id: values.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: values.scalars
+    omits: "expression"
+    sql: |
+      VALUES
+  - id: values.empty-tuple
+    verdict: must-reject
+    anchor: "#syntax"
+    from: values.tuples
+    omits: "expression"
+    sql: |
+      VALUES ()
+  - id: values.trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: values.tuples
+    omits: "expression"
+    sql: |
+      VALUES (1),

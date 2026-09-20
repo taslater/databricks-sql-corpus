@@ -1,0 +1,45 @@
+# * (star) clause. The bare and qualified star and the EXCEPT clause parse;
+# this page pins them.
+statement: "* (star) clause"
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star
+checked: 2026-09-20
+syntax: |
+  star_clause
+     [ name . ] * [ except_clause ]
+  except_clause
+     EXCEPT ( { column_name | field_name } [, ...] )
+cases:
+  - id: star.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t
+  - id: star.qualified
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT TA.* FROM TA
+  - id: star.except
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * EXCEPT (c1, cb) FROM t
+  - id: star.qualified-except
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT TA.* EXCEPT (c1.x) FROM t
+  - id: star.except-empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: star.except
+    omits: "column_name"
+    sql: |
+      SELECT * EXCEPT () FROM t
+  - id: star.except-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: star.except
+    omits: "column_name"
+    sql: |
+      SELECT * EXCEPT (c1, ) FROM t

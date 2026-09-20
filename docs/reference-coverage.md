@@ -167,18 +167,18 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | done |
 | [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | done |
 
-## Data retrieval statements (20 done, 9 queued, 0 n/a)
+## Data retrieval statements (29 done, 0 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
-| [SQL Pipeline Syntax](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline) | queued |
-| [Query](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query) | queued |
-| [SELECT (subselect)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select) | queued |
-| [VALUES clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values) | queued |
-| [EXPLAIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain) | queued |
+| [SQL Pipeline Syntax](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline) | done |
+| [Query](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query) | done |
+| [SELECT (subselect)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select) | done |
+| [VALUES clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values) | done |
+| [EXPLAIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain) | done |
 | [SELECT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list) | done |
-| [\* (star) clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star) | queued |
-| [table reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference) | queued |
+| [\* (star) clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star) | done |
+| [table reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference) | done |
 | [JOIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join) | done |
 | [WHERE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where) | done |
 | [GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby) | done |
@@ -195,8 +195,8 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [UNPIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot) | done |
 | [LATERAL VIEW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view) | done |
 | [TABLESAMPLE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling) | done |
-| [Table-valued function (TVF) invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf) | queued |
-| [Common table expression (CTE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte) | queued |
+| [Table-valued function (TVF) invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf) | done |
+| [Common table expression (CTE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte) | done |
 | [Set operators](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops) | done |
 | [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | done |
 | [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | done |

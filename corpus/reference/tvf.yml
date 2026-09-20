@@ -1,0 +1,30 @@
+# Table-valued function (TVF) invocation. Expression arguments and a table
+# alias parse; this page pins them.
+statement: Table-valued function (TVF) invocation
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf
+checked: 2026-09-20
+syntax: |
+  function_name ( [ expression [, ...] ] ) [ table_alias ]
+cases:
+  - id: tvf.expression-arguments
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM range(6 + cos(3))
+  - id: tvf.table-alias
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM range(5) AS test
+  - id: tvf.explode
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM explode(array(10, 20))
+  - id: tvf.argument-list-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: tvf.expression-arguments
+    omits: "expression"
+    sql: |
+      SELECT * FROM range(5, )

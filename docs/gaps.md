@@ -351,6 +351,35 @@ and `SELECT /*+ BROADCAST() */ * FROM t1` parse. Pinned by
 `hints.coalesce-without-argument` and `hints.broadcast-without-table`.
 Recorded 2026-09-20 by the Tier 3 batch.
 
+**The SQL pipeline forms are unsupported.** The
+[SQL pipeline reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline)
+introduces the `|>` operator — `{ FROM | TABLE } relation_name { |>
+piped_operation }` — and the
+[Query reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query)
+lists `TABLE [ table_name | view_name ]` and `FROM table_reference [, ...]`
+as subquery forms. The `databricks` dialect has neither, so
+`FROM t |> SELECT a`, `FROM t |> WHERE a > 1`, `TABLE t |> SELECT a`,
+`TABLE t` and `FROM t` all fail. Pinned by `sql-pipeline.*` and
+`query.table` / `query.from`. Recorded 2026-09-20 by the Tier 3 batch.
+
+**The table-reference options specification is rejected.** The
+[table reference reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference)
+documents a `WITH ( … )` options specification on a table reference in its own
+examples — ``FROM `csv`.`…/data.csv` WITH(CREDENTIAL some_credential)`` and
+`FROM jdbcTable WITH(fetchSize = 0)`. `SELECT * FROM t WITH(CREDENTIAL c)`
+and `… WITH(fetchSize = 0)` are both rejected. This is the same options
+family as the CREATE TABLE `LOCATION … WITH (CREDENTIAL …)` gap above. Pinned
+by `table-reference.options`. Recorded 2026-09-20 by the Tier 3 batch.
+
+**A CTE rejects `MAX RECURSION LEVEL`.** The
+[CTE reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte)
+brackets a `recursion_limit` of `MAX RECURSION LEVEL maxLevel` on a common
+table expression. Plain, multi-column, nested and `WITH RECURSIVE` CTEs all
+parse, but adding the limit fails:
+`WITH RECURSIVE r(n) MAX RECURSION LEVEL 10 AS (VALUES(1) UNION ALL SELECT
+n+1 FROM r) SELECT * FROM r` is rejected. Pinned by `cte.recursion-limit`.
+Recorded 2026-09-20 by the Tier 3 batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

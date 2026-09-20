@@ -1,0 +1,72 @@
+# Query. The subselect, VALUES, parenthesised and CTE forms parse, as do set
+# operators and the trailing clause list; the bare `TABLE name` and
+# `FROM table_reference` subquery forms are gaps.
+statement: Query
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query
+checked: 2026-09-20
+syntax: |
+  [ common_table_expression ]
+  subquery
+  [ set_operator ]
+  [ ORDER BY clause | { [ DISTRIBUTE BY clause ] [ SORT BY clause ] } | CLUSTER BY clause ]
+  [ WINDOW clause ]
+  [ LIMIT clause ]
+  [ OFFSET clause ]
+  [ { |> piped_operation } [ ...] ]
+  subquery
+  { subselect | VALUES clause | ( query ) | TABLE [ table_name | view_name ] | FROM table_reference [, ...] }
+cases:
+  - id: query.select
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t
+  - id: query.parenthesised
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      (SELECT 1)
+  - id: query.values
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      VALUES (1)
+  - id: query.with-cte
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH x AS (SELECT 1) SELECT * FROM x
+  - id: query.set-operator
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT 1 UNION SELECT 2
+  - id: query.order-by
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t ORDER BY a
+  - id: query.limit
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t LIMIT 1
+  - id: query.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      TABLE t
+    note: Rejected by the databricks dialect on main; the bare TABLE subquery form has no grammar.
+  - id: query.from
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FROM t
+    note: Rejected by the databricks dialect on main; the bare FROM subquery form has no grammar.
+  - id: query.without-subquery
+    verdict: must-reject
+    anchor: "#syntax"
+    from: query.select
+    omits: "subselect"
+    sql: |
+      SELECT

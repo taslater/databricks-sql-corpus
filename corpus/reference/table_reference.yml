@@ -1,0 +1,96 @@
+# table reference. The name, STREAM, JOIN, PIVOT, UNPIVOT, VALUES, TVF and
+# time-travel forms parse; the options specification (`WITH (...)`) is a gap.
+statement: table reference
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference
+checked: 2026-09-20
+syntax: |
+  table_reference
+    { table_name [ TABLESAMPLE clause ] [ table_alias ]
+    |  { STREAM table_name [ table_alias ] | STREAM ( table_name ) [ table_alias ] }
+    |  view_name [ table_alias ]
+    |  table_reference JOIN clause
+    |  table_reference NEAREST BY JOIN clause
+    |  table_reference PIVOT clause
+    |  table_reference UNPIVOT clause
+    |  table_reference MATCH_RECOGNIZE clause
+    |  [ STREAM ] table_valued_function [ table_alias ]
+    |  [ LATERAL ] table_valued_function [ table_alias ]
+    |  VALUES clause
+    |  [ LATERAL ] ( query ) [ TABLESAMPLE clause ] [ table_alias ] }
+
+  table_identifier TIMESTAMP AS OF timestamp_expression
+  table_identifier VERSION AS OF version
+cases:
+  - id: table-reference.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t
+  - id: table-reference.alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t AS x
+  - id: table-reference.tablesample
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t TABLESAMPLE (10 PERCENT)
+  - id: table-reference.stream
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM STREAM t
+  - id: table-reference.stream-parenthesised
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM STREAM(t)
+  - id: table-reference.join
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t JOIN u ON t.id = u.id
+  - id: table-reference.pivot
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t PIVOT (sum(v) FOR k IN (1))
+  - id: table-reference.unpivot
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t UNPIVOT (v FOR k IN (a, b))
+  - id: table-reference.values
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM VALUES (1, 2) AS t(a, b)
+  - id: table-reference.tvf
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM range(5)
+  - id: table-reference.version-as-of
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t VERSION AS OF 1
+  - id: table-reference.timestamp-as-of
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t TIMESTAMP AS OF '2020-01-01'
+  - id: table-reference.options
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM t WITH(CREDENTIAL c)
+    note: A documented example form; rejected by the databricks dialect on main.
+  - id: table-reference.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: table-reference.basic
+    omits: "table_name"
+    sql: |
+      SELECT * FROM

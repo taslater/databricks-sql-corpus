@@ -1,0 +1,61 @@
+# Common table expression (CTE). Plain, multi-column, nested and recursive
+# CTEs parse; the `MAX RECURSION LEVEL` clause is a gap.
+statement: Common table expression (CTE)
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte
+checked: 2026-09-20
+syntax: |
+  WITH [ RECURSIVE ] common_table_expression [, ...]
+  common_table_expression
+    view_identifier [ ( column_identifier [, ...] ) ] [ recursion_limit ] [ AS ] ( query | recursive_query )
+  recursion_limit
+    MAX RECURSION LEVEL maxLevel
+  recursive_query
+    base_case_query UNION ALL step_case_query
+cases:
+  - id: cte.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH t AS (SELECT 1) SELECT * FROM t
+  - id: cte.column-list
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      WITH t(x, y) AS (SELECT 1, 2) SELECT * FROM t
+  - id: cte.nested
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      WITH t AS (WITH t2 AS (SELECT 1) SELECT * FROM t2) SELECT * FROM t
+  - id: cte.recursive
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      WITH RECURSIVE r(col) AS (SELECT 'a' UNION ALL SELECT col FROM r) SELECT * FROM r
+  - id: cte.recursion-limit
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH RECURSIVE r(n) MAX RECURSION LEVEL 10 AS (VALUES(1) UNION ALL SELECT n+1 FROM r) SELECT * FROM r
+    note: Rejected by the databricks dialect on main; MAX RECURSION LEVEL has no grammar.
+  - id: cte.without-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cte.basic
+    omits: "query"
+    sql: |
+      WITH t AS () SELECT * FROM t
+  - id: cte.trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cte.basic
+    omits: "common_table_expression"
+    sql: |
+      WITH t AS (SELECT 1), SELECT * FROM t
+  - id: cte.recursion-without-level
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cte.recursion-limit
+    omits: "maxLevel"
+    sql: |
+      WITH RECURSIVE r(n) MAX RECURSION LEVEL AS (VALUES(1)) SELECT * FROM r

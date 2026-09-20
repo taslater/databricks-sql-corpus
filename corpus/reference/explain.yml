@@ -1,0 +1,54 @@
+# EXPLAIN. Every documented mode parses; this page pins them.
+statement: EXPLAIN
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain
+checked: 2026-09-20
+syntax: |
+  EXPLAIN [ EXTENDED | CODEGEN | COST | FORMATTED ] statement
+cases:
+  - id: explain.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXPLAIN SELECT 1
+  - id: explain.extended
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXPLAIN EXTENDED SELECT 1
+  - id: explain.codegen
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXPLAIN CODEGEN SELECT 1
+  - id: explain.cost
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXPLAIN COST SELECT 1
+  - id: explain.formatted
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      EXPLAIN FORMATTED SELECT 1
+  - id: explain.without-statement
+    verdict: must-reject
+    anchor: "#syntax"
+    from: explain.basic
+    omits: "statement"
+    sql: |
+      EXPLAIN
+  - id: explain.extended-without-statement
+    verdict: must-reject
+    anchor: "#syntax"
+    from: explain.extended
+    omits: "statement"
+    sql: |
+      EXPLAIN EXTENDED
+  - id: explain.extended-and-codegen
+    verdict: must-reject
+    anchor: "#syntax"
+    from: explain.basic
+    reason: exclusive-alternative
+    conflicts: [ "EXTENDED", "CODEGEN" ]
+    sql: |
+      EXPLAIN EXTENDED CODEGEN SELECT 1
