@@ -1,0 +1,219 @@
+# COPY INTO. The whole statement is unsupported by the databricks and
+# sparksql dialects -- SQLFluff implements `COPY INTO` for tsql and
+# snowflake only. Every must-parse case here is therefore a gap, and every
+# must-reject case reports vacuous until the statement lands; they are the
+# partial forms that matter when it does.
+statement: COPY INTO
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into
+checked: 2026-09-20
+syntax: |
+  COPY INTO target_table [ BY POSITION | ( col_name [ , <col_name> ... ] ) ]
+    FROM { source_clause |
+           ( SELECT expression_list FROM source_clause ) }
+    FILEFORMAT = data_source
+    [ VALIDATE [ ALL | num_rows ROWS ] ]
+    [ FILES = ( file_name [, ...] ) | PATTERN = glob_pattern ]
+    [ FORMAT_OPTIONS ( { data_source_reader_option = value } [, ...] ) ]
+    [ COPY_OPTIONS ( { copy_option = value } [, ...] ) ]
+
+  source_clause
+    source [ WITH ( [ CREDENTIAL { credential_name |
+                                  (temporary_credential_options) } ]
+                    [ ENCRYPTION (encryption_options) ] ) ]
+cases:
+  - id: copy-into.minimal
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main; COPY INTO has no grammar at all.
+  - id: copy-into.by-position
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t BY POSITION FROM 's3://example-bucket/p' FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.column-list
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t (a, b) FROM 's3://example-bucket/p' FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.select-from
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM (SELECT a, b FROM 's3://example-bucket/p') FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.validate-all
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV VALIDATE ALL
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.validate-rows
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV VALIDATE 10 ROWS
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.files
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FILES = ('a.csv', 'b.csv')
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.pattern
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV PATTERN = '*.csv'
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.format-options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FORMAT_OPTIONS (header = 'true')
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.copy-options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV COPY_OPTIONS (force = 'true')
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.source-credential
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' WITH (CREDENTIAL cred) FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.source-temporary-credential
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' WITH (CREDENTIAL (AWS_ACCESS_KEY = 'k', AWS_SECRET_KEY = 's')) FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.source-encryption
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' WITH (ENCRYPTION (TYPE = 'AWS_SSE_C', MASTER_KEY = 'k')) FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.source-credential-and-encryption
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' WITH (CREDENTIAL cred ENCRYPTION (TYPE = 'AWS_SSE_C')) FILEFORMAT = CSV
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      COPY INTO t (a) FROM 's3://example-bucket/p' FILEFORMAT = CSV VALIDATE 5 ROWS FILES = ('a.csv') FORMAT_OPTIONS (header = 'true') COPY_OPTIONS (force = 'true')
+    note: Rejected by the databricks dialect on main.
+  - id: copy-into.empty-column-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.column-list
+    omits: "col_name"
+    sql: |
+      COPY INTO t () FROM 's3://example-bucket/p' FILEFORMAT = CSV
+  - id: copy-into.column-list-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.column-list
+    omits: "col_name"
+    sql: |
+      COPY INTO t (a, ) FROM 's3://example-bucket/p' FILEFORMAT = CSV
+  - id: copy-into.validate-without-unit
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.validate-rows
+    omits: "[ ALL | num_rows ROWS ]"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV VALIDATE 10
+  - id: copy-into.validate-without-number
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.validate-rows
+    omits: "num_rows"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV VALIDATE ROWS
+  - id: copy-into.empty-files
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.files
+    omits: "file_name"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FILES = ()
+  - id: copy-into.file-list-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.files
+    omits: "file_name"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FILES = ('a.csv', )
+  - id: copy-into.empty-format-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.format-options
+    omits: "data_source_reader_option = value"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FORMAT_OPTIONS ()
+  - id: copy-into.format-option-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.format-options
+    omits: "value"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FORMAT_OPTIONS (header =)
+  - id: copy-into.empty-copy-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.copy-options
+    omits: "copy_option = value"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV COPY_OPTIONS ()
+  - id: copy-into.copy-option-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.copy-options
+    omits: "value"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV COPY_OPTIONS (force =)
+  - id: copy-into.fileformat-without-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.minimal
+    omits: "data_source"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT =
+  - id: copy-into.from-without-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.minimal
+    omits: "source_clause"
+    sql: |
+      COPY INTO t FROM FILEFORMAT = CSV
+  - id: copy-into.credential-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.source-credential
+    omits: "credential_name"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' WITH (CREDENTIAL) FILEFORMAT = CSV
+  - id: copy-into.empty-encryption
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.source-encryption
+    omits: "encryption_options"
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' WITH (ENCRYPTION ()) FILEFORMAT = CSV
+  - id: copy-into.files-and-pattern
+    verdict: must-reject
+    anchor: "#syntax"
+    from: copy-into.files
+    reason: exclusive-alternative
+    conflicts: [ "FILES =", "PATTERN =" ]
+    sql: |
+      COPY INTO t FROM 's3://example-bucket/p' FILEFORMAT = CSV FILES = ('a.csv') PATTERN = '*.csv'

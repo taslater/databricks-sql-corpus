@@ -201,13 +201,13 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | queued |
 | [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | queued |
 
-## Delta Lake (3 done, 12 queued, 0 n/a)
+## Delta Lake (4 done, 11 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
 | [CREATE BLOOM FILTER INDEX (deprecated)](https://docs.databricks.com/aws/en/sql/language-manual/delta-create-bloomfilter-index) | queued |
 | [DROP BLOOM FILTER INDEX](https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index) | queued |
-| [COPY INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into) | queued |
+| [COPY INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into) | done |
 | [DELETE FROM](https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from) | queued |
 | [MERGE INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into) | done |
 | [UPDATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-update) | queued |

@@ -219,6 +219,22 @@ by the Tier 2 batch. The rest of the MERGE grammar — all three WHEN branches,
 the DELETE / UPDATE SET / INSERT actions, `EXCEPT`, aliases and a leading CTE —
 parses and is pinned green.
 
+**`COPY INTO` is unsupported by the databricks dialect.** The
+[COPY INTO reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into)
+defines `COPY INTO target_table [ BY POSITION | ( col_name … ) ] FROM {
+source_clause | ( SELECT … FROM source_clause ) } FILEFORMAT = data_source
+[ VALIDATE … ] [ FILES = ( … ) | PATTERN = … ] [ FORMAT_OPTIONS ( … ) ]
+[ COPY_OPTIONS ( … ) ]`, with a `source_clause` carrying optional `CREDENTIAL`
+and `ENCRYPTION`. SQLFluff implements `COPY INTO` for `tsql` and `snowflake`
+only — neither `sparksql` nor `databricks` has any grammar — so on `main` at
+`33d8c8459` and released 4.3.0 every form is rejected at position 1, including
+`COPY INTO t FROM 's3://b/p' FILEFORMAT = CSV` and the fourteen other
+documented variants. A corpus file (the `dbx-devrel` SCD notebook) already
+fails here, so the gap was known; the reference corpus now pins the full
+production and its fifteen partial forms as `copy-into.*`. The partial
+rejections report vacuous until the statement lands. Recorded 2026-09-20 by
+the Tier 2 batch.
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as
