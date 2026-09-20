@@ -84,7 +84,7 @@ Data types is covered page by page: `array_type.yml`, `map_type.yml`,
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.
 
-## DDL statements (7 done, 55 queued, 0 n/a)
+## DDL statements (8 done, 54 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -112,7 +112,7 @@ writes the type as input, so a case would have to invent the position.
 | [CREATE POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy) | queued |
 | [CREATE PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure) | queued |
 | [CREATE RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient) | queued |
-| [CREATE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema) | queued |
+| [CREATE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema) | done |
 | [CREATE SERVER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-server) | queued |
 | [CREATE SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share) | queued |
 | [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-streaming-table) | queued |

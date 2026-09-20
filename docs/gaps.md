@@ -85,6 +85,13 @@ production is a whole statement form, not a clause: it takes
 rejects their partial forms (`create-catalog.foreign-without-connection`,
 `create-catalog.foreign-without-options`).
 
+`CREATE SCHEMA` shares two of those clauses. `CREATE SCHEMA s DEFAULT
+COLLATION UTF8_BINARY` and `CREATE SCHEMA s RETAIN DROPPED FOR 14 DAYS` are
+rejected on the same engine state, pinned by `create-schema.default-collation`
+and the `create-schema.retain-dropped-*` cases. The rest of the CREATE SCHEMA
+clause list parses, including `MANAGED LOCATION` — that clause was #8511's
+gap on CREATE CATALOG, not on CREATE SCHEMA.
+
 **`CREATE VIEW` lost its data-source production.** The
 [CREATE VIEW reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view)
 gives a second production, `CREATE [ OR REPLACE ] [ GLOBAL ] TEMPORARY VIEW
