@@ -1,0 +1,51 @@
+# INSERT OVERWRITE DIRECTORY with Hive format. Every documented form parses on
+# main; this page pins them. ROW FORMAT and STORED AS are both optional, so
+# `DIRECTORY <path> <query>` is legal here.
+statement: INSERT OVERWRITE DIRECTORY with Hive format
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive
+checked: 2026-09-20
+syntax: |
+  INSERT OVERWRITE [ LOCAL ] DIRECTORY directory_path    [ ROW FORMAT row_format ] [ STORED AS file_format ]    { VALUES ( { value | NULL } [ , ... ] ) [ , ( ... ) ] | query }
+cases:
+  - id: insert-overwrite-directory-hive.stored-as
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' STORED AS orc SELECT * FROM t
+  - id: insert-overwrite-directory-hive.local-stored-as
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE LOCAL DIRECTORY '/tmp/d' STORED AS orc SELECT * FROM t
+  - id: insert-overwrite-directory-hive.row-format-delimited
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      INSERT OVERWRITE LOCAL DIRECTORY '/tmp/d' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' SELECT * FROM t
+  - id: insert-overwrite-directory-hive.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' SELECT * FROM t
+    note: ROW FORMAT and STORED AS are both optional in this form.
+  - id: insert-overwrite-directory-hive.without-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert-overwrite-directory-hive.stored-as
+    omits: "query"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' STORED AS orc
+  - id: insert-overwrite-directory-hive.stored-as-without-format
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert-overwrite-directory-hive.stored-as
+    omits: "file_format"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' STORED AS
+  - id: insert-overwrite-directory-hive.row-format-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert-overwrite-directory-hive.row-format-delimited
+    omits: "row_format"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' ROW FORMAT SELECT * FROM t

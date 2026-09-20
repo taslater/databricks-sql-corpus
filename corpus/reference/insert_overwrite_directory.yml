@@ -1,0 +1,61 @@
+# INSERT OVERWRITE DIRECTORY (Spark format). Every documented form parses on
+# main; this page pins them. `DIRECTORY` without `USING` is valid under the
+# Hive sibling page, so it is not pinned as a rejection here.
+statement: INSERT OVERWRITE DIRECTORY
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory
+checked: 2026-09-20
+syntax: |
+  INSERT OVERWRITE [ LOCAL ] DIRECTORY [ directory_path ]    USING file_format [ OPTIONS ( { key [ = ] val } [ , ... ] ) ]    { VALUES ( { value | NULL } [ , ... ] ) [ , ( ... ) ] | query }
+cases:
+  - id: insert-overwrite-directory.select
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet SELECT * FROM t
+  - id: insert-overwrite-directory.local
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE LOCAL DIRECTORY '/tmp/d' USING parquet SELECT * FROM t
+  - id: insert-overwrite-directory.options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet OPTIONS (col1 1, col2 'x') SELECT * FROM t
+  - id: insert-overwrite-directory.options-with-equals
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet OPTIONS (col1 = 1) SELECT * FROM t
+  - id: insert-overwrite-directory.path-in-options
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      INSERT OVERWRITE DIRECTORY USING parquet OPTIONS ('path' '/tmp/d') SELECT * FROM t
+    note: The directory_path is optional when OPTIONS carries the path key.
+  - id: insert-overwrite-directory.values
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet VALUES (1, 2)
+  - id: insert-overwrite-directory.without-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert-overwrite-directory.select
+    omits: "query"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet
+  - id: insert-overwrite-directory.empty-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert-overwrite-directory.options
+    omits: "key"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet OPTIONS () SELECT * FROM t
+  - id: insert-overwrite-directory.option-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert-overwrite-directory.options
+    omits: "val"
+    sql: |
+      INSERT OVERWRITE DIRECTORY '/tmp/d' USING parquet OPTIONS (col1 =) SELECT * FROM t

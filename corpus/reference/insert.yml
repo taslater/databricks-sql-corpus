@@ -1,0 +1,156 @@
+# INSERT. Three of the four documented alternatives parse; `WITH SCHEMA
+# EVOLUTION` and the whole `REPLACE ON` form are gaps.
+statement: INSERT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into
+checked: 2026-09-20
+syntax: |
+  [ common_table_expression ]  INSERT [ WITH SCHEMA EVOLUTION ] { OVERWRITE | INTO } [ TABLE ] table_name    [ PARTITION clause ]    [ ( column_name [, ...] ) | BY NAME ]    query
+
+  [ common_table_expression ]  INSERT [ WITH SCHEMA EVOLUTION ] INTO [ TABLE ] table_name    [ ( column_name [, ...] ) | BY NAME ]    [ REPLACE WHERE predicate ]    query
+
+  [ common_table_expression ]  INSERT [ WITH SCHEMA EVOLUTION ] INTO [ TABLE ] table_name    [ BY NAME ]    [ REPLACE USING ( column_name [, ...] ) ]    query
+
+  [ common_table_expression ]  INSERT [ WITH SCHEMA EVOLUTION ] INTO [ TABLE ] table_name    [ ( column_name [, ...] ) | BY NAME ]    [ target_alias ]    REPLACE ON boolean_expression    { (query) [source_alias] | query }
+cases:
+  - id: insert.values
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t VALUES (1, 2)
+  - id: insert.select
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t SELECT a, b FROM s
+  - id: insert.overwrite
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE t SELECT a FROM s
+  - id: insert.overwrite-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT OVERWRITE TABLE t SELECT a FROM s
+  - id: insert.into-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO TABLE t VALUES (1)
+  - id: insert.column-list
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t (a, b) VALUES (1, 2)
+  - id: insert.by-name
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t BY NAME SELECT 1 AS a
+  - id: insert.schema-evolution
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT WITH SCHEMA EVOLUTION INTO t SELECT a FROM s
+    note: Rejected by the databricks dialect on main; WITH SCHEMA EVOLUTION has no grammar.
+  - id: insert.partition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t PARTITION (p = 1) SELECT a FROM s
+  - id: insert.replace-where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t REPLACE WHERE a > 1 SELECT a FROM s
+  - id: insert.replace-using
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t REPLACE USING (id) SELECT id FROM s
+  - id: insert.replace-on
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t REPLACE ON a = s.a SELECT * FROM s
+    note: Rejected by the databricks dialect on main; the REPLACE ON alternative has no grammar.
+  - id: insert.replace-on-parenthesised-query
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t REPLACE ON a = s.a (SELECT * FROM s) AS s
+    note: Rejected by the databricks dialect on main.
+  - id: insert.replace-on-target-alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      INSERT INTO t AS tgt REPLACE ON tgt.a = s.a SELECT * FROM s
+    note: Rejected by the databricks dialect on main.
+  - id: insert.with-cte
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH x AS (SELECT 1 AS a) INSERT INTO t SELECT a FROM x
+  - id: insert.without-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.values
+    omits: "query"
+    sql: |
+      INSERT INTO t
+  - id: insert.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.values
+    omits: "table_name"
+    sql: |
+      INSERT INTO SELECT a FROM s
+  - id: insert.without-into-or-overwrite
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.values
+    omits: "{ OVERWRITE | INTO }"
+    sql: |
+      INSERT t SELECT a FROM s
+  - id: insert.empty-column-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.column-list
+    omits: "column_name"
+    sql: |
+      INSERT INTO t () SELECT a FROM s
+  - id: insert.column-list-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.column-list
+    omits: "column_name"
+    sql: |
+      INSERT INTO t (a, ) SELECT a FROM s
+  - id: insert.empty-replace-using
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.replace-using
+    omits: "column_name"
+    sql: |
+      INSERT INTO t REPLACE USING () SELECT a FROM s
+  - id: insert.replace-where-without-predicate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.replace-where
+    omits: "predicate"
+    sql: |
+      INSERT INTO t REPLACE WHERE SELECT a FROM s
+  - id: insert.replace-on-without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.replace-on
+    omits: "boolean_expression"
+    sql: |
+      INSERT INTO t REPLACE ON SELECT a FROM s
+  - id: insert.empty-partition
+    verdict: must-reject
+    anchor: "#syntax"
+    from: insert.partition
+    omits: "PARTITION clause"
+    sql: |
+      INSERT INTO t PARTITION () SELECT a FROM s

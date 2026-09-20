@@ -1,0 +1,53 @@
+# DELETE FROM. Bare (delete all rows), WHERE, table alias, CTE prefix and
+# subquery predicates all parse on main; this page pins them.
+statement: DELETE FROM
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from
+checked: 2026-09-20
+syntax: |
+  [ common_table_expression ]    DELETE FROM table_name [table_alias] [WHERE predicate]
+cases:
+  - id: delete-from.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DELETE FROM events
+    note: No predicate is legal and deletes all rows.
+  - id: delete-from.where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DELETE FROM events WHERE date < '2017-01-01'
+  - id: delete-from.alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DELETE FROM orders AS t1 WHERE t1.oid = 1
+  - id: delete-from.not-in-subquery
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      DELETE FROM events WHERE category NOT IN (SELECT category FROM events2)
+  - id: delete-from.exists-subquery
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      DELETE FROM orders AS t1 WHERE EXISTS (SELECT oid FROM returned_orders WHERE t1.oid = oid)
+  - id: delete-from.with-cte
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH r AS (SELECT 1 AS oid) DELETE FROM orders AS t1 WHERE t1.oid IN (SELECT oid FROM r)
+  - id: delete-from.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: delete-from.bare
+    omits: "table_name"
+    sql: |
+      DELETE FROM
+  - id: delete-from.where-without-predicate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: delete-from.where
+    omits: "predicate"
+    sql: |
+      DELETE FROM events WHERE

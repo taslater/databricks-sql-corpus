@@ -1,0 +1,48 @@
+# DROP BLOOM FILTER INDEX. The whole statement is unsupported by the
+# databricks dialect, so every must-parse case is a gap and every partial
+# rejection is vacuous until a grammar lands. Deprecated, but still documented.
+statement: DROP BLOOM FILTER INDEX
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index
+checked: 2026-09-20
+syntax: |
+  DROP BLOOMFILTER INDEX
+  ON [TABLE] table_name
+  [FOR COLUMNS(columnName1 [, ...] ) ]
+cases:
+  - id: drop-bloom-filter-index.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP BLOOMFILTER INDEX ON TABLE t
+    note: Rejected by the databricks dialect on main; DROP BLOOM FILTER INDEX has no grammar.
+  - id: drop-bloom-filter-index.without-table-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP BLOOMFILTER INDEX ON t
+  - id: drop-bloom-filter-index.columns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP BLOOMFILTER INDEX ON TABLE t FOR COLUMNS (a, b)
+  - id: drop-bloom-filter-index.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-bloom-filter-index.table
+    omits: "table_name"
+    sql: |
+      DROP BLOOMFILTER INDEX
+  - id: drop-bloom-filter-index.empty-columns
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-bloom-filter-index.columns
+    omits: "columnName1"
+    sql: |
+      DROP BLOOMFILTER INDEX ON TABLE t FOR COLUMNS ()
+  - id: drop-bloom-filter-index.columns-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-bloom-filter-index.columns
+    omits: "columnName1"
+    sql: |
+      DROP BLOOMFILTER INDEX ON TABLE t FOR COLUMNS (a, )

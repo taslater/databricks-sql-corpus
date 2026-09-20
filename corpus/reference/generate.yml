@@ -1,0 +1,34 @@
+# GENERATE. The statement and its rejections all behave as documented on main;
+# this page pins them.
+statement: GENERATE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-generate
+checked: 2026-09-20
+syntax: |
+  GENERATE mode FOR TABLE table_name
+cases:
+  - id: generate.symlink-manifest
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GENERATE symlink_format_manifest FOR TABLE t
+  - id: generate.without-mode
+    verdict: must-reject
+    anchor: "#syntax"
+    from: generate.symlink-manifest
+    omits: "mode"
+    sql: |
+      GENERATE FOR TABLE t
+  - id: generate.without-table-keyword
+    verdict: must-reject
+    anchor: "#syntax"
+    from: generate.symlink-manifest
+    omits: "TABLE"
+    sql: |
+      GENERATE symlink_format_manifest FOR t
+  - id: generate.without-table-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: generate.symlink-manifest
+    omits: "table_name"
+    sql: |
+      GENERATE symlink_format_manifest FOR TABLE

@@ -1,0 +1,78 @@
+# FSCK REPAIR TABLE. The whole statement is unsupported by the databricks
+# dialect, so every must-parse case is a gap and every partial rejection is
+# vacuous until a grammar lands.
+statement: FSCK REPAIR TABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck
+checked: 2026-09-20
+syntax: |
+  FSCK REPAIR TABLE table_name [fsck_mode] [DRY RUN]
+  fsck_mode  { METADATA ONLY |
+     VERIFY ALL FILES |
+     VERIFY FILES MODIFIED BETWEEN start_timestamp AND end_timestamp }
+cases:
+  - id: fsck-repair-table.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FSCK REPAIR TABLE t
+    note: Rejected by the databricks dialect on main; FSCK REPAIR TABLE has no grammar.
+  - id: fsck-repair-table.metadata-only
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FSCK REPAIR TABLE t METADATA ONLY
+  - id: fsck-repair-table.verify-all-files
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FSCK REPAIR TABLE t VERIFY ALL FILES
+  - id: fsck-repair-table.verify-files-between
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FSCK REPAIR TABLE t VERIFY FILES MODIFIED BETWEEN current_timestamp() AND current_timestamp()
+  - id: fsck-repair-table.dry-run
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FSCK REPAIR TABLE t DRY RUN
+  - id: fsck-repair-table.metadata-only-dry-run
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      FSCK REPAIR TABLE t METADATA ONLY DRY RUN
+  - id: fsck-repair-table.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: fsck-repair-table.bare
+    omits: "table_name"
+    sql: |
+      FSCK REPAIR TABLE
+  - id: fsck-repair-table.metadata-without-only
+    verdict: must-reject
+    anchor: "#syntax"
+    from: fsck-repair-table.metadata-only
+    omits: "ONLY"
+    sql: |
+      FSCK REPAIR TABLE t METADATA
+  - id: fsck-repair-table.verify-all-without-files
+    verdict: must-reject
+    anchor: "#syntax"
+    from: fsck-repair-table.verify-all-files
+    omits: "FILES"
+    sql: |
+      FSCK REPAIR TABLE t VERIFY ALL
+  - id: fsck-repair-table.between-without-end
+    verdict: must-reject
+    anchor: "#syntax"
+    from: fsck-repair-table.verify-files-between
+    omits: "end_timestamp"
+    sql: |
+      FSCK REPAIR TABLE t VERIFY FILES MODIFIED BETWEEN current_timestamp() AND
+  - id: fsck-repair-table.between-without-start
+    verdict: must-reject
+    anchor: "#syntax"
+    from: fsck-repair-table.verify-files-between
+    omits: "start_timestamp"
+    sql: |
+      FSCK REPAIR TABLE t VERIFY FILES MODIFIED BETWEEN AND current_timestamp()

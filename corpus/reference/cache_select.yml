@@ -1,0 +1,48 @@
+# CACHE SELECT. The whole statement is unsupported by the databricks dialect,
+# so every must-parse case is a gap and every partial rejection is vacuous
+# until a grammar lands.
+statement: CACHE SELECT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-cache
+checked: 2026-09-20
+syntax: |
+  CACHE SELECT column_name [, ...] FROM table_name [ WHERE boolean_expression ]
+cases:
+  - id: cache-select.star
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CACHE SELECT * FROM boxes
+    note: Rejected by the databricks dialect on main; CACHE SELECT has no grammar.
+  - id: cache-select.columns-and-where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CACHE SELECT width, length FROM boxes WHERE height = 3
+  - id: cache-select.without-column
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cache-select.star
+    omits: "column_name"
+    sql: |
+      CACHE SELECT FROM boxes
+  - id: cache-select.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cache-select.star
+    omits: "table_name"
+    sql: |
+      CACHE SELECT a FROM
+  - id: cache-select.where-without-predicate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cache-select.columns-and-where
+    omits: "boolean_expression"
+    sql: |
+      CACHE SELECT a FROM boxes WHERE
+  - id: cache-select.column-list-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: cache-select.columns-and-where
+    omits: "column_name"
+    sql: |
+      CACHE SELECT a, FROM boxes

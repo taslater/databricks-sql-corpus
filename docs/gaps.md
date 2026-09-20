@@ -256,6 +256,54 @@ modes: `VACUUM t FULL` and `VACUUM t LITE`. Pinned as `vacuum.full` and
 `vacuum.lite`; the two partial rejections that mix the alternatives report
 vacuous until the modes land. Recorded 2026-09-20 by the Tier 2 batch.
 
+**`INSERT … WITH SCHEMA EVOLUTION` and the `REPLACE ON` alternative are
+rejected.** The
+[INSERT reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into)
+has four alternatives. The first three parse — `INTO`/`OVERWRITE`,
+`PARTITION`, a column list or `BY NAME`, `REPLACE WHERE` and `REPLACE USING`
+all bind — but `WITH SCHEMA EVOLUTION` (DBR 18.1+) and the fourth
+alternative, `REPLACE ON boolean_expression` (DBR 16.3+), have no grammar.
+Pinned by `insert.schema-evolution`, `insert.replace-on`,
+`insert.replace-on-parenthesised-query` and `insert.replace-on-target-alias`.
+Recorded 2026-09-20 by the DML batch.
+
+**`RESTORE` requires `TABLE` and `TO` explicitly.** The
+[RESTORE reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore)
+gives `RESTORE [ TABLE ] table_name [ TO ] time_travel_version`, yet
+`RESTORE employee TO VERSION AS OF 1` and `RESTORE TABLE employee VERSION AS
+OF 1` are rejected even though both keywords are documented as optional; the
+fully spelled forms parse. Pinned by `restore.without-table` and
+`restore.without-to`. Recorded 2026-09-20 by the DML batch.
+
+**`TIMESTAMP AS OF` rejects an arithmetic timestamp expression.** The
+[RESTORE reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore)
+lists `current_timestamp() - interval 12 hours` among the valid
+`timestamp_expression` forms, and the same `TIMESTAMP AS OF <expr>` is used
+for time travel generally. Literals, function calls and casts parse, but
+arithmetic on the timestamp is rejected: `RESTORE TABLE employee TO TIMESTAMP
+AS OF current_timestamp() - INTERVAL '1' HOUR` fails at the `-`, as does
+`SELECT * FROM t TIMESTAMP AS OF current_timestamp() - INTERVAL '1' HOUR`.
+Pinned by `restore.timestamp-arithmetic`. Recorded 2026-09-20 by the DML
+batch.
+
+**The Delta maintenance statements are unsupported.** Four statements have no
+grammar in the `databricks` dialect, so every documented form is rejected at
+position 1:
+
+- `REORG TABLE` — pinned by `reorg-table.*` (six must-parse cases, including
+  `APPLY (PURGE)`, `APPLY (CHECKPOINT)`, `APPLY (UPGRADE UNIFORM …)` and
+  `APPLY (SET PARQUET …)`).
+- `FSCK REPAIR TABLE` — pinned by `fsck-repair-table.*` (six cases, including
+  the three `fsck_mode`s and `DRY RUN`).
+- `CACHE SELECT` — pinned by `cache-select.*` (two cases).
+- `DROP BLOOM FILTER INDEX` — pinned by `drop-bloom-filter-index.*` (three
+  cases).
+
+Their partial rejections report vacuous until a grammar lands. `CREATE BLOOM
+FILTER INDEX` is not transcribed: its page is a deprecation notice with no
+syntax block, so it is `n/a` in the coverage tracker. Recorded 2026-09-20 by
+the DML batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

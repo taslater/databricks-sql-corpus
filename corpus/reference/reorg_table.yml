@@ -1,0 +1,85 @@
+# REORG TABLE. The whole statement is unsupported by the databricks dialect,
+# so every must-parse case is a gap and every partial rejection is vacuous
+# until a grammar lands.
+statement: REORG TABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table
+checked: 2026-09-20
+syntax: |
+  REORG [ TABLE ] table_name { [ WHERE predicate ] APPLY ( PURGE ) |
+                               APPLY ( UPGRADE UNIFORM ( ICEBERG_COMPAT_VERSION = version ) |
+                                       CHECKPOINT |
+                                       SET PARQUET ( FORMAT_VERSION = version ) ) }
+cases:
+  - id: reorg-table.purge
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REORG TABLE events APPLY (PURGE)
+    note: Rejected by the databricks dialect on main; REORG TABLE has no grammar.
+  - id: reorg-table.purge-with-where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REORG TABLE events WHERE date >= '2022-01-01' APPLY (PURGE)
+  - id: reorg-table.without-table-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REORG events APPLY (PURGE)
+  - id: reorg-table.upgrade-uniform
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REORG TABLE events APPLY (UPGRADE UNIFORM (ICEBERG_COMPAT_VERSION = 2))
+  - id: reorg-table.checkpoint
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REORG TABLE events APPLY (CHECKPOINT)
+  - id: reorg-table.set-parquet
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REORG TABLE events APPLY (SET PARQUET (FORMAT_VERSION = '2.12.0'))
+  - id: reorg-table.without-apply
+    verdict: must-reject
+    anchor: "#syntax"
+    from: reorg-table.purge
+    omits: "APPLY"
+    sql: |
+      REORG TABLE events
+  - id: reorg-table.empty-purge
+    verdict: must-reject
+    anchor: "#syntax"
+    from: reorg-table.purge
+    omits: "PURGE"
+    sql: |
+      REORG TABLE events APPLY ()
+  - id: reorg-table.upgrade-without-key
+    verdict: must-reject
+    anchor: "#syntax"
+    from: reorg-table.upgrade-uniform
+    omits: "ICEBERG_COMPAT_VERSION"
+    sql: |
+      REORG TABLE events APPLY (UPGRADE UNIFORM ())
+  - id: reorg-table.upgrade-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: reorg-table.upgrade-uniform
+    omits: "version"
+    sql: |
+      REORG TABLE events APPLY (UPGRADE UNIFORM (ICEBERG_COMPAT_VERSION =))
+  - id: reorg-table.set-parquet-empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: reorg-table.set-parquet
+    omits: "FORMAT_VERSION"
+    sql: |
+      REORG TABLE events APPLY (SET PARQUET ())
+  - id: reorg-table.where-without-predicate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: reorg-table.purge-with-where
+    omits: "predicate"
+    sql: |
+      REORG TABLE events WHERE APPLY (PURGE)
