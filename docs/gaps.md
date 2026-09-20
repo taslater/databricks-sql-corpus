@@ -399,11 +399,33 @@ templater alone does not flip them — each needs its own fix:
 | --- | --- |
 | `my_streaming_table.sql` | a `-- MAGIC %pip` mention inside an `%md` cell (unit 10) |
 | `identifier-clause.sql` | Spark's `SET hivevar:name = value` |
-| `Generating Surrogate Keys.sql` | `count(DISTINCT sk)FROM` without whitespace |
+| ~~`Generating Surrogate Keys.sql`~~ | fixed by the core branch below; the file parses once it merges |
 | `Clean Up.sql` | `USE CATALOG ${catalog}` left unterminated before the next statement |
 
 `src/dbsqlparse/preprocess.py` remains the reference implementation for the
 parameter shapes and is kept for that reason.
+
+## Core: a keyword glued to a closing bracket
+
+`dbx-devrel/Generating Surrogate Keys.sql` failed on `count(DISTINCT sk)FROM`
+with no space before `FROM`. The cause is general, not Databricks: with no
+whitespace between a closing bracket and a following keyword, `greedy_match()`
+refuses the keyword as a terminator (it requires whitespace before an
+all-alphabetic terminator), so the keyword is consumed as an **implicit alias**
+and the rest of the statement is unparsable:
+
+| statement | released 4.3.0 / `main` |
+| --- | --- |
+| `SELECT (a) FROM t;` | parses |
+| `SELECT (a)FROM t;` | `FROM` parsed as `alias_expression: naked_identifier 'FROM'` |
+
+It reproduces on `ansi`, `sparksql` and `databricks`, and on released 4.3.0.
+The fix drops the whitespace requirement after `)`, `]` or `}` — a closing
+bracket is already an unambiguous code boundary — in both engines
+(`greedy_match` in Python and `is_preceded_by_whitespace` in Rust, which the
+parity test enforces). Branch `core/keyword-terminator-after-bracket`
+(`cea2c68d6`), body in `docs/pr-bodies/`. Corpus: `dbx-devrel` 3/5 → 4/5,
+mutation 1326/1326, reference unchanged at 107/177 with `controls: ok`.
 
 ## Not gaps
 

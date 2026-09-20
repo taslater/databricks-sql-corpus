@@ -81,7 +81,7 @@ its base has moved and the unit is opened.
 
 | unit | branch | base | tip | state |
 | --- | --- | --- | --- | --- |
-| 1 | `fix/databricks-append-flow-sequence-by` | `upstream/main` `b52246da5` | `535cf5655` | pushed, ready to open first |
+| 1 | `fix/databricks-append-flow-sequence-by` | `upstream/main` `b52246da5` | `1e8fbed27` | pushed, ready to open first |
 | 2 | `fix/databricks-create-catalog-additions` | `upstream/main` `b52246da5` | `ee80fe4f0` | pushed, ready |
 | 3 | `fix/databricks-live-view` (#8513) | `6356e4765` (opened 2026-09-18) | `de3b6372c` | PR open; body rewritten; rebase before more commits if upstream moves `CreateViewStatementSegment` |
 | 4 | `fix/databricks-uc-privileges` | stacked on `c9121aaa8` (#8516) | `848ce72cf` | pushed; rebase onto `main` when #8516 merges, and after #8512 if it lands first |
@@ -91,6 +91,7 @@ its base has moved and the unit is opened.
 | 8 | `fix/templater-placeholder-databricks-params` | `upstream/main` `b52246da5` | `eb35e1c62` | pushed, ready (core templater, not dialect) |
 | 9 | — | — | — | folded into unit 7 |
 | 10 | `fix/databricks-magic-cell-boundaries` | `upstream/main` `b52246da5` | `1625e1051` | pushed; lexer regexes inside, so a measurement needs the Rust tables rebuilt (see notes) |
+| core | `core/keyword-terminator-after-bracket` | `main` `33d8c8459` | `cea2c68d6` | pushed, ready; not a Databricks unit — the general `(a)FROM t` parser bug; touches both engines (`greedy_match` + `is_preceded_by_whitespace`) |
 | — | `personal/combined-2026-09-20` (tag of the same name) | `upstream/main` `b52246da5` | `ba4a00c8b` | the measurement union; never merge, never open a PR from it |
 
 Measuring a branch: the corpus `.venv` is pinned to the `sqlfluff/` checkout
@@ -98,6 +99,27 @@ path, so check the branch out there, run `make reference` and `make corpus`,
 and switch back to `main` afterwards. Measure only committed state — an
 uncommitted tree measures the same everywhere (this trap has cost two
 mis-read deltas already).
+
+**Which engine runs (checked 2026-09-21).** There are two parsers, and the
+measuring venvs have `sqlfluffrs` installed, so `core.use_rust_parser = auto`
+(the default) runs the **Rust** parser, fed by dialect tables baked at build
+time. That means a Python grammar change is inert until the extension is
+rebuilt (`utils/rustify.py build` + `maturin build`, then install the wheel
+into *each* measuring venv). Two independent consequences:
+
+- A dialect branch's numbers only reflect its grammar after that rebuild; if
+  you did not rebuild, you measured the previous branch's tables. The Rust
+  parser **and** the Rust lexer both come from the same wheel.
+- Upstream CI runs the non-rust suite (`tox -e py312`) on the **Python**
+  parser, so the Python engine is the one a PR is judged on; `py312-rust`
+  (and `test/core/parser/parity/`) enforce parity. A core change to the
+  matching algorithm must therefore land in **both** `match_algorithms.py`
+  and the Rust `table_driven/match_algorithms.rs`.
+
+To measure the Python engine without uninstalling the wheel, temporarily set
+`use_rust_parser = False` in `src/sqlfluff/core/default_config.cfg` (revert
+it before committing) — the earlier note that `RustParser is None` predates
+the first `sqlfluffrs` wheel built in this workspace and is no longer true.
 
 ## Combining decisions
 
