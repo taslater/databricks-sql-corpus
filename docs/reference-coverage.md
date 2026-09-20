@@ -84,7 +84,7 @@ Data types is covered page by page: `array_type.yml`, `map_type.yml`,
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.
 
-## DDL statements (5 done, 54 queued, 0 n/a)
+## DDL statements (6 done, 56 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -116,7 +116,10 @@ writes the type as input, so a case would have to invent the position.
 | [CREATE SERVER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-server) | queued |
 | [CREATE SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share) | queued |
 | [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-streaming-table) | queued |
-| [CREATE TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table) | queued |
+| [CREATE TABLE [USING]](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using) | done |
+| [CREATE TABLE (Hive format)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat) | queued |
+| [CREATE TABLE LIKE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like) | queued |
+| [CREATE TABLE CLONE](https://docs.databricks.com/aws/en/sql/language-manual/delta-clone) | queued |
 | [CREATE VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view) | done |
 | [CREATE VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume) | done |
 | [DROP CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog) | queued |
