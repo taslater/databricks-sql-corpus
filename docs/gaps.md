@@ -206,6 +206,19 @@ characteristic family as CREATE TABLE, ALTER TABLE and CREATE SCHEMA. Pinned
 by `create-function.*`; found 2026-09-20 by the Tier 2 batch; no corpus file
 uses any of the seven.
 
+**`MERGE WITH SCHEMA EVOLUTION` is rejected.** The
+[MERGE INTO reference](https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into)
+gives the statement start as `MERGE [ WITH SCHEMA EVOLUTION ] INTO
+target_table_name …`, and documents the clause (Databricks Runtime 15.2+) as
+enabling automatic schema evolution, with a worked example. On `main` at
+`33d8c8459` and released 4.3.0,
+`MERGE WITH SCHEMA EVOLUTION INTO t USING s ON t.k = s.k WHEN MATCHED THEN
+UPDATE SET *` is rejected at position 1, while the same statement without the
+clause parses. Pinned by `merge-into.with-schema-evolution`. Found 2026-09-20
+by the Tier 2 batch. The rest of the MERGE grammar — all three WHEN branches,
+the DELETE / UPDATE SET / INSERT actions, `EXCEPT`, aliases and a leading CTE —
+parses and is pinned green.
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as
