@@ -1,0 +1,87 @@
+# CREATE EXTERNAL LOCATION. The whole statement is unsupported by the
+# databricks and sparksql dialects, so every must-parse case is a gap and
+# every partial rejection is vacuous until a grammar lands.
+statement: CREATE EXTERNAL LOCATION
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location
+checked: 2026-09-20
+syntax: |
+  CREATE EXTERNAL LOCATION [IF NOT EXISTS] location_name    URL url_str    WITH (STORAGE CREDENTIAL credential_name)    [COMMENT comment]
+cases:
+  - id: create-external-location.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL LOCATION s3_remote URL 's3://us-east-1/location' WITH (STORAGE CREDENTIAL s3_remote_cred)
+    note: Rejected by the databricks dialect on main; CREATE EXTERNAL LOCATION has no grammar.
+  - id: create-external-location.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL LOCATION s3_remote URL 's3://us-east-1/location' WITH (STORAGE CREDENTIAL s3_remote_cred) COMMENT 'Default source'
+    note: Rejected by the databricks dialect on main.
+  - id: create-external-location.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL LOCATION IF NOT EXISTS s3_remote URL 's3://us-east-1/location' WITH (STORAGE CREDENTIAL c)
+    note: Rejected by the databricks dialect on main.
+  - id: create-external-location.backticked-names
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE EXTERNAL LOCATION `s3-remote` URL 's3://us-east-1/location' WITH (STORAGE CREDENTIAL `s3-remote-cred`)
+    note: Backticks are required for object names with special characters such as hyphens.
+  - id: create-external-location.all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL LOCATION IF NOT EXISTS `s3-remote` URL 's3://us-east-1/location' WITH (STORAGE CREDENTIAL `s3-remote-cred`) COMMENT 'x'
+  - id: create-external-location.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.bare
+    omits: "location_name"
+    sql: |
+      CREATE EXTERNAL LOCATION URL 'u' WITH (STORAGE CREDENTIAL c)
+  - id: create-external-location.without-url-keyword
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.bare
+    omits: "URL"
+    sql: |
+      CREATE EXTERNAL LOCATION l 'u' WITH (STORAGE CREDENTIAL c)
+  - id: create-external-location.without-url-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.bare
+    omits: "url_str"
+    sql: |
+      CREATE EXTERNAL LOCATION l URL WITH (STORAGE CREDENTIAL c)
+  - id: create-external-location.without-with
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.bare
+    omits: "WITH"
+    sql: |
+      CREATE EXTERNAL LOCATION l URL 'u'
+  - id: create-external-location.empty-with
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.bare
+    omits: "STORAGE CREDENTIAL"
+    sql: |
+      CREATE EXTERNAL LOCATION l URL 'u' WITH ()
+  - id: create-external-location.without-credential-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.bare
+    omits: "credential_name"
+    sql: |
+      CREATE EXTERNAL LOCATION l URL 'u' WITH (STORAGE CREDENTIAL)
+  - id: create-external-location.without-comment-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-external-location.comment
+    omits: "comment"
+    sql: |
+      CREATE EXTERNAL LOCATION l URL 'u' WITH (STORAGE CREDENTIAL c) COMMENT
