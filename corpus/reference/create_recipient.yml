@@ -1,0 +1,90 @@
+# CREATE RECIPIENT. The whole statement is unsupported by the databricks and
+# sparksql dialects, so every must-parse case is a gap and every partial
+# rejection is vacuous until a grammar lands.
+statement: CREATE RECIPIENT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient
+checked: 2026-09-20
+syntax: |
+  CREATE RECIPIENT [ IF NOT EXISTS ] recipient_name    [ USING ID sharing_identifier ]    [ COMMENT comment ]    [ PROPERTIES ( property_key [ = ] property_value [, ...] ) ]
+cases:
+  - id: create-recipient.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT other_org
+    note: Rejected by the databricks dialect on main; CREATE RECIPIENT has no grammar.
+  - id: create-recipient.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT IF NOT EXISTS other_org
+    note: Rejected by the databricks dialect on main.
+  - id: create-recipient.using-id
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT r USING ID 'azure:westus:abc'
+    note: Rejected by the databricks dialect on main.
+  - id: create-recipient.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT r COMMENT 'x'
+    note: Rejected by the databricks dialect on main.
+  - id: create-recipient.properties-with-equals
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT r PROPERTIES (k = 'v')
+    note: The page brackets the equals sign, so both keyed forms are legal.
+  - id: create-recipient.properties-without-equals
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT r PROPERTIES (k 'v')
+  - id: create-recipient.properties-dotted-key
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      CREATE RECIPIENT r PROPERTIES (a.b = 'v')
+    note: A property_key of dotted identifiers, per the property_key production.
+  - id: create-recipient.all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE RECIPIENT IF NOT EXISTS r USING ID 'x' COMMENT 'c' PROPERTIES (k = 'v', a.b 'w')
+  - id: create-recipient.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-recipient.bare
+    omits: "recipient_name"
+    sql: |
+      CREATE RECIPIENT USING ID 'x'
+  - id: create-recipient.without-sharing-identifier
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-recipient.using-id
+    omits: "sharing_identifier"
+    sql: |
+      CREATE RECIPIENT r USING ID
+  - id: create-recipient.empty-properties
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-recipient.properties-with-equals
+    omits: "property_key"
+    sql: |
+      CREATE RECIPIENT r PROPERTIES ()
+  - id: create-recipient.without-property-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-recipient.properties-with-equals
+    omits: "property_value"
+    sql: |
+      CREATE RECIPIENT r PROPERTIES (k =)
+  - id: create-recipient.without-comment-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-recipient.comment
+    omits: "comment"
+    sql: |
+      CREATE RECIPIENT r COMMENT

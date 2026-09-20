@@ -256,6 +256,24 @@ modes: `VACUUM t FULL` and `VACUUM t LITE`. Pinned as `vacuum.full` and
 `vacuum.lite`; the two partial rejections that mix the alternatives report
 vacuous until the modes land. Recorded 2026-09-20 by the Tier 2 batch.
 
+**The Unity Catalog connectivity and sharing DDL is unsupported.** Four
+statements have no grammar in the `databricks` or `sparksql` dialect, so
+every documented form is rejected at position 1:
+
+- `CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (host 'h')` — pinned by
+  `create-connection.*` (eight must-parse cases, including `IF NOT EXISTS`,
+  `COMMENT`, dotted and string-literal option keys, a `secret(...)` value and
+  the standards-compliance `SERVER` synonym).
+- `CREATE EXTERNAL LOCATION l URL 'u' WITH (STORAGE CREDENTIAL c)` — pinned
+  by `create-external-location.*` (five cases, including backticked names).
+- `CREATE SHARE customer_share` — pinned by `create-share.*` (four cases).
+- `CREATE RECIPIENT r` — pinned by `create-recipient.*` (eight cases,
+  including `USING ID`, dotted `PROPERTIES` keys, and the bracketed `=`).
+
+These are the same class as the `COPY INTO` gap above — a whole statement
+missing rather than a bracketed clause — and their partial rejections report
+vacuous until a grammar lands. Recorded 2026-09-20 by the Tier 2 batch.
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as

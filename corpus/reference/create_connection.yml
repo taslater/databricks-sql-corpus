@@ -1,0 +1,106 @@
+# CREATE CONNECTION. The whole statement is unsupported by the databricks and
+# sparksql dialects, including the standards-compliance SERVER synonym, so
+# every must-parse case is a gap and every partial rejection is vacuous until
+# a grammar lands.
+statement: CREATE CONNECTION
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection
+checked: 2026-09-20
+syntax: |
+  CREATE CONNECTION [IF NOT EXISTS] connection_name  TYPE connection_type  OPTIONS ( option value [, ...] )  [ COMMENT comment ]
+cases:
+  - id: create-connection.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (host 'h', port '5432')
+    note: Rejected by the databricks dialect on main; CREATE CONNECTION has no grammar.
+  - id: create-connection.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CONNECTION IF NOT EXISTS c TYPE POSTGRESQL OPTIONS (host 'h')
+    note: Rejected by the databricks dialect on main.
+  - id: create-connection.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (host 'h') COMMENT 'x'
+    note: Rejected by the databricks dialect on main.
+  - id: create-connection.dotted-option-key
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (a.b 'h')
+    note: A key of dotted identifiers, per the option_key production.
+  - id: create-connection.string-option-key
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS ('host' 'h')
+    note: A STRING literal key, per the option_key production.
+  - id: create-connection.secret-value
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (user secret('secrets.r.us', 'u'), password secret('secrets.r.us', 'p'))
+    note: The documented way to supply a credential value.
+  - id: create-connection.all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE CONNECTION IF NOT EXISTS c TYPE HTTP OPTIONS (host 'https://slack.com', bearer_token secret('secrets.r.us', 't')) COMMENT 'slack'
+  - id: create-connection.server-synonym
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SERVER c TYPE POSTGRESQL OPTIONS (host 'h')
+    note: The page documents SERVER as a standards-compliance synonym for CONNECTION.
+  - id: create-connection.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "connection_name"
+    sql: |
+      CREATE CONNECTION TYPE POSTGRESQL OPTIONS (host 'h')
+  - id: create-connection.without-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "TYPE"
+    sql: |
+      CREATE CONNECTION c OPTIONS (host 'h')
+  - id: create-connection.without-type-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "connection_type"
+    sql: |
+      CREATE CONNECTION c TYPE OPTIONS (host 'h')
+  - id: create-connection.without-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "option value"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL
+  - id: create-connection.empty-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "option value"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS ()
+  - id: create-connection.without-option-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "value"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (host)
+  - id: create-connection.options-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-connection.bare
+    omits: "option value"
+    sql: |
+      CREATE CONNECTION c TYPE POSTGRESQL OPTIONS (host 'h', )

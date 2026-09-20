@@ -1,0 +1,53 @@
+# CREATE SHARE. The whole statement is unsupported by the databricks and
+# sparksql dialects, so every must-parse case is a gap and every partial
+# rejection is vacuous until a grammar lands.
+statement: CREATE SHARE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share
+checked: 2026-09-20
+syntax: |
+  CREATE SHARE [ IF NOT EXISTS ] share_name    [ COMMENT comment ]
+cases:
+  - id: create-share.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SHARE customer_share
+    note: Rejected by the databricks dialect on main; CREATE SHARE has no grammar.
+  - id: create-share.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SHARE IF NOT EXISTS customer_share
+    note: Rejected by the databricks dialect on main.
+  - id: create-share.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SHARE customer_share COMMENT 'x'
+    note: Rejected by the databricks dialect on main.
+  - id: create-share.all-clauses
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SHARE IF NOT EXISTS customer_share COMMENT 'x'
+  - id: create-share.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-share.bare
+    omits: "share_name"
+    sql: |
+      CREATE SHARE
+  - id: create-share.without-name-with-comment
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-share.comment
+    omits: "share_name"
+    sql: |
+      CREATE SHARE COMMENT 'x'
+  - id: create-share.without-comment-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-share.comment
+    omits: "comment"
+    sql: |
+      CREATE SHARE s COMMENT
