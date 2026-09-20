@@ -1001,18 +1001,540 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 540,
-      "passed": 356,
-      "rate": 65.92592592592592
+      "total": 823,
+      "passed": 491,
+      "rate": 59.65978128797084
     },
     "must_reject": {
-      "total": 294,
-      "caught": 251,
-      "informative": 144,
-      "vacuous": 107,
-      "rate": 85.37414965986395
+      "total": 396,
+      "caught": 333,
+      "informative": 176,
+      "vacuous": 157,
+      "rate": 84.0909090909091
     },
     "cases": [
+      {
+        "id": "alter-catalog.owner",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-catalog.tags",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-catalog.predictive",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-catalog.managed-location",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER CATALOG c SET MANAGED LOCATION 's3...\""
+      },
+      {
+        "id": "alter-catalog.retain-dropped",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER CATALOG c RETAIN DROPPED TO 1 DAY'"
+      },
+      {
+        "id": "alter-catalog.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER CATALOG c DEFAULT COLLATION 'UTF8_...\""
+      },
+      {
+        "id": "alter-catalog.collation-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-catalog.empty-tags",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "ALTER CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-connection.owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER CONNECTION c SET OWNER TO `u`'"
+      },
+      {
+        "id": "alter-connection.rename",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER CONNECTION c RENAME TO d'"
+      },
+      {
+        "id": "alter-connection.options",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER CONNECTION c OPTIONS (host 'h')\""
+      },
+      {
+        "id": "alter-connection.rename-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-connection.empty-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-credential.rename",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER CREDENTIAL c RENAME TO d'"
+      },
+      {
+        "id": "alter-credential.storage-owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER STORAGE CREDENTIAL c OWNER TO `u`'"
+      },
+      {
+        "id": "alter-credential.service-owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SERVICE CREDENTIAL c OWNER TO `u`'"
+      },
+      {
+        "id": "alter-credential.rename-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-external-location.rename",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER EXTERNAL LOCATION l RENAME TO m'"
+      },
+      {
+        "id": "alter-external-location.set-url",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER EXTERNAL LOCATION l SET URL 's3://...\""
+      },
+      {
+        "id": "alter-external-location.set-credential",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER EXTERNAL LOCATION l SET STORAGE CR...'"
+      },
+      {
+        "id": "alter-external-location.owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER EXTERNAL LOCATION l OWNER TO `u`'"
+      },
+      {
+        "id": "alter-external-location.set-url-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-group.add-group",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER GROUP g ADD GROUP h'"
+      },
+      {
+        "id": "alter-group.drop-user",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER GROUP g DROP USER `u`'"
+      },
+      {
+        "id": "alter-group.without-principal",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-materialized-view.owner",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-materialized-view.drop-schedule",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-materialized-view.add-trigger",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER MATERIALIZED VIEW v ADD TRIGGER ON...'"
+      },
+      {
+        "id": "alter-materialized-view.alter-schedule",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER MATERIALIZED VIEW v ALTER SCHEDULE...'"
+      },
+      {
+        "id": "alter-materialized-view.alter-column",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER MATERIALIZED VIEW v ALTER COLUMN c...'"
+      },
+      {
+        "id": "alter-materialized-view.comment-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER MATERIALIZED VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-provider.rename",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER PROVIDER p RENAME TO q'"
+      },
+      {
+        "id": "alter-provider.owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER PROVIDER p OWNER TO `u`'"
+      },
+      {
+        "id": "alter-provider.rename-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-recipient.rename",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER RECIPIENT r RENAME TO s'"
+      },
+      {
+        "id": "alter-recipient.set-properties",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER RECIPIENT r SET PROPERTIES ('count...\""
+      },
+      {
+        "id": "alter-recipient.unset-properties",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER RECIPIENT r UNSET PROPERTIES ('cou...\""
+      },
+      {
+        "id": "alter-recipient.owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER RECIPIENT r OWNER TO `u`'"
+      },
+      {
+        "id": "alter-recipient.empty-properties",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-schema.owner",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-schema.dbproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-schema.tags",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-schema.predictive",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-schema.managed-location",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER SCHEMA s SET MANAGED LOCATION 's3:...\""
+      },
+      {
+        "id": "alter-schema.retain-dropped",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SCHEMA s RETAIN DROPPED TO 1 DAY'"
+      },
+      {
+        "id": "alter-schema.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER SCHEMA s DEFAULT COLLATION 'UTF8_L...\""
+      },
+      {
+        "id": "alter-schema.empty-dbproperties",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "ALTER SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-share.add-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SHARE s ADD TABLE t'"
+      },
+      {
+        "id": "alter-share.add-schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SHARE s ADD SCHEMA sc'"
+      },
+      {
+        "id": "alter-share.remove-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SHARE s REMOVE TABLE t'"
+      },
+      {
+        "id": "alter-share.rename",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SHARE s RENAME TO s2'"
+      },
+      {
+        "id": "alter-share.owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER SHARE s OWNER TO `u`'"
+      },
+      {
+        "id": "alter-share.add-table-full",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: \"ALTER SHARE s ADD TABLE t COMMENT 'c' PA...\""
+      },
+      {
+        "id": "alter-share.add-table-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-streaming-table.add-trigger",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER STREAMING TABLE t ADD TRIGGER ON U...'"
+      },
+      {
+        "id": "alter-streaming-table.alter-schedule",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER STREAMING TABLE t ALTER SCHEDULE E...'"
+      },
+      {
+        "id": "alter-streaming-table.owner",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ALTER STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ALTER STREAMING TABLE t SET OWNER TO `u`...'"
+      },
+      {
+        "id": "alter-streaming-table.owner-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER STREAMING TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table",
+        "anchor": "#syntax",
+        "message": null
+      },
       {
         "id": "alter-table.rename-to",
         "verdict": "must-parse",
@@ -1392,6 +1914,168 @@
         "message": null
       },
       {
+        "id": "alter-view.rename",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-view.tblproperties",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-view.body",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-view.schema-binding",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-view.owner",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-view.rename-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER VIEW",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-volume.rename",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-volume.owner",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-volume.tags",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-volume.unset-tags",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ALTER VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "alter-volume.rename-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ALTER VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "analyze-compute-statistics.table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STATISTICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-statistics",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "analyze-compute-statistics.column-stats",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STATISTICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-statistics",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "analyze-compute-statistics.tables-in-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STATISTICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-statistics",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "analyze-compute-statistics.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STATISTICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-statistics",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "analyze-compute-storage-metrics.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STORAGE METRICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-storage-metrics",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'ANALYZE TABLE t COMPUTE STORAGE METRICS'"
+      },
+      {
+        "id": "analyze-compute-storage-metrics.inventory",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STORAGE METRICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-storage-metrics",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'ANALYZE TABLE t COMPUTE STORAGE METRICS ...'"
+      },
+      {
+        "id": "analyze-compute-storage-metrics.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ANALYZE TABLE \u2026 COMPUTE STORAGE METRICS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-storage-metrics",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "array-sort.lambda-keyword-parameters",
         "verdict": "must-parse",
         "ok": false,
@@ -1437,6 +2121,42 @@
         "message": null,
         "reason": "extra",
         "extra": "elementType"
+      },
+      {
+        "id": "auto-cdc-into.minimal",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "AUTO CDC INTO",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "auto-cdc-into.full",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "AUTO CDC INTO",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "auto-cdc-into.once",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "AUTO CDC INTO",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FLOW flow AS AUTO CDC ONCE INTO t...'"
+      },
+      {
+        "id": "auto-cdc-into.without-keys",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "AUTO CDC INTO",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "cache-select.star",
@@ -1489,6 +2209,105 @@
         "ok": true,
         "statement": "CACHE SELECT",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cache-table.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-cache-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cache-table.lazy",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-cache-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cache-table.options-and-query",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-cache-table",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "cache-table.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-cache-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "call.positional",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CALL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-call",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CALL area_of_rectangle(5, 10, area, acc)...'"
+      },
+      {
+        "id": "call.named-parameters",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CALL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-call",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CALL area_of_rectangle(y => 10, x => 5, ...'"
+      },
+      {
+        "id": "call.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CALL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-call",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "case-stmt.simple",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CASE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE choice INT DEFAULT 3; CASE...'"
+      },
+      {
+        "id": "case-stmt.searched",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CASE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE choice INT DEFAULT 3; CASE...'"
+      },
+      {
+        "id": "case-stmt.without-end",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CASE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "clear-cache.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CLEAR CACHE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-clear-cache",
         "anchor": "#syntax",
         "message": null
       },
@@ -1579,6 +2398,69 @@
         "ok": true,
         "statement": ":: operator",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/coloncolonsign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "comment-on.catalog",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "COMMENT ON",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "comment-on.column",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "COMMENT ON",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "comment-on.connection",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "COMMENT ON",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "comment-on.without-comment",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COMMENT ON",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "compound-stmt.atomic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "BEGIN END compound statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN ATOMIC INSERT INTO accounts VALUES...'"
+      },
+      {
+        "id": "compound-stmt.declare-and-handler",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "BEGIN END compound statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE a INT DEFAULT 1; DECLARE E...'"
+      },
+      {
+        "id": "compound-stmt.without-body",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "BEGIN END compound statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt",
         "anchor": "#syntax",
         "message": null
       },
@@ -2827,6 +3709,69 @@
         ]
       },
       {
+        "id": "create-function-external.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (External)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function-external.temporary-with-jar",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (External)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "create-function-external.or-replace-if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (External)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function-external.without-class",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (External)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-group.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-create-group",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE GROUP g'"
+      },
+      {
+        "id": "create-group.with-user",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-create-group",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE GROUP g WITH USER `u`'"
+      },
+      {
+        "id": "create-group.with-user-and-group",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-create-group",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE GROUP g WITH USER `u` GROUP h'"
+      },
+      {
         "id": "create-materialized-view.expectations-only",
         "verdict": "must-parse",
         "ok": false,
@@ -2877,6 +3822,96 @@
         "ok": false,
         "statement": "CREATE MATERIALIZED VIEW",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view-pipeline.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view-pipeline.or-refresh",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view-pipeline.cluster-by",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "create-materialized-view-pipeline.without-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE MATERIALIZED VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-policy.column-mask",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE POLICY ssn_mask ON CATALOG employ...'"
+      },
+      {
+        "id": "create-policy.grant",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE POLICY grant_anthropic_model_serv...'"
+      },
+      {
+        "id": "create-policy.without-body",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-procedure.with-parameters",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE OR REPLACE PROCEDURE add(x INT, y...'"
+      },
+      {
+        "id": "create-procedure.control-flow-body",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE PROCEDURE greeting(IN mode STRING...'"
+      },
+      {
+        "id": "create-procedure.without-body",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure",
         "anchor": "#syntax",
         "message": null
       },
@@ -3827,6 +4862,186 @@
         ]
       },
       {
+        "id": "create-table-clone.deep",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE CLONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-clone",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-clone.shallow",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE CLONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-clone",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-clone.or-replace",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE CLONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-clone",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-clone.without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE CLONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-clone",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-flow.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE TABLE ... FLOW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 16: Found unparsable section: 'FLOW INSERT BY NAME SELECT 1'"
+      },
+      {
+        "id": "create-table-flow.once",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE TABLE ... FLOW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 16: Found unparsable section: 'FLOW INSERT ONCE BY NAME SELECT 1'"
+      },
+      {
+        "id": "create-table-flow.with-partition",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE TABLE ... FLOW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow",
+        "anchor": "#examples",
+        "message": "Line 1, Position 35: Found unparsable section: 'FLOW INSERT BY NAME SELECT 1, 2'"
+      },
+      {
+        "id": "create-table-flow.standalone-flow",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE TABLE ... FLOW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FLOW f AS INSERT INTO t BY NAME S...'"
+      },
+      {
+        "id": "create-table-flow.without-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE ... FLOW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-hive.stored-as",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE (Hive format)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-hive.external-with-location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE (Hive format)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-hive.row-format-delimited",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE (Hive format)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-hive.stored-as-without-format",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE (Hive format)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-like.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE LIKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-like.using-location",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE LIKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "create-table-like.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TABLE LIKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-table-like.without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TABLE LIKE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-temporary-view.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TEMPORARY VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-temporary-view.column-list",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE TEMPORARY VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "create-temporary-view.without-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE TEMPORARY VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "create-view.plain",
         "verdict": "must-parse",
         "ok": true,
@@ -4097,6 +5312,33 @@
         "message": null
       },
       {
+        "id": "create-view-pipeline.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view-pipeline.comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-view-pipeline.without-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE VIEW (pipelines)",
+        "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "create-volume.managed",
         "verdict": "must-parse",
         "ok": true,
@@ -4259,6 +5501,42 @@
         "message": null
       },
       {
+        "id": "declare-variable.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DECLARE VARIABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "declare-variable.without-type",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DECLARE VARIABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "declare-variable.multiple",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DECLARE VARIABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 10: Found unparsable section: ', b INT'"
+      },
+      {
+        "id": "declare-variable.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DECLARE VARIABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "delete-from.bare",
         "verdict": "must-parse",
         "ok": true,
@@ -4331,6 +5609,105 @@
         "message": null
       },
       {
+        "id": "deny.privilege",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DENY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-deny",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DENY SELECT ON TABLE t TO `u`'"
+      },
+      {
+        "id": "deny.all-privileges",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DENY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-deny",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DENY ALL PRIVILEGES ON TABLE t TO `u`'"
+      },
+      {
+        "id": "deny.without-principal",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DENY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-deny",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-catalog.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-catalog.desc-extended",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 23: Found unparsable section: 'c'"
+      },
+      {
+        "id": "describe-catalog.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-connection.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-connection.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-credential.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-credential",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-credential.storage",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-credential",
+        "anchor": "#examples",
+        "message": "Line 1, Position 29: Found unparsable section: 'c'"
+      },
+      {
+        "id": "describe-credential.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-credential",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "describe-detail.table",
         "verdict": "must-parse",
         "ok": true,
@@ -4358,6 +5735,51 @@
         "message": "Line 1, Position 1: Found unparsable section: 'DESC DETAIL t'"
       },
       {
+        "id": "describe-external-location.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 28: Found unparsable section: 'l'"
+      },
+      {
+        "id": "describe-external-location.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-function.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-function.desc-extended",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-function.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "describe-history.table",
         "verdict": "must-parse",
         "ok": true,
@@ -4383,6 +5805,186 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history",
         "anchor": "#syntax",
         "message": "Line 1, Position 1: Found unparsable section: 'DESC HISTORY t'"
+      },
+      {
+        "id": "describe-policy.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-policy",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 19: Found unparsable section: 'ON TABLE t'"
+      },
+      {
+        "id": "describe-policy.schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-policy",
+        "anchor": "#examples",
+        "message": "Line 1, Position 15: Found unparsable section: 'ON SCHEMA s'"
+      },
+      {
+        "id": "describe-policy.without-target",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-policy",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-procedure.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-procedure",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-procedure.desc-extended",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DESCRIBE PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-procedure",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 25: Found unparsable section: 'p'"
+      },
+      {
+        "id": "describe-procedure.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-procedure",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-provider.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-provider",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-provider.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-provider",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-query.with-keyword",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE QUERY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-query.without-keyword",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE QUERY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-query.without-statement",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE QUERY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-recipient.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-recipient.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-schema.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-schema.desc-extended",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-schema.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-share.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-share.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-volume.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DESCRIBE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "describe-volume.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "DESCRIBE VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-volume",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "distribute-by.basic",
@@ -4457,6 +6059,321 @@
         "message": null
       },
       {
+        "id": "drop-catalog.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-catalog.cascade",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-catalog.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-connection.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP CONNECTION c'"
+      },
+      {
+        "id": "drop-connection.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-credential.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-credential",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP CREDENTIAL c'"
+      },
+      {
+        "id": "drop-credential.storage-force",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-credential",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP STORAGE CREDENTIAL c FORCE'"
+      },
+      {
+        "id": "drop-credential.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP CREDENTIAL",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-credential",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-external-location.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP EXTERNAL LOCATION l'"
+      },
+      {
+        "id": "drop-external-location.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-function.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-function.temporary-if-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-function.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-group.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-drop-group",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP GROUP g'"
+      },
+      {
+        "id": "drop-group.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP GROUP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-drop-group",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-policy.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-policy",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP POLICY p ON CATALOG c'"
+      },
+      {
+        "id": "drop-policy.without-target",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP POLICY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-policy",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-procedure.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-procedure",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP PROCEDURE p'"
+      },
+      {
+        "id": "drop-procedure.if-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-procedure",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP PROCEDURE IF EXISTS p'"
+      },
+      {
+        "id": "drop-procedure.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP PROCEDURE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-procedure",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-provider.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-provider",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP PROVIDER p'"
+      },
+      {
+        "id": "drop-provider.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-provider",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-recipient.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP RECIPIENT r'"
+      },
+      {
+        "id": "drop-recipient.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-schema.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-schema.cascade",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-schema.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-share.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP SHARE s'"
+      },
+      {
+        "id": "drop-share.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-table.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-table.if-exists-force",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 24: Found unparsable section: 'FORCE'"
+      },
+      {
+        "id": "drop-table.temporary",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-table.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-variable.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP VARIABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP TEMPORARY VARIABLE v'"
+      },
+      {
+        "id": "drop-variable.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP VARIABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "drop-view.plain",
         "verdict": "must-parse",
         "ok": true,
@@ -4491,6 +6408,24 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view",
         "anchor": "#syntax",
         "message": "Line 1, Position 1: Found unparsable section: 'DROP MATERIALIZED VIEW IF EXISTS mv'"
+      },
+      {
+        "id": "drop-volume.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DROP VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-volume",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-volume.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP VOLUME",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-volume",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "execute-immediate.plain",
@@ -4678,6 +6613,24 @@
         ]
       },
       {
+        "id": "for-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FOR statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE sum INT DEFAULT 0; FOR row...'"
+      },
+      {
+        "id": "for-stmt.without-do",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "FOR statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "from-json.literal-schema",
         "verdict": "must-parse",
         "ok": true,
@@ -4858,6 +6811,33 @@
         "message": null
       },
       {
+        "id": "function-invocation.positional",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Function invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "function-invocation.star-argument",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Function invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "function-invocation.named-parameter",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Function invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
         "id": "generate.symlink-manifest",
         "verdict": "must-parse",
         "ok": true,
@@ -4890,6 +6870,33 @@
         "ok": true,
         "statement": "GENERATE",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-generate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "get-diagnostics.row-count",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "GET DIAGNOSTICS statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN GET DIAGNOSTICS rc = ROW_COUNT; EN...'"
+      },
+      {
+        "id": "get-diagnostics.condition",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "GET DIAGNOSTICS statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE msg STRING; GET DIAGNOSTIC...'"
+      },
+      {
+        "id": "get-diagnostics.without-item",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GET DIAGNOSTICS statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt",
         "anchor": "#syntax",
         "message": null
       },
@@ -5003,6 +7010,24 @@
         "ok": true,
         "statement": "GRANT",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "grant-share.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "GRANT ON SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'GRANT SELECT ON SHARE s TO RECIPIENT r'"
+      },
+      {
+        "id": "grant-share.without-recipient",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GRANT ON SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant-share",
         "anchor": "#syntax",
         "message": null
       },
@@ -5251,6 +7276,60 @@
         "ok": false,
         "statement": "Hints",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "identifier-clause.use-catalog",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "IDENTIFIER clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "identifier-clause.select",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "IDENTIFIER clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "identifier-clause.create-table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "IDENTIFIER clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "identifier-clause.without-argument",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "IDENTIFIER clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "if-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "IF THEN ELSE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/if-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE choice INT DEFAULT 3; IF c...'"
+      },
+      {
+        "id": "if-stmt.without-condition",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "IF THEN ELSE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/if-stmt",
         "anchor": "#syntax",
         "message": null
       },
@@ -5615,6 +7694,24 @@
         "message": null
       },
       {
+        "id": "iterate-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "ITERATE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/iterate-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE num INT DEFAULT 0; sumNumb...'"
+      },
+      {
+        "id": "iterate-stmt.without-label",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ITERATE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/iterate-stmt",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "join.on",
         "verdict": "must-parse",
         "ok": true,
@@ -5944,6 +8041,24 @@
         "message": null
       },
       {
+        "id": "leave-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "LEAVE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/leave-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN sumNumbers: LOOP LEAVE sumNumbers;...'"
+      },
+      {
+        "id": "leave-stmt.without-label",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LEAVE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/leave-stmt",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "limit.number",
         "verdict": "must-parse",
         "ok": true,
@@ -5976,6 +8091,33 @@
         "ok": true,
         "statement": "LIMIT clause",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "list.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "LIST",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-list",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"LIST 's3://us-east-1-dev/some_dir'\""
+      },
+      {
+        "id": "list.with-credential-and-limit",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "LIST",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-list",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: \"LIST 's3://us-east-1-dev/some_dir' WITH ...\""
+      },
+      {
+        "id": "list.without-url",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LIST",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-list",
         "anchor": "#syntax",
         "message": null
       },
@@ -6048,6 +8190,24 @@
         "ok": false,
         "statement": "LOAD DATA",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "loop-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "LOOP statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/loop-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE num INT DEFAULT 0; sumNumb...'"
+      },
+      {
+        "id": "loop-stmt.without-end",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LOOP statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/loop-stmt",
         "anchor": "#syntax",
         "message": null
       },
@@ -6390,6 +8550,33 @@
           "DELETE",
           "UPDATE SET"
         ]
+      },
+      {
+        "id": "msck-repair-privileges.schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "MSCK REPAIR PRIVILEGES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-msck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'MSCK REPAIR SCHEMA s PRIVILEGES'"
+      },
+      {
+        "id": "msck-repair-privileges.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "MSCK REPAIR PRIVILEGES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-msck",
+        "anchor": "#examples",
+        "message": "Line 1, Position 21: Found unparsable section: 'PRIVILEGES'"
+      },
+      {
+        "id": "msck-repair-privileges.anonymous-function",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "MSCK REPAIR PRIVILEGES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-msck",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'MSCK REPAIR ANONYMOUS FUNCTION PRIVILEGE...'"
       },
       {
         "id": "offset.number",
@@ -6874,6 +9061,42 @@
         "message": null
       },
       {
+        "id": "privileges-hms.table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Privileges and securable objects in the Hive metastore",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "privileges-hms.schema-usage",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Privileges and securable objects in the Hive metastore",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "privileges-hms.any-file",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Privileges and securable objects in the Hive metastore",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'GRANT READ FILES ON ANY FILE TO `u`'"
+      },
+      {
+        "id": "privileges-hms.table-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Privileges and securable objects in the Hive metastore",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "qualify.window-in-select",
         "verdict": "must-parse",
         "ok": true,
@@ -7036,6 +9259,177 @@
         "message": null
       },
       {
+        "id": "refresh-cache.string-literal",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REFRESH CACHE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-cache.without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REFRESH CACHE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-foreign.catalog",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'CATALOG c'"
+      },
+      {
+        "id": "refresh-foreign.schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'SCHEMA c.s'"
+      },
+      {
+        "id": "refresh-foreign.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'TABLE c.s.t'"
+      },
+      {
+        "id": "refresh-foreign.resolve-dbfs",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'TABLE c.s.t RESOLVE DBFS LOCATION'"
+      },
+      {
+        "id": "refresh-foreign.without-type",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "REFRESH FOREIGN (CATALOG, SCHEMA, and TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-foreign",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh.materialized-view",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH (MATERIALIZED VIEW or STREAMING TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 22: Found unparsable section: 'VIEW v'"
+      },
+      {
+        "id": "refresh.streaming-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH (MATERIALIZED VIEW or STREAMING TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 19: Found unparsable section: 'TABLE t'"
+      },
+      {
+        "id": "refresh.table-full",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH (MATERIALIZED VIEW or STREAMING TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'FULL'"
+      },
+      {
+        "id": "refresh.streaming-table-where",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REFRESH (MATERIALIZED VIEW or STREAMING TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 19: Found unparsable section: 'TABLE t WHERE x > 1'"
+      },
+      {
+        "id": "refresh.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REFRESH (MATERIALIZED VIEW or STREAMING TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh.where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REFRESH (MATERIALIZED VIEW or STREAMING TABLE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-refresh-full",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-function.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REFRESH FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-function.qualified",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REFRESH FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-function",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "refresh-function.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "REFRESH FUNCTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-table.with-keyword",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REFRESH TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-table.without-keyword",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REFRESH TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "refresh-table.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REFRESH TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "reorg-table.purge",
         "verdict": "must-parse",
         "ok": false,
@@ -7142,6 +9536,96 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "repair-table.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REPAIR TABLE t'"
+      },
+      {
+        "id": "repair-table.msck",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "repair-table.sync-metadata",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table",
+        "anchor": "#examples",
+        "message": "Line 1, Position 21: Found unparsable section: 'SYNC METADATA'"
+      },
+      {
+        "id": "repair-table.add-partitions",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REPAIR TABLE t ADD PARTITIONS'"
+      },
+      {
+        "id": "repair-table.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "repeat-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REPEAT statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/repeat-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE num INT DEFAULT 0; sumNumb...'"
+      },
+      {
+        "id": "repeat-stmt.without-until",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REPEAT statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/repeat-stmt",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reset.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "RESET",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-reset",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reset.parameter",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "RESET",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-reset",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "resignal-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "RESIGNAL statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/resignal-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE EXIT HANDLER FOR DIVIDE_BY...'"
       },
       {
         "id": "restore.version",
@@ -7320,6 +9804,24 @@
         "ok": true,
         "statement": "REVOKE",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "revoke-share.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REVOKE ON SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REVOKE SELECT ON SHARE s FROM RECIPIENT ...'"
+      },
+      {
+        "id": "revoke-share.without-share",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REVOKE ON SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke-share",
         "anchor": "#syntax",
         "message": null
       },
@@ -7536,6 +10038,312 @@
         "message": "Line 1, Position 25: Found unparsable section: 'EXCEPT (SELECT c FROM number2)'"
       },
       {
+        "id": "set.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set.verbose",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set.key-value",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set.key",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-recipient.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SET RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 15: Found unparsable section: 'nasdaq'"
+      },
+      {
+        "id": "set-recipient.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "SET RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-tag.catalog",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-tag.table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-tag.column",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 9: Found unparsable section: 'ON COLUMN t.ssn pii'"
+      },
+      {
+        "id": "set-tag.without-key",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-set-tag",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-time-zone.local",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET TIME ZONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set-timezone",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-time-zone.zone-name",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET TIME ZONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set-timezone",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "set-time-zone.interval",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET TIME ZONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set-timezone",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "set-time-zone.without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SET TIME ZONE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set-timezone",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-variable.assignment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET variable",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-variable",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-variable.default",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET variable",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-variable",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-variable.tuple",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SET variable",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-set-variable",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-all-in-share.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW ALL IN SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-all-in-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW ALL IN SHARE s'"
+      },
+      {
+        "id": "show-all-in-share.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW ALL IN SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-all-in-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-catalogs.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW CATALOGS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-catalogs",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW CATALOGS'"
+      },
+      {
+        "id": "show-catalogs.like",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW CATALOGS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-catalogs",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"SHOW CATALOGS LIKE 'pay*'\""
+      },
+      {
+        "id": "show-columns.in",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW COLUMNS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-columns",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-columns.from-with-schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW COLUMNS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-columns",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW COLUMNS FROM t FROM s'"
+      },
+      {
+        "id": "show-columns.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW COLUMNS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-columns",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-connections.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW CONNECTIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-connections",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW CONNECTIONS'"
+      },
+      {
+        "id": "show-create-table.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW CREATE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-create-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-create-table.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW CREATE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-create-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-credentials.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW CREDENTIALS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-credentials",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW CREDENTIALS'"
+      },
+      {
+        "id": "show-credentials.storage",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW CREDENTIALS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-credentials",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW STORAGE CREDENTIALS'"
+      },
+      {
+        "id": "show-credentials.service",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW CREDENTIALS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-credentials",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW SERVICE CREDENTIALS'"
+      },
+      {
+        "id": "show-external-locations.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW EXTERNAL LOCATIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-locations",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW EXTERNAL LOCATIONS'"
+      },
+      {
+        "id": "show-functions.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW FUNCTIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-functions",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-functions.system-in-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW FUNCTIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-functions",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-functions.like-name",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW FUNCTIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-functions",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
         "id": "show-grants.on-table",
         "verdict": "must-parse",
         "ok": false,
@@ -7615,6 +10423,402 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "show-grants-on-share.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS ON SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-on-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS ON SHARE shared_date'"
+      },
+      {
+        "id": "show-grants-to-recipient.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GRANTS TO RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-to-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GRANTS TO RECIPIENT a_corp'"
+      },
+      {
+        "id": "show-grants-to-recipient.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW GRANTS TO RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-to-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-groups.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GROUPS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-groups",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GROUPS'"
+      },
+      {
+        "id": "show-groups.with-user",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GROUPS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-groups",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW GROUPS WITH USER `u`'"
+      },
+      {
+        "id": "show-groups.with-group-like",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW GROUPS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-groups",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"SHOW GROUPS WITH GROUP g LIKE 'a*'\""
+      },
+      {
+        "id": "show-partitions.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW PARTITIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-partitions",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-partitions.partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW PARTITIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-partitions",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-partitions.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW PARTITIONS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-partitions",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-policies.schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW POLICIES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-policies",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW POLICIES ON SCHEMA s'"
+      },
+      {
+        "id": "show-policies.effective",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW POLICIES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-policies",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW EFFECTIVE POLICIES ON SCHEMA s'"
+      },
+      {
+        "id": "show-policies.without-target",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW POLICIES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-policies",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-procedures.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW PROCEDURES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-procedures",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW PROCEDURES'"
+      },
+      {
+        "id": "show-procedures.in-schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW PROCEDURES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-procedures",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW PROCEDURES IN s'"
+      },
+      {
+        "id": "show-providers.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW PROVIDERS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-providers",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW PROVIDERS'"
+      },
+      {
+        "id": "show-providers.like",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW PROVIDERS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-providers",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: \"SHOW PROVIDERS LIKE 'other_org'\""
+      },
+      {
+        "id": "show-recipients.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW RECIPIENTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-recipients",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW RECIPIENTS'"
+      },
+      {
+        "id": "show-recipients.like",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW RECIPIENTS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-recipients",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: \"SHOW RECIPIENTS LIKE 'other_org'\""
+      },
+      {
+        "id": "show-schemas.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW SCHEMAS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-schemas",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-schemas.in-catalog",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW SCHEMAS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-schemas",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-schemas.like",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW SCHEMAS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-schemas",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-shares.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW SHARES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-shares",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW SHARES'"
+      },
+      {
+        "id": "show-shares.like",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW SHARES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-shares",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"SHOW SHARES LIKE 'a*'\""
+      },
+      {
+        "id": "show-shares-in-provider.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW SHARES IN PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-shares-in-provider",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW SHARES IN PROVIDER p'"
+      },
+      {
+        "id": "show-shares-in-provider.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW SHARES IN PROVIDER",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-shares-in-provider",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-table-extended.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW TABLE EXTENDED",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-table-extended.with-partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW TABLE EXTENDED",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-table",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-table-extended.without-pattern",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW TABLE EXTENDED",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-tables.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW TABLES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-tables.from-like",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW TABLES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-tables-dropped.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW TABLES DROPPED",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables-dropped",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 13: Found unparsable section: 'DROPPED'"
+      },
+      {
+        "id": "show-tables-dropped.in-schema",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW TABLES DROPPED",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables-dropped",
+        "anchor": "#examples",
+        "message": "Line 1, Position 13: Found unparsable section: 'DROPPED IN c.s'"
+      },
+      {
+        "id": "show-tables-dropped.limit",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW TABLES DROPPED",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables-dropped",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 13: Found unparsable section: 'DROPPED LIMIT 5'"
+      },
+      {
+        "id": "show-tblproperties.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW TBLPROPERTIES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tblproperties",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-tblproperties.key",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW TBLPROPERTIES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tblproperties",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-tblproperties.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SHOW TBLPROPERTIES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tblproperties",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-users.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW USERS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-users",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SHOW USERS'"
+      },
+      {
+        "id": "show-users.like",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SHOW USERS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-users",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: \"SHOW USERS LIKE '*SEr*'\""
+      },
+      {
+        "id": "show-views.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW VIEWS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-views",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-views.from-like",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW VIEWS",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-views",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "show-volumes.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW VOLUMES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-volumes",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "show-volumes.in-schema",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SHOW VOLUMES",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-volumes",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "signal-stmt.condition",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SIGNAL statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/signal-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN SIGNAL USER_RAISED_EXCEPTION; END'"
+      },
+      {
+        "id": "signal-stmt.sqlstate",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SIGNAL statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/signal-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"BEGIN SIGNAL SQLSTATE '45000' SET MESSAG...\""
       },
       {
         "id": "sort-by.basic",
@@ -7968,6 +11172,42 @@
         "message": null
       },
       {
+        "id": "sync.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SYNC",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-sync",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SYNC TABLE main.default.t FROM hive_meta...'"
+      },
+      {
+        "id": "sync.schema-external",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SYNC",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-sync",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'SYNC SCHEMA main.s AS EXTERNAL FROM hive...'"
+      },
+      {
+        "id": "sync.owner-dry-run",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SYNC",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-sync",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'SYNC TABLE main.default.t FROM hive_meta...'"
+      },
+      {
+        "id": "sync.without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SYNC",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-sync",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "table-reference.basic",
         "verdict": "must-parse",
         "ok": true,
@@ -8148,6 +11388,33 @@
         "message": null
       },
       {
+        "id": "truncate-table.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "TRUNCATE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-truncate-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "truncate-table.partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "TRUNCATE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-truncate-table",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "truncate-table.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "TRUNCATE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-truncate-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "tvf.expression-arguments",
         "verdict": "must-parse",
         "ok": true,
@@ -8180,6 +11447,78 @@
         "ok": true,
         "statement": "Table-valued function (TVF) invocation",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "uncache-table.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNCACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-uncache-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "uncache-table.if-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNCACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-uncache-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "uncache-table.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UNCACHE TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-uncache-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "undrop.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "UNDROP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'UNDROP TABLE t'"
+      },
+      {
+        "id": "undrop.materialized-view",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "UNDROP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'UNDROP MATERIALIZED VIEW v'"
+      },
+      {
+        "id": "undrop.with-id",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "UNDROP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'UNDROP TABLE WITH ID 1'"
+      },
+      {
+        "id": "undrop.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UNDROP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "undrop.with-id-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UNDROP",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-undrop-table",
         "anchor": "#syntax",
         "message": null
       },
@@ -8241,6 +11580,42 @@
           "INCLUDE NULLS",
           "EXCLUDE NULLS"
         ]
+      },
+      {
+        "id": "unset-tag.catalog",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNSET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unset-tag.table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNSET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unset-tag.column",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNSET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unset-tag.without-key",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UNSET TAG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-unset-tag",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "update.bare",
@@ -8347,6 +11722,78 @@
         "ok": true,
         "statement": "UPDATE",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "use-catalog.use",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "USE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "use-catalog.set",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "USE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 13: Found unparsable section: 'c'"
+      },
+      {
+        "id": "use-catalog.quoted",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "USE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "use-catalog.identifier",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "USE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "use-catalog.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "USE CATALOG",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "use-schema.with-keyword",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "USE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "use-schema.without-keyword",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "USE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "use-schema.without-name",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "USE SCHEMA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema",
         "anchor": "#syntax",
         "message": null
       },
@@ -8566,6 +12013,24 @@
         "ok": true,
         "statement": "WHERE clause",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "while-stmt.basic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "WHILE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/while-stmt",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'BEGIN DECLARE num INT DEFAULT 0; sumNumb...'"
+      },
+      {
+        "id": "while-stmt.without-do",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "WHILE statement",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/control-flow/while-stmt",
         "anchor": "#syntax",
         "message": null
       },
