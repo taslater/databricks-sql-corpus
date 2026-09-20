@@ -1,0 +1,150 @@
+# CREATE SCHEMA. Dense optional clause list; a close sibling of CREATE
+# CATALOG, and it shares two of that page's open gaps (DEFAULT COLLATION,
+# RETAIN DROPPED). MANAGED LOCATION parses here even though it was the
+# #8511 gap on CREATE CATALOG.
+statement: CREATE SCHEMA
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema
+checked: 2026-09-20
+syntax: |
+  CREATE SCHEMA [ IF NOT EXISTS ] schema_name
+      [ COMMENT schema_comment |
+        DEFAULT COLLATION default_collation_name |
+        { LOCATION schema_directory | MANAGED LOCATION location_path } |
+        RETAIN DROPPED FOR number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } |
+        WITH DBPROPERTIES ( { property_name = property_value } [ , ... ] ) ] [...]
+cases:
+  - id: create-schema.plain
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s
+  - id: create-schema.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA IF NOT EXISTS s
+  - id: create-schema.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s COMMENT 'a schema'
+  - id: create-schema.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s DEFAULT COLLATION UTF8_BINARY
+    note: Rejected by the databricks dialect on main; same gap as create-catalog.default-collation.
+  - id: create-schema.location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s LOCATION 's3://example-bucket/s'
+  - id: create-schema.managed-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s MANAGED LOCATION 's3://example-bucket/s'
+  - id: create-schema.retain-dropped-days
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s RETAIN DROPPED FOR 14 DAYS
+    note: Rejected by the databricks dialect on main; same gap as create-catalog.retain-dropped-days.
+  - id: create-schema.retain-dropped-hours
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s RETAIN DROPPED FOR 0 HOURS
+    note: Rejected by the databricks dialect on main.
+  - id: create-schema.retain-dropped-week
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s RETAIN DROPPED FOR 1 WEEK
+    note: Rejected by the databricks dialect on main.
+  - id: create-schema.dbproperties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s WITH DBPROPERTIES (k = 'v')
+  - id: create-schema.dbproperties-multi
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s WITH DBPROPERTIES (k = 'v', j = 'w')
+  - id: create-schema.clause-list-repeats
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE SCHEMA s COMMENT 'a schema' WITH DBPROPERTIES (k = 'v')
+    note: The trailing ellipsis makes the clause list repeat.
+  - id: create-schema.if-not-without-exists
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.if-not-exists
+    omits: "EXISTS"
+    sql: |
+      CREATE SCHEMA IF NOT s
+  - id: create-schema.if-exists-without-not
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.if-not-exists
+    omits: "NOT"
+    sql: |
+      CREATE SCHEMA IF EXISTS s
+  - id: create-schema.comment-without-text
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.comment
+    omits: "schema_comment"
+    sql: |
+      CREATE SCHEMA s COMMENT
+  - id: create-schema.default-collation-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.default-collation
+    omits: "default_collation_name"
+    sql: |
+      CREATE SCHEMA s DEFAULT COLLATION
+  - id: create-schema.location-without-path
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.location
+    omits: "schema_directory"
+    sql: |
+      CREATE SCHEMA s LOCATION
+  - id: create-schema.managed-location-without-path
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.managed-location
+    omits: "location_path"
+    sql: |
+      CREATE SCHEMA s MANAGED LOCATION
+  - id: create-schema.retain-dropped-without-unit
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.retain-dropped-days
+    omits: "{ HOUR | HOURS | DAY | DAYS | WEEK | WEEKS }"
+    sql: |
+      CREATE SCHEMA s RETAIN DROPPED FOR 14
+  - id: create-schema.retain-dropped-without-number
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.retain-dropped-days
+    omits: "number"
+    sql: |
+      CREATE SCHEMA s RETAIN DROPPED FOR DAYS
+  - id: create-schema.empty-dbproperties
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.dbproperties
+    omits: "property_name = property_value"
+    sql: |
+      CREATE SCHEMA s WITH DBPROPERTIES ()
+  - id: create-schema.dbproperties-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-schema.dbproperties
+    omits: "property_value"
+    sql: |
+      CREATE SCHEMA s WITH DBPROPERTIES (k =)
