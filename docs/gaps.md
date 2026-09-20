@@ -394,6 +394,25 @@ throughout and are pinned. `ALTER DATABASE` is a documented alias of
 `ALTER SCHEMA` with no syntax block of its own, so it is `n/a` in the
 coverage tracker. Recorded 2026-09-20 by the DDL batch.
 
+**`CREATE POLICY` and `CREATE PROCEDURE` are unsupported.** Neither has a
+grammar in the `databricks` dialect, so every documented form is rejected:
+the row-filter, column-mask and grant policy bodies (`create-policy.*`) and
+the parameterised procedure with its compound-statement body
+(`create-procedure.*`). Recorded 2026-09-20 by the DDL batch.
+
+**Nine `DROP` statements are unsupported, and `DROP TABLE … FORCE` is
+partial.** `DROP CONNECTION`, `DROP CREDENTIAL`, `DROP EXTERNAL LOCATION`,
+`DROP POLICY`, `DROP PROCEDURE`, `DROP PROVIDER`, `DROP RECIPIENT`,
+`DROP SHARE` and `DROP VARIABLE` have no grammar, so every documented form
+is rejected. `DROP TABLE t` and `DROP TEMPORARY TABLE t` parse, but the
+`FORCE` option does not: `DROP TABLE IF EXISTS t FORCE` is rejected. Pinned
+by `drop-table.*`. `DROP CATALOG`, `DROP FUNCTION`, `DROP SCHEMA` and
+`DROP VOLUME` parse throughout. `DROP DATABASE` is a documented alias of
+`DROP SCHEMA` with no syntax block, so it is `n/a`. `CREATE FUNCTION
+(External)`, `CREATE TABLE (Hive format)`, `CREATE TABLE LIKE` and
+`CREATE TABLE CLONE` also parse and are pinned. Recorded 2026-09-20 by the
+DDL batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

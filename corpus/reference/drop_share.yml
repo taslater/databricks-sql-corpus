@@ -1,0 +1,21 @@
+# DROP SHARE. The statement is unsupported by the databricks dialect, so the
+# must-parse case is a gap and the partial rejection is vacuous until a
+# grammar lands.
+statement: DROP SHARE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-share
+checked: 2026-09-20
+syntax: |
+  DROP SHARE [ IF EXISTS ] share_name
+cases:
+  - id: drop-share.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP SHARE s
+  - id: drop-share.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-share.basic
+    omits: "share_name"
+    sql: |
+      DROP SHARE

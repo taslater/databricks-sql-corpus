@@ -1,0 +1,48 @@
+# CREATE TABLE LIKE. The bare form and the clause forms parse; this page pins
+# them.
+statement: CREATE TABLE LIKE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like
+checked: 2026-09-20
+syntax: |
+  CREATE TABLE [ IF NOT EXISTS ] table_name LIKE source_table_name [table_clauses]
+
+  table_clauses
+     { USING data_source |
+       LOCATION path |
+       TBLPROPERTIES clause |
+       ROW FORMAT row_format |
+       STORED AS file_format } [...]
+
+  row_format
+     { SERDE serde_class [ WITH SERDEPROPERTIES (serde_key = serde_val [, ...] ) ] |
+       { DELIMITED [ FIELDS TERMINATED BY fields_terminated_char [ ESCAPED BY escaped_char ] ]
+         [ COLLECTION ITEMS TERMINATED BY collection_items_terminated_char ]
+         [ MAP KEYS TERMINATED BY map_key_terminated_char ]
+         [ LINES TERMINATED BY row_terminated_char ]
+         [ NULL DEFINED AS null_char ] } }
+
+  property_key
+    { identifier [. ...] | string_literal }
+cases:
+  - id: create-table-like.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t LIKE s
+  - id: create-table-like.using-location
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE TABLE t LIKE s USING CSV LOCATION '/p'
+  - id: create-table-like.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE IF NOT EXISTS t LIKE s
+  - id: create-table-like.without-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-table-like.basic
+    omits: "source_table_name"
+    sql: |
+      CREATE TABLE t LIKE

@@ -1,0 +1,25 @@
+# DROP CATALOG. The statement and its RESTRICT/CASCADE options parse; this
+# page pins them.
+statement: DROP CATALOG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog
+checked: 2026-09-20
+syntax: |
+  DROP CATALOG [ IF EXISTS ] catalog_name [ RESTRICT | CASCADE ]
+cases:
+  - id: drop-catalog.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP CATALOG c
+  - id: drop-catalog.cascade
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP CATALOG IF EXISTS c CASCADE
+  - id: drop-catalog.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-catalog.basic
+    omits: "catalog_name"
+    sql: |
+      DROP CATALOG

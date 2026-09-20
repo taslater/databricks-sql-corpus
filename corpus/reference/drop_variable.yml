@@ -1,0 +1,21 @@
+# DROP VARIABLE. The statement is unsupported by the databricks dialect, so
+# the must-parse case is a gap and the partial rejection is vacuous until a
+# grammar lands.
+statement: DROP VARIABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable
+checked: 2026-09-20
+syntax: |
+  DROP TEMPORARY VARIABLE [ IF EXISTS ] variable_name
+cases:
+  - id: drop-variable.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP TEMPORARY VARIABLE v
+  - id: drop-variable.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-variable.basic
+    omits: "variable_name"
+    sql: |
+      DROP TEMPORARY VARIABLE

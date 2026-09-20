@@ -84,7 +84,7 @@ Data types is covered page by page: `array_type.yml`, `map_type.yml`,
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.
 
-## DDL statements (25 done, 36 queued, 1 n/a)
+## DDL statements (46 done, 12 queued, 4 n/a)
 
 | page | status |
 | --- | --- |
@@ -104,40 +104,40 @@ writes the type as input, so a case would have to invent the position.
 | [ALTER VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume) | done |
 | [CREATE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog) | done |
 | [CREATE CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection) | done |
-| [CREATE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-database) | queued |
+| [CREATE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-database) | n/a |
 | [CREATE FUNCTION (SQL, Python, Scala, and Java)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function) | done |
-| [CREATE FUNCTION (External)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function) | queued |
+| [CREATE FUNCTION (External)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-function) | done |
 | [CREATE EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location) | done |
 | [CREATE MATERIALIZED VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-materialized-view) | done |
-| [CREATE POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy) | queued |
-| [CREATE PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure) | queued |
+| [CREATE POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy) | done |
+| [CREATE PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure) | done |
 | [CREATE RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient) | done |
 | [CREATE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema) | done |
-| [CREATE SERVER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-server) | queued |
+| [CREATE SERVER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-server) | n/a |
 | [CREATE SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share) | done |
-| [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-streaming-table) | queued |
+| [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-streaming-table) | done |
 | [CREATE TABLE [USING]](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using) | done |
-| [CREATE TABLE (Hive format)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat) | queued |
-| [CREATE TABLE LIKE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like) | queued |
-| [CREATE TABLE CLONE](https://docs.databricks.com/aws/en/sql/language-manual/delta-clone) | queued |
+| [CREATE TABLE (Hive format)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat) | done |
+| [CREATE TABLE LIKE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-like) | done |
+| [CREATE TABLE CLONE](https://docs.databricks.com/aws/en/sql/language-manual/delta-clone) | done |
 | [CREATE VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-view) | done |
 | [CREATE VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-volume) | done |
-| [DROP CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog) | queued |
-| [DROP CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-connection) | queued |
-| [DROP CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-credential) | queued |
-| [DROP DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-database) | queued |
-| [DROP FUNCTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-function) | queued |
-| [DROP EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-location) | queued |
-| [DROP POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-policy) | queued |
-| [DROP PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-procedure) | queued |
-| [DROP PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-provider) | queued |
-| [DROP RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-recipient) | queued |
-| [DROP SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema) | queued |
-| [DROP SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-share) | queued |
-| [DROP TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table) | queued |
-| [DROP VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable) | queued |
+| [DROP CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-catalog) | done |
+| [DROP CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-connection) | done |
+| [DROP CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-credential) | done |
+| [DROP DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-database) | n/a |
+| [DROP FUNCTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-function) | done |
+| [DROP EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-location) | done |
+| [DROP POLICY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-policy) | done |
+| [DROP PROCEDURE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-procedure) | done |
+| [DROP PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-provider) | done |
+| [DROP RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-recipient) | done |
+| [DROP SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema) | done |
+| [DROP SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-share) | done |
+| [DROP TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-table) | done |
+| [DROP VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-variable) | done |
 | [DROP VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-view) | done |
-| [DROP VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-volume) | queued |
+| [DROP VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-volume) | done |
 | [COMMENT ON](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-comment) | queued |
 | [DECLARE VARIABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-declare-variable) | queued |
 | [REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-repair-table) | queued |

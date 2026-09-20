@@ -1,0 +1,25 @@
+# DROP SCHEMA. The statement and its RESTRICT/CASCADE options parse; this
+# page pins them.
+statement: DROP SCHEMA
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-schema
+checked: 2026-09-20
+syntax: |
+  DROP SCHEMA [ IF EXISTS ] schema_name [ RESTRICT | CASCADE ]
+cases:
+  - id: drop-schema.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP SCHEMA s
+  - id: drop-schema.cascade
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP SCHEMA IF EXISTS s CASCADE
+  - id: drop-schema.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-schema.basic
+    omits: "schema_name"
+    sql: |
+      DROP SCHEMA

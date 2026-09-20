@@ -1,0 +1,21 @@
+# DROP EXTERNAL LOCATION. The statement is unsupported by the databricks
+# dialect, so the must-parse case is a gap and the partial rejection is
+# vacuous until a grammar lands.
+statement: DROP EXTERNAL LOCATION
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-drop-location
+checked: 2026-09-20
+syntax: |
+  DROP EXTERNAL LOCATION [ IF EXISTS ] location_name
+cases:
+  - id: drop-external-location.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DROP EXTERNAL LOCATION l
+  - id: drop-external-location.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: drop-external-location.basic
+    omits: "location_name"
+    sql: |
+      DROP EXTERNAL LOCATION

@@ -1,0 +1,47 @@
+# CREATE TABLE (Hive format). STORED AS, ROW FORMAT and LOCATION parse; this
+# page pins them.
+statement: CREATE TABLE (Hive format)
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-hiveformat
+checked: 2026-09-20
+syntax: |
+  CREATE [ EXTERNAL ] TABLE [ IF NOT EXISTS ] table_identifier
+      [ ( col_name1[:] col_type1 [ COMMENT col_comment1 ], ... ) ]
+      [ COMMENT table_comment ]
+      [ PARTITIONED BY ( col_name2[:] col_type2 [ COMMENT col_comment2 ], ... )
+          | ( col_name1, col_name2, ... ) ]
+      [ ROW FORMAT row_format ]
+      [ STORED AS file_format ]
+      [ LOCATION path ]
+      [ TBLPROPERTIES ( key1=val1, key2=val2, ... ) ]
+      [ AS select_statement ]
+
+  row_format:
+      : SERDE serde_class [ WITH SERDEPROPERTIES (k1=v1, k2=v2, ... ) ]
+      | DELIMITED [ FIELDS TERMINATED BY fields_terminated_char [ ESCAPED BY escaped_char ] ]
+          [ COLLECTION ITEMS TERMINATED BY collection_items_terminated_char ]
+          [ MAP KEYS TERMINATED BY map_key_terminated_char ]
+          [ LINES TERMINATED BY row_terminated_char ]
+          [ NULL DEFINED AS null_char ]
+cases:
+  - id: create-table-hive.stored-as
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a INT) STORED AS ORC
+  - id: create-table-hive.external-with-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE EXTERNAL TABLE t (a INT) STORED AS ORC LOCATION '/p'
+  - id: create-table-hive.row-format-delimited
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+  - id: create-table-hive.stored-as-without-format
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-table-hive.stored-as
+    omits: "file_format"
+    sql: |
+      CREATE TABLE t (a INT) STORED AS

@@ -1,0 +1,54 @@
+# CREATE POLICY. Row filter, column mask and grant policy bodies; the page
+# pins the documented examples.
+statement: CREATE POLICY
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-policy
+checked: 2026-09-20
+syntax: |
+  CREATE [ OR REPLACE ] POLICY policy_name
+  ON { METASTORE | CATALOG catalog_name | SCHEMA schema_name | TABLE table_name }
+  [ COMMENT description ]
+  { row_filter_body | column_mask_body | grant_policy_body }
+
+  row_filter_body
+    ROW FILTER function_name
+    TO principal [, ...]
+    [ EXCEPT principal [, ...] ]
+    FOR TABLES
+    [ WHEN condition ]
+    [ MATCH COLUMNS condition [ [ AS ] alias ] [, ...] ]
+    [ USING COLUMNS ( function_arg [, ...] ) ]
+
+  column_mask_body
+    COLUMN MASK function_name
+    TO principal [, ...]
+    [ EXCEPT principal [, ...] ]
+    FOR TABLES
+    [ WHEN condition ]
+    [ MATCH COLUMNS condition [ [ AS ] alias ] [, ...] ]
+    ON COLUMN alias
+    [ USING COLUMNS ( function_arg [, ...] ) ]
+
+  grant_policy_body
+    TO principal [, ...]
+    [ EXCEPT principal [, ...] ]
+    GRANT privilege [, ...]
+    FOR grant_target_type
+    [ WHEN condition ]
+cases:
+  - id: create-policy.column-mask
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE POLICY ssn_mask ON CATALOG employees COLUMN MASK ssn_to_last_nr TO 'All Users' EXCEPT 'HR admins' FOR TABLES MATCH COLUMNS has_tag('ssn') AS ssn ON COLUMN ssn USING COLUMNS (4)
+  - id: create-policy.grant
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE POLICY grant_anthropic_model_services ON SCHEMA system.ai COMMENT 'x' TO data_scientists EXCEPT contractors GRANT EXECUTE FOR MODEL SERVICES WHEN has_tag_value('ai.model_creator', 'anthropic')
+  - id: create-policy.without-body
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-policy.column-mask
+    omits: "row_filter_body"
+    sql: |
+      CREATE POLICY p ON CATALOG c
