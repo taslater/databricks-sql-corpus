@@ -1007,9 +1007,9 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 170,
-      "passed": 95,
-      "rate": 55.88235294117647
+      "total": 174,
+      "passed": 96,
+      "rate": 55.172413793103445
     },
     "must_reject": {
       "total": 83,
@@ -1019,6 +1019,15 @@
       "rate": 91.56626506024097
     },
     "cases": [
+      {
+        "id": "array-sort.lambda-keyword-parameters",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "array_sort function",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/array_sort",
+        "anchor": "#examples",
+        "message": "Line 1, Position 18: Found unparsable section: '(ARRAY(3, 1), (left, right) -> CASE WHEN...'"
+      },
       {
         "id": "array.element-type",
         "verdict": "must-parse",
@@ -2944,6 +2953,33 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-revoke",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "set-operators.except-distinct",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Set operators",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 23: Found unparsable section: 'EXCEPT DISTINCT SELECT c FROM number2'"
+      },
+      {
+        "id": "set-operators.except-all",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Set operators",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "set-operators.parenthesised-operands",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Set operators",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops",
+        "anchor": "#examples",
+        "message": "Line 1, Position 25: Found unparsable section: 'EXCEPT (SELECT c FROM number2)'"
       },
       {
         "id": "show-grants.on-table",
