@@ -1,0 +1,41 @@
+# MATCH_RECOGNIZE clause. The whole clause is unsupported by the databricks
+# dialect, so every must-parse case is a gap and the partial rejection is
+# vacuous until a grammar lands.
+statement: MATCH_RECOGNIZE clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize
+checked: 2026-09-20
+syntax: |
+  MATCH_RECOGNIZE (
+    [ PARTITION BY partition [, ...] ]
+    [ ORDER BY order_by ]
+    [ MEASURES measures ]
+    [ row_pattern_rows_per_match ]
+    [ AFTER MATCH row_pattern_skip_to ]
+    PATTERN ( row_pattern )
+    DEFINE row_pattern_definition_list )
+
+  measures
+    MEASURES { measureExpr AS measureName } [, ...]
+  row_pattern_rows_per_match
+    { ONE ROW PER MATCH | ALL ROWS PER MATCH [ SHOW EMPTY MATCHES ] }
+  row_pattern_skip_to
+    SKIP PAST LAST ROW
+cases:
+  - id: match-recognize.simple
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t MATCH_RECOGNIZE (PATTERN (a) DEFINE a AS TRUE)
+    note: Rejected by the databricks dialect on main; MATCH_RECOGNIZE has no grammar.
+  - id: match-recognize.full
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT symbol FROM stock MATCH_RECOGNIZE (PARTITION BY symbol ORDER BY tstamp MEASURES FIRST(tstamp) AS s ONE ROW PER MATCH AFTER MATCH SKIP PAST LAST ROW PATTERN (strt up+) DEFINE up AS price > PREV(price)) AS T
+  - id: match-recognize.without-pattern
+    verdict: must-reject
+    anchor: "#syntax"
+    from: match-recognize.simple
+    omits: "PATTERN"
+    sql: |
+      SELECT * FROM t MATCH_RECOGNIZE (DEFINE a AS TRUE)

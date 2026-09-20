@@ -1,0 +1,51 @@
+# PIVOT clause. The aggregate expression, its alias and a multi-column FOR
+# list all parse; this page pins them.
+statement: PIVOT clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot
+checked: 2026-09-20
+syntax: |
+  PIVOT ( { aggregate_expression [ [ AS ] agg_column_alias ] } [, ...]
+      FOR column_list IN ( expression_list ) )
+  column_list
+    { column_name |
+      ( column_name [, ...] ) }
+  expression_list
+    { expression [ AS ] [ column_alias ] |
+      { ( expression [, ...] ) [ AS ] [ column_alias] } [, ...] ) }
+cases:
+  - id: pivot.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM sales PIVOT (sum(sales) FOR quarter IN (1, 2))
+  - id: pivot.aggregate-alias
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM sales PIVOT (sum(sales) AS s FOR quarter IN (1 AS q1))
+  - id: pivot.multi-column-for
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM sales PIVOT (sum(sales) FOR (quarter, region) IN ((1, 'east')))
+  - id: pivot.without-aggregate
+    verdict: must-reject
+    anchor: "#syntax"
+    from: pivot.basic
+    omits: "aggregate_expression"
+    sql: |
+      SELECT * FROM sales PIVOT ()
+  - id: pivot.in-without-expression-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: pivot.basic
+    omits: "expression_list"
+    sql: |
+      SELECT * FROM sales PIVOT (sum(sales) FOR quarter IN ())
+  - id: pivot.for-without-in
+    verdict: must-reject
+    anchor: "#syntax"
+    from: pivot.basic
+    omits: "IN"
+    sql: |
+      SELECT * FROM sales PIVOT (sum(sales) FOR quarter)

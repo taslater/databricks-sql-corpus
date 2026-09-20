@@ -326,6 +326,31 @@ expression …` — but the `databricks` dialect accepts the mixed forms:
 parse on their own, so the over-acceptance is only in the mixture. Recorded
 2026-09-20 by the Tier 3 batch.
 
+**`MATCH_RECOGNIZE` is unsupported.** The
+[MATCH_RECOGNIZE reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize)
+defines a row-pattern clause (`PARTITION BY`, `ORDER BY`, `MEASURES`,
+`PATTERN … DEFINE …`, `ONE ROW PER MATCH`, `AFTER MATCH SKIP PAST LAST ROW`).
+The `databricks` dialect has no grammar, so every form is rejected —
+`SELECT * FROM t MATCH_RECOGNIZE (PATTERN (a) DEFINE a AS TRUE)` and the full
+documented example both fail. Pinned by `match-recognize.*`. Recorded
+2026-09-20 by the Tier 3 batch.
+
+**`TABLESAMPLE … REPEATABLE` is rejected.** The
+[TABLESAMPLE reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling)
+brackets an optional `REPEATABLE ( seed )` after the sample specification.
+`PERCENT`, `ROWS` and `BUCKET` all parse, but adding `REPEATABLE` fails:
+`SELECT * FROM test TABLESAMPLE (30 PERCENT) REPEATABLE (123)` is rejected.
+Pinned by `tablesample.repeatable`. Recorded 2026-09-20 by the Tier 3 batch.
+
+**Over-acceptance: a malformed hint parses.** The
+[Hints reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints)
+requires an argument in every hint — `COALESCE ( part_num )`,
+`BROADCAST ( table_name )` — but a hint is written as a comment and the
+dialect does not validate its contents, so `SELECT /*+ COALESCE() */ * FROM t`
+and `SELECT /*+ BROADCAST() */ * FROM t1` parse. Pinned by
+`hints.coalesce-without-argument` and `hints.broadcast-without-table`.
+Recorded 2026-09-20 by the Tier 3 batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

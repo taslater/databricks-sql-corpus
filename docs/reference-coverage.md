@@ -167,7 +167,7 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | done |
 | [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | done |
 
-## Data retrieval statements (13 done, 16 queued, 0 n/a)
+## Data retrieval statements (20 done, 9 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -179,7 +179,7 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [SELECT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list) | done |
 | [\* (star) clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star) | queued |
 | [table reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference) | queued |
-| [JOIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join) | queued |
+| [JOIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join) | done |
 | [WHERE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where) | done |
 | [GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby) | done |
 | [HAVING clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having) | done |
@@ -190,16 +190,16 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [DISTRIBUTE BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby) | done |
 | [LIMIT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit) | done |
 | [OFFSET clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset) | done |
-| [MATCH_RECOGNIZE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize) | queued |
-| [PIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot) | queued |
-| [UNPIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot) | queued |
+| [MATCH_RECOGNIZE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize) | done |
+| [PIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot) | done |
+| [UNPIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot) | done |
 | [LATERAL VIEW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view) | done |
-| [TABLESAMPLE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling) | queued |
+| [TABLESAMPLE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling) | done |
 | [Table-valued function (TVF) invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf) | queued |
 | [Common table expression (CTE)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte) | queued |
 | [Set operators](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops) | done |
-| [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | queued |
-| [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | queued |
+| [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | done |
+| [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | done |
 
 ## Delta Lake (14 done, 0 queued, 1 n/a)
 

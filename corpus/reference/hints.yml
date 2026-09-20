@@ -1,0 +1,75 @@
+# Hints. Every documented partition and join hint parses. Because a hint is
+# written as a comment, a malformed hint is not a syntax error: an empty
+# argument list is over-accepted.
+statement: Hints
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints
+checked: 2026-09-20
+syntax: |
+  /*+ { partition_hint | join_hint | skew_hint } [, ...] */
+
+  partition_hint
+    COALESCE ( part_num ) |
+    REPARTITION ( { part_num | [ part_num , ] column_name [ , ...] } ) |
+    REPARTITION_BY_RANGE ( part_num [, column_name [, ...] ] | column_name [, ...] ) |
+    REBALANCE [ ( column_name [, ...] ) ]
+
+  join_hint
+    BROADCAST ( table_name ) |
+    MERGE ( table_name ) |
+    SHUFFLE_HASH ( table_name ) |
+    SHUFFLE_REPLICATE_NL ( table_name )
+cases:
+  - id: hints.coalesce
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ COALESCE(3) */ * FROM t
+  - id: hints.repartition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ REPARTITION(3, c) */ * FROM t
+  - id: hints.repartition-by-range
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ REPARTITION_BY_RANGE(3, c) */ * FROM t
+  - id: hints.rebalance
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ REBALANCE(c) */ * FROM t
+  - id: hints.broadcast
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ BROADCAST(t1) */ * FROM t1
+  - id: hints.merge
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ MERGE(s1) */ * FROM t1 AS s1
+  - id: hints.shuffle-hash
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ SHUFFLE_HASH(t1) */ * FROM t1
+  - id: hints.shuffle-replicate-nl
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ SHUFFLE_REPLICATE_NL(t1) */ * FROM t1
+  - id: hints.coalesce-without-argument
+    verdict: must-reject
+    anchor: "#syntax"
+    from: hints.coalesce
+    omits: "part_num"
+    sql: |
+      SELECT /*+ COALESCE() */ * FROM t
+  - id: hints.broadcast-without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: hints.broadcast
+    omits: "table_name"
+    sql: |
+      SELECT /*+ BROADCAST() */ * FROM t1

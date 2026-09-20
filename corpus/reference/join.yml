@@ -1,0 +1,100 @@
+# JOIN. Every documented join type parses, including LATERAL and the
+# NATURAL and CROSS forms; this page pins them.
+statement: JOIN
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join
+checked: 2026-09-20
+syntax: |
+  { [ join_type ] JOIN right_table_reference [ join_criteria ] |
+    NATURAL join_type JOIN right_table_reference |
+    CROSS JOIN right_table_reference }
+  join_type
+    { [ INNER ] |
+      LEFT [ OUTER ] |
+      [ LEFT ] SEMI |
+      RIGHT [ OUTER ] |
+      FULL [ OUTER ] |
+      [ LEFT ] ANTI |
+      CROSS }
+  join_criteria
+    { ON boolean_expression |
+      USING ( column_name [, ...] ) }
+cases:
+  - id: join.on
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a JOIN b ON a.id = b.id
+  - id: join.using
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a INNER JOIN b USING (id)
+  - id: join.left-outer
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a LEFT OUTER JOIN b ON a.id = b.id
+  - id: join.left-semi
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a LEFT SEMI JOIN b ON a.id = b.id
+  - id: join.left-anti
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a LEFT ANTI JOIN b ON a.id = b.id
+  - id: join.full-outer
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a FULL OUTER JOIN b ON a.id = b.id
+  - id: join.cross
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a CROSS JOIN b
+  - id: join.natural
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a NATURAL JOIN b
+  - id: join.natural-left
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM a NATURAL LEFT JOIN b
+  - id: join.lateral
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM a JOIN LATERAL (SELECT 1)
+  - id: join.without-right-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: join.on
+    omits: "right_table_reference"
+    sql: |
+      SELECT * FROM a JOIN
+  - id: join.on-without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: join.on
+    omits: "boolean_expression"
+    sql: |
+      SELECT * FROM a JOIN b ON
+  - id: join.using-empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: join.using
+    omits: "column_name"
+    sql: |
+      SELECT * FROM a JOIN b USING ()
+  - id: join.natural-with-criteria
+    verdict: must-reject
+    anchor: "#syntax"
+    from: join.natural
+    reason: exclusive-alternative
+    conflicts: [ "NATURAL", "join_criteria" ]
+    sql: |
+      SELECT * FROM a NATURAL JOIN b ON a.id = b.id

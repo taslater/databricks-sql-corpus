@@ -1,0 +1,53 @@
+# UNPIVOT clause. Single- and multi-value forms with and without NULL
+# filtering parse; this page pins them.
+statement: UNPIVOT clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot
+checked: 2026-09-20
+syntax: |
+  UNPIVOT [ { INCLUDE NULLS | EXCLUDE NULLS } ]
+    { single_value | multi_value }
+    ( value_column
+      FOR unpivot_column IN ( { column_name [ column_alias ] } [, ...] ) )
+    [ table_alias ]
+  single_value
+    ( value_column
+      FOR unpivot_column IN ( { column_name [ column_alias ] } [, ...] ) )
+  multi_value
+    ( ( value_column [, ...] )
+      FOR unpivot_column IN ( { ( column_name [, ...] ) [ column_alias ] } [, ...] ) )
+cases:
+  - id: unpivot.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM sales UNPIVOT (sales FOR quarter IN (q1, q2))
+  - id: unpivot.include-nulls
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM sales UNPIVOT INCLUDE NULLS (sales FOR quarter IN (q1))
+  - id: unpivot.exclude-nulls
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM sales UNPIVOT EXCLUDE NULLS (sales FOR quarter IN (q1))
+  - id: unpivot.multi-value
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM oncall UNPIVOT ((name, email) FOR precedence IN ((n1, e1), (n2, e2)))
+  - id: unpivot.without-value-column
+    verdict: must-reject
+    anchor: "#syntax"
+    from: unpivot.basic
+    omits: "value_column"
+    sql: |
+      SELECT * FROM sales UNPIVOT ()
+  - id: unpivot.include-and-exclude
+    verdict: must-reject
+    anchor: "#syntax"
+    from: unpivot.basic
+    reason: exclusive-alternative
+    conflicts: [ "INCLUDE NULLS", "EXCLUDE NULLS" ]
+    sql: |
+      SELECT * FROM sales UNPIVOT INCLUDE NULLS EXCLUDE NULLS (sales FOR quarter IN (q1))
