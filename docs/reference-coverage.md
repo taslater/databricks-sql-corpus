@@ -201,7 +201,7 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | queued |
 | [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | queued |
 
-## Delta Lake (4 done, 11 queued, 0 n/a)
+## Delta Lake (6 done, 9 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -216,10 +216,10 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [DESCRIBE HISTORY](https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history) | done |
 | [FSCK REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck) | queued |
 | [GENERATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-generate) | queued |
-| [OPTIMIZE](https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize) | queued |
+| [OPTIMIZE](https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize) | done |
 | [REORG TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table) | queued |
 | [RESTORE](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore) | queued |
-| [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum) | queued |
+| [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum) | done |
 
 ## SQL scripting (0 done, 12 queued, 0 n/a)
 
