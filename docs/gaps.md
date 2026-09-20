@@ -158,6 +158,10 @@ Found 2026-09-19 by the sqlglot differential (`make diff`), which reproduces
 sqlglot's own fixture `tests/dialects/test_databricks.py:38`; verified against
 `main` in the `.venv-main` worktree. Pinned by the reference corpus as
 `describe-table.qualified-history` once the identifiers page is transcribed.
+Fixed on `fix/sparksql-identifier-false-positives` (pushed 2026-09-20): the
+`DescribeObjectGrammar` exclusion of `HISTORY`/`DETAIL` is gone, and the
+Delta statements are tried before the general DESCRIBE instead, so the
+collision resolves by fall-through rather than by exclusion.
 
 **`SELECT * FROM stream` is rejected for a table named `stream`.** `STREAM` is
 part of the `FROM STREAM <function>` relation spelling, and the dialect
@@ -174,7 +178,10 @@ does not list it among the words that need backticks. Repros on `main` at
 
 Same discovery path as the entry above (sqlglot fixture
 `tests/dialects/test_databricks.py:33`). The fix belongs with the `STREAM`
-keyword handling that #8509 touched, not in the lexer.
+keyword handling that #8509 touched, not in the lexer. Fixed on
+`fix/sparksql-identifier-false-positives` (pushed 2026-09-20): `STREAM` is
+a prefix keyword only when a table expression follows it, in both the
+keyword position and the fallthrough.
 
 **`left` and `right` are globally reserved in `databricks`, undoing a merged
 `sparksql` fix.** #8050 (merged 2026-07-07) treats LEFT/RIGHT as
@@ -234,6 +241,35 @@ position. Fixed together with LEFT/RIGHT on
 `fix/databricks-unreserve-identifiers`: the alias grammar is split so an
 explicit `AS` alias may use the three, while an implicit alias still cannot
 consume a following clause keyword.
+
+**A `%`-prefixed `-- MAGIC` line inside a magic cell ends the cell.**
+Databricks notebook source marks every line of a magic cell with
+`-- MAGIC`; the language is named by the first directive, and a later line
+may also start with `%` — an `%md` cell quoting `%pip`, for example. The
+grammar allowed only plain body lines after the directive, so the
+`%`-prefixed line ended the cell and the rest of the file was unparsable.
+Repro:
+
+```
+-- MAGIC %md
+-- MAGIC Some prose quoting a magic command:
+-- MAGIC %pip within a Python notebook.
+```
+
+Found 2026-09-20 by the corpus (`dbx-learn-databricks`
+`my_streaming_table.sql`, a cell quoting a `%pip` warning). Fixed on
+`fix/databricks-magic-cell-percent-line` (pushed): directive-shaped lines
+are body text once a cell is open, and the corpus file parses
+(`dbx-learn-databricks` 43/46 → 44/46, zero regressions).
+
+An adjacent quirk is **not** fixed: a cell whose *last* line is a
+standalone directive (`-- MAGIC %fs`, or a cell holding only
+`-- MAGIC %md`) leaves one newline where the `command` separator regex
+wants two, so the next statement is unparsable. The cause is the
+`magic_start` lexer regex consuming its trailing `(\r?\n)`; dropping that
+tail fixes it under the Python lexer, but the default Rust lexer bakes
+its tables at build time, so the change needs a Rust rebuild to measure
+and was left out of these branches.
 
 **Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
 [GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)

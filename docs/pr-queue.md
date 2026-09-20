@@ -43,8 +43,8 @@ new failure. Of the 16 corpus constructs, 8 are ours (units 3, 6, 7, 8, 10),
 | 6 | `fix/sparksql-parenthesised-set-operands` | parenthesised set-operation operands | 1 | 1 (q87) | S/M | **pushed** `ff39472cf`; verified +1 must-parse (109→110), suite 7030, rejection 1327/1327 |
 | 7 | `fix/databricks-unreserve-identifiers` | LEFT/RIGHT regression + `KEYS`/`PIVOT`/`WINDOW` as unquoted aliases | 1 | 1 (select_lambda) | M | **pushed** `66aebdaa4`; verified +1 must-parse (109→110), suite 7038, corpus `sqlfluff-sparksql` 124→125, mutation 1327/1327; databricks keeps its own `AliasExpressionSegment` for `FOR` (anonymous PIVOT) |
 | 8 | `fix/templater-placeholder-databricks-params` | placeholder templater: `${dotted}`, `{{ dashboard }}`, `${}` | 0 | 1 | M | **pushed** `eb35e1c62`; verified: dbx-dlt-notebooks 18/19→19/19, failures 104→103, zero regressions, mutation 1327/1327, templater suite 239; four other template-shaped files have secondary gaps (gaps.md) |
-| 9 | `fix/sparksql-identifier-false-positives` | `DESCRIBE history.tbl`, `SELECT * FROM stream` | 0 | 0 | S | to build |
-| 10 | `fix/databricks-magic-cell-percent-line` | a `%`-prefixed `-- MAGIC` line inside an `%md` cell | 0 | 1 | S/M | to build, add a queue entry first |
+| 9 | `fix/sparksql-identifier-false-positives` | `DESCRIBE history.tbl`, `SELECT * FROM stream` | 0 | 0 | S | **pushed** `163c2f232`; suite 7033; reference unchanged 109/177; corpus failures unchanged 103, mutation 1327/1327 — correctness fix, no counts |
+| 10 | `fix/databricks-magic-cell-percent-line` | a `%`-prefixed `-- MAGIC` line inside an `%md` cell | 0 | 1 | S/M | **pushed** `c1754c458`; verified: `my_streaming_table.sql` parses, dbx-learn-databricks 43/46→44/46, failures 103→102, mutation 100% (1326/1326); adjacent quirk left alone: a cell ending in a standalone directive still hides the separator's blank line (needs a lexer regex change) |
 
 Covered by existing open PRs, not repeated here: #8512 (3 cases),
 #8515 (8), #8516 (6 + unlocks the securable cases), #8517 (6, draft),
@@ -68,6 +68,8 @@ its base has moved and the unit is opened.
 | 6 | `fix/sparksql-parenthesised-set-operands` | `upstream/main` `b52246da5` | `ff39472cf` | pushed, ready |
 | 7 | `fix/databricks-unreserve-identifiers` | `upstream/main` `b52246da5` | `66aebdaa4` | pushed, ready |
 | 8 | `fix/templater-placeholder-databricks-params` | `upstream/main` `b52246da5` | `eb35e1c62` | pushed, ready (core templater, not dialect) |
+| 9 | `fix/sparksql-identifier-false-positives` | `upstream/main` `b52246da5` | `163c2f232` | pushed, ready |
+| 10 | `fix/databricks-magic-cell-percent-line` | `upstream/main` `b52246da5` | `c1754c458` | pushed, ready |
 | — | `personal/combined-2026-09-20` (tag of the same name) | `upstream/main` `b52246da5` | `ba4a00c8b` | the measurement union; never merge, never open a PR from it |
 
 Measuring a branch: the corpus `.venv` is pinned to the `sqlfluff/` checkout
