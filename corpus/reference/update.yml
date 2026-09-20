@@ -1,0 +1,80 @@
+# UPDATE. Bare, WHERE, multiple assignments, alias, DEFAULT, struct field
+# assignment and a CTE prefix all parse on main; this page pins them. The
+# syntax block reproduces the page's own bracket typo (`= [ expr | DEFAULT }`).
+statement: UPDATE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-update
+checked: 2026-09-20
+syntax: |
+  [ common_table_expression ]  UPDATE table_name [table_alias]     SET  { { column_name | field_name }  = [ expr | DEFAULT } [, ...]     [WHERE clause]
+cases:
+  - id: update.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UPDATE events SET eventType = 'click'
+  - id: update.where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UPDATE events SET eventType = 'click' WHERE eventType = 'clk'
+  - id: update.multiple-assignments
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UPDATE all_events SET session_time = 0, ignored = true WHERE session_time < 1
+  - id: update.alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UPDATE orders AS t1 SET order_status = 'returned' WHERE t1.oid = 1
+  - id: update.default
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UPDATE events SET ignored = DEFAULT WHERE eventType = 'unknown'
+    note: DEFAULT applies to Databricks Runtime 11.3 LTS and above.
+  - id: update.struct-field
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      UPDATE t SET s.a = 1 WHERE s.b = 2
+  - id: update.with-cte
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH x AS (SELECT 1 AS a) UPDATE t SET a = 1
+  - id: update.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: update.bare
+    omits: "table_name"
+    sql: |
+      UPDATE SET a = 1
+  - id: update.without-set
+    verdict: must-reject
+    anchor: "#syntax"
+    from: update.bare
+    omits: "SET"
+    sql: |
+      UPDATE events
+  - id: update.without-column
+    verdict: must-reject
+    anchor: "#syntax"
+    from: update.bare
+    omits: "column_name"
+    sql: |
+      UPDATE events SET
+  - id: update.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: update.bare
+    omits: "expr"
+    sql: |
+      UPDATE events SET a =
+  - id: update.trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: update.bare
+    omits: "column_name"
+    sql: |
+      UPDATE events SET a = 1,

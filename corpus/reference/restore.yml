@@ -1,0 +1,78 @@
+# RESTORE. `VERSION AS OF` and literal/function `TIMESTAMP AS OF` parse; the
+# optional TABLE and TO keywords are rejected, as is a bracketed timestamp
+# arithmetic expression (a general time-travel gap, shared with SELECT).
+statement: RESTORE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-restore
+checked: 2026-09-20
+syntax: |
+  RESTORE [ TABLE ] table_name [ TO ] time_travel_version
+  time_travel_version { TIMESTAMP AS OF timestamp_expression |   VERSION AS OF version }
+cases:
+  - id: restore.version
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      RESTORE TABLE employee TO VERSION AS OF 1
+  - id: restore.timestamp
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      RESTORE TABLE employee TO TIMESTAMP AS OF '2022-08-02 00:00:00'
+  - id: restore.timestamp-function
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      RESTORE TABLE employee TO TIMESTAMP AS OF date_sub(current_date(), 1)
+  - id: restore.without-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      RESTORE employee TO VERSION AS OF 1
+    note: Rejected by the databricks dialect on main; the optional TABLE keyword has no grammar.
+  - id: restore.without-to
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      RESTORE TABLE employee VERSION AS OF 1
+    note: Rejected by the databricks dialect on main; the optional TO keyword has no grammar.
+  - id: restore.timestamp-arithmetic
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      RESTORE TABLE employee TO TIMESTAMP AS OF current_timestamp() - INTERVAL '1' HOUR
+    note: Listed as a valid timestamp_expression; rejected generally for `TIMESTAMP AS OF`.
+  - id: restore.without-version
+    verdict: must-reject
+    anchor: "#syntax"
+    from: restore.version
+    omits: "time_travel_version"
+    sql: |
+      RESTORE TABLE employee
+  - id: restore.without-time-travel
+    verdict: must-reject
+    anchor: "#syntax"
+    from: restore.version
+    omits: "time_travel_version"
+    sql: |
+      RESTORE TABLE employee TO
+  - id: restore.timestamp-without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: restore.timestamp
+    omits: "timestamp_expression"
+    sql: |
+      RESTORE TABLE employee TO TIMESTAMP AS OF
+  - id: restore.version-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: restore.version
+    omits: "version"
+    sql: |
+      RESTORE TABLE employee TO VERSION AS OF
+  - id: restore.without-table-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: restore.version
+    omits: "table_name"
+    sql: |
+      RESTORE TO VERSION AS OF 1

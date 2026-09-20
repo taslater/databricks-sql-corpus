@@ -158,14 +158,14 @@ sub-page, which is still queued and where the clause's partial forms belong
 `sql-ref-syntax-ddl-cluster-by`, `sql-ref-syntax-ddl-tblproperties`). The
 `alter_table.yml` file pins the clause menu itself.
 
-## DML statements (0 done, 4 queued, 0 n/a)
+## DML statements (4 done, 0 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
-| [INSERT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into) | queued |
-| [INSERT OVERWRITE DIRECTORY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory) | queued |
-| [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | queued |
-| [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | queued |
+| [INSERT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into) | done |
+| [INSERT OVERWRITE DIRECTORY](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory) | done |
+| [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | done |
+| [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | done |
 
 ## Data retrieval statements (2 done, 27 queued, 0 n/a)
 
@@ -201,24 +201,24 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [WINDOW clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window) | queued |
 | [Hints](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints) | queued |
 
-## Delta Lake (6 done, 9 queued, 0 n/a)
+## Delta Lake (14 done, 0 queued, 1 n/a)
 
 | page | status |
 | --- | --- |
-| [CREATE BLOOM FILTER INDEX (deprecated)](https://docs.databricks.com/aws/en/sql/language-manual/delta-create-bloomfilter-index) | queued |
-| [DROP BLOOM FILTER INDEX](https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index) | queued |
+| [CREATE BLOOM FILTER INDEX (deprecated)](https://docs.databricks.com/aws/en/sql/language-manual/delta-create-bloomfilter-index) | n/a |
+| [DROP BLOOM FILTER INDEX](https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index) | done |
 | [COPY INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into) | done |
-| [DELETE FROM](https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from) | queued |
+| [DELETE FROM](https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from) | done |
 | [MERGE INTO](https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into) | done |
-| [UPDATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-update) | queued |
-| [CACHE SELECT](https://docs.databricks.com/aws/en/sql/language-manual/delta-cache) | queued |
+| [UPDATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-update) | done |
+| [CACHE SELECT](https://docs.databricks.com/aws/en/sql/language-manual/delta-cache) | done |
 | [CONVERT TO DELTA](https://docs.databricks.com/aws/en/sql/language-manual/delta-convert-to-delta) | done |
 | [DESCRIBE HISTORY](https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history) | done |
-| [FSCK REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck) | queued |
-| [GENERATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-generate) | queued |
+| [FSCK REPAIR TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck) | done |
+| [GENERATE](https://docs.databricks.com/aws/en/sql/language-manual/delta-generate) | done |
 | [OPTIMIZE](https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize) | done |
-| [REORG TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table) | queued |
-| [RESTORE](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore) | queued |
+| [REORG TABLE](https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table) | done |
+| [RESTORE](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore) | done |
 | [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum) | done |
 
 ## SQL scripting (0 done, 12 queued, 0 n/a)

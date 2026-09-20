@@ -1,0 +1,56 @@
+# LOAD DATA. INPATH, LOCAL, OVERWRITE and PARTITION all parse on main; this
+# page pins them.
+statement: LOAD DATA
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load
+checked: 2026-09-20
+syntax: |
+  LOAD DATA [ LOCAL ] INPATH path [ OVERWRITE ] INTO TABLE table_name [ PARTITION clause ]
+cases:
+  - id: load-data.bare
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      LOAD DATA INPATH '/p' INTO TABLE t
+  - id: load-data.local
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      LOAD DATA LOCAL INPATH '/p' INTO TABLE t
+  - id: load-data.overwrite
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      LOAD DATA INPATH '/p' OVERWRITE INTO TABLE t
+  - id: load-data.partition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      LOAD DATA LOCAL INPATH '/p' OVERWRITE INTO TABLE t PARTITION (c2 = 2)
+  - id: load-data.without-path
+    verdict: must-reject
+    anchor: "#syntax"
+    from: load-data.bare
+    omits: "path"
+    sql: |
+      LOAD DATA INPATH INTO TABLE t
+  - id: load-data.without-into-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: load-data.bare
+    omits: "INTO TABLE"
+    sql: |
+      LOAD DATA INPATH '/p' OVERWRITE t
+  - id: load-data.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: load-data.bare
+    omits: "table_name"
+    sql: |
+      LOAD DATA INPATH '/p' INTO TABLE
+  - id: load-data.empty-partition
+    verdict: must-reject
+    anchor: "#syntax"
+    from: load-data.partition
+    omits: "PARTITION clause"
+    sql: |
+      LOAD DATA INPATH '/p' INTO TABLE t PARTITION ()
