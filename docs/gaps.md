@@ -262,14 +262,29 @@ Found 2026-09-20 by the corpus (`dbx-learn-databricks`
 are body text once a cell is open, and the corpus file parses
 (`dbx-learn-databricks` 43/46 → 44/46, zero regressions).
 
-An adjacent quirk is **not** fixed: a cell whose *last* line is a
-standalone directive (`-- MAGIC %fs`, or a cell holding only
-`-- MAGIC %md`) leaves one newline where the `command` separator regex
-wants two, so the next statement is unparsable. The cause is the
-`magic_start` lexer regex consuming its trailing `(\r?\n)`; dropping that
-tail fixes it under the Python lexer, but the default Rust lexer bakes
-its tables at build time, so the change needs a Rust rebuild to measure
-and was left out of these branches.
+Two adjacent lexer-regex quirks are **fixed** on
+`fix/databricks-magic-cell-boundaries` (the branch also carries the
+`%`-prefixed-line grammar change, so the whole notebook boundary surface is
+one PR):
+
+- `magic_start` consumed its trailing `(\r?\n)`, and the `[^%]` in
+  `magic_single_line` / `magic_line` could match one. A `-- MAGIC` line
+  with a trailing space, or a cell whose last line is a standalone
+  directive, therefore swallowed the blank line the `command` separator
+  needs and the next statement was unparsable. The two corpus cases are the
+  `dbx-devrel` SCD file (`-- MAGIC %fs rm -r …` with a trailing space) and
+  a cell ending in `-- MAGIC %fs`.
+- Fixing it means matching only `[^\n%]` in the line bodies and leaving the
+  newline to the lexer. Those regexes are baked into the Rust lexer at
+  build time, so a local measurement needs `utils/rustify.py build` plus a
+  `maturin develop` rebuild; upstream CI does that as part of installing
+  the package.
+
+With the boundary fixed, the SCD file parses past the magic cells and now
+fails later, on `COPY INTO` (line 151) — a different, already-queued gap,
+not a regression. The boundary cases are pinned in `databricks_test.py`
+rather than in a fixture, because pre-commit strips the trailing space one
+of them is made of.
 
 **Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
 [GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)

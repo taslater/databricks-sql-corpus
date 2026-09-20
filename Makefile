@@ -8,7 +8,7 @@
 #     make corpus PY=.venv-release/bin/python
 PY ?= .venv/bin/python
 
-.PHONY: help venv test coverage corpus corpus-fetch gaps diff reference reference-gaps baseline clean
+.PHONY: help venv test coverage corpus corpus-fetch gaps diff reference reference-gaps baseline audit clean
 
 help:
 	@echo "make venv          create .venv and install the harness"
@@ -21,6 +21,7 @@ help:
 	@echo "make baseline      regenerate corpus/reports/baseline.json"
 	@echo "make test          run the test suite (gates reference.py at 100%)"
 	@echo "make coverage      report coverage for the whole package"
+	@echo "make audit AUDIT_REF=<ref>  measure an unmerged branch end to end"
 	@echo ""
 	@echo "To measure an unmerged SQLFluff branch, install it over the release:"
 	@echo "    .venv/bin/pip install -e ../sqlfluff"
@@ -82,3 +83,27 @@ coverage:
 clean:
 	rm -rf corpus/cache corpus/reports/latest.json .pytest_cache .coverage
 	find . -name __pycache__ -type d -exec rm -rf {} +
+
+# Audit an unmerged branch end to end, in the second measurement slot. The
+# branch is checked out in the worktree that .venv-main measures, so the dev
+# checkout in ../sqlfluff is left alone; the worktree is restored to detached
+# main afterwards. Never measure an uncommitted tree, and switch the dev slot
+# back to main after any measurement that used it.
+#
+#     make audit AUDIT_REF=fix/databricks-live-view
+#
+# The scraped corpus and the differential are advisory here: reference is the
+# oracle for a unit's cases, and test/dialects is the regression gate.
+AUDIT_WT ?= ../sqlfluff-worktrees/main
+audit:
+	@test -n "$(AUDIT_REF)" || { echo "usage: make audit AUDIT_REF=<git ref>"; exit 1; }
+	git -C $(AUDIT_WT) checkout --detach $(AUDIT_REF)
+	@echo "=================== reference ==================="
+	$(MAKE) reference PY=.venv-main/bin/python
+	@echo "=================== corpus (advisory) ==========="
+	$(MAKE) corpus PY=.venv-main/bin/python
+	@echo "=================== diff (advisory) ============="
+	-$(MAKE) diff PY=.venv-main/bin/python
+	@echo "=================== test/dialects ==============="
+	cd $(AUDIT_WT) && $(CURDIR)/.venv-main/bin/python -m pytest test/dialects/ -q -n auto
+	git -C $(AUDIT_WT) checkout --detach main

@@ -38,13 +38,15 @@ Remaining scraped-corpus failures on the union are all accounted for:
 - **78 `spark-sql-tests` files** — the source expectation is `mixed`; these
   are Spark's own inputs, many of them labelled negative cases.
 - **3 files with a secondary blocker** newly exposed once the first one was
-  fixed: `Generating Surrogate Keys.sql` (`count(DISTINCT sk)FROM` with no
-  space between the bracket and the keyword), `Clean Up.sql` (`USE CATALOG c`
-  left unterminated before the next statement in the same cell), and the
-  `dbx-devrel` SCD file (`-- MAGIC %fs …` with a trailing space, where the
-  `magic_single_line` regex's `[^%]` matches the newline and swallows the
-  separator). The last two are lexer-regex fixes, so measuring them needs the
-  Rust lexer tables rebuilt.
+  fixed. The `dbx-devrel` SCD file was the magic-cell boundary bug (a
+  `-- MAGIC %fs …` line with a trailing space, plus the `magic_start`
+  trailing newline); that is fixed on `fix/databricks-magic-cell-boundaries`,
+  and the file now fails later, on queued `COPY INTO`. The other two are
+  `Generating Surrogate Keys.sql` (`count(DISTINCT sk)FROM`: a **general
+  parser bug**, not databricks-specific — `(a)FROM t` is parsed as an
+  implicit alias on ansi, sparksql and databricks, and on released 4.3.0)
+  and `Clean Up.sql` (`USE CATALOG c` left unterminated before the next
+  statement in the same cell).
 - **1 documented not-gap**: Lakebase `create_raw_tags.sql`.
 
 None of the four is a reference-corpus case; they are candidates for the
@@ -63,7 +65,7 @@ next batch, not for this one.
 | 7 | `fix/databricks-unreserve-identifiers` | LEFT/RIGHT regression + `KEYS`/`PIVOT`/`WINDOW` as unquoted aliases | 1 | 1 (select_lambda) | M | **pushed** `66aebdaa4`; verified +1 must-parse (109→110), suite 7038, corpus `sqlfluff-sparksql` 124→125, mutation 1327/1327; databricks keeps its own `AliasExpressionSegment` for `FOR` (anonymous PIVOT) |
 | 8 | `fix/templater-placeholder-databricks-params` | placeholder templater: `${dotted}`, `{{ dashboard }}`, `${}` | 0 | 1 | M | **pushed** `eb35e1c62`; verified: dbx-dlt-notebooks 18/19→19/19, failures 104→103, zero regressions, mutation 1327/1327, templater suite 239; four other template-shaped files have secondary gaps (gaps.md) |
 | 9 | `fix/sparksql-identifier-false-positives` | `DESCRIBE history.tbl`, `SELECT * FROM stream` | 0 | 0 | S | **pushed** `163c2f232`; suite 7033; reference unchanged 109/177; corpus failures unchanged 103, mutation 1327/1327 — correctness fix, no counts |
-| 10 | `fix/databricks-magic-cell-percent-line` | a `%`-prefixed `-- MAGIC` line inside an `%md` cell | 0 | 1 | S/M | **pushed** `c1754c458`; verified: `my_streaming_table.sql` parses, dbx-learn-databricks 43/46→44/46, failures 103→102, mutation 100% (1326/1326); adjacent quirk left alone: a cell ending in a standalone directive still hides the separator's blank line (needs a lexer regex change) |
+| 10 | `fix/databricks-magic-cell-boundaries` (was `…-percent-line`) | a `%`-prefixed `-- MAGIC` line inside an `%md` cell; plus the `magic_start` / `magic_single_line` / `magic_line` regexes so a trailing space or a final standalone directive cannot swallow the separator | 0 | 1 | S/M | **pushed** `1625e1051`; verified: `my_streaming_table.sql` parses, SCD file advances past the magic cells (now fails later on queued `COPY INTO`), suite 7032, mutation 100% (1326/1326); the lexer regexes need the Rust tables rebuilt to measure (`utils/rustify.py build` + `maturin develop`), done locally |
 
 Covered by existing open PRs, not repeated here: #8512 (3 cases),
 #8515 (8), #8516 (6 + unlocks the securable cases), #8517 (6, draft),
@@ -88,7 +90,7 @@ its base has moved and the unit is opened.
 | 7 | `fix/databricks-unreserve-identifiers` | `upstream/main` `b52246da5` | `66aebdaa4` | pushed, ready |
 | 8 | `fix/templater-placeholder-databricks-params` | `upstream/main` `b52246da5` | `eb35e1c62` | pushed, ready (core templater, not dialect) |
 | 9 | `fix/sparksql-identifier-false-positives` | `upstream/main` `b52246da5` | `163c2f232` | pushed, ready |
-| 10 | `fix/databricks-magic-cell-percent-line` | `upstream/main` `b52246da5` | `c1754c458` | pushed, ready |
+| 10 | `fix/databricks-magic-cell-boundaries` | `upstream/main` `b52246da5` | `1625e1051` | pushed; lexer regexes inside, so a measurement needs the Rust tables rebuilt (see notes) |
 | — | `personal/combined-2026-09-20` (tag of the same name) | `upstream/main` `b52246da5` | `ba4a00c8b` | the measurement union; never merge, never open a PR from it |
 
 Measuring a branch: the corpus `.venv` is pinned to the `sqlfluff/` checkout
@@ -165,11 +167,27 @@ refused in the same session, including the other three `gh pr ready` calls and
 `gh pr create` for unit 1. One mutation per burst; retrying in the same minute
 does not help.
 
-State at the end of 2026-09-21: **#8517, #8519, #8520, #8522 are all ready**
-(#8517 confirmed; the other three are finished work whose `gh pr ready` was
-refused, so GitHub still shows them as drafts — retry these first, then unit
-1's creation, as soon as a burst admits a call).
+State after 2026-09-21: **#8517 is ready; #8519, #8520, #8522 still show
+as drafts**. Review comments *are* being admitted — the cubic replies on
+#8512 and #8513 posted first try — while `markPullRequestReadyForReview` and
+`createPullRequest` are still refused. So the block is specific to those two
+mutations, not to the token: post bodies/replies freely, and retry the three
+`gh pr ready` calls and unit 1's creation on the next burst.
 
 Unit 1's body is in `docs/pr-bodies/`; the remaining units' bodies are to be
 drafted from the same template when opened. The branches are all pushed and
 independent, so nothing is lost by waiting.
+
+## Measuring a branch
+
+`make audit AUDIT_REF=<ref>` checks the ref out in the
+`../sqlfluff-worktrees/main` worktree (the `.venv-main` slot), runs
+`make reference`, `make corpus`, `make diff` and the whole
+`test/dialects/` suite with `-n auto`, then restores the worktree to
+detached `main`. It measures committed state only, by construction.
+
+Two caveats: `.venv-main` must have the branch's Rust lexer tables if the
+branch touches a lexer regex (build with `utils/rustify.py build` +
+`maturin develop`, then install the wheel into `.venv-main`); and the
+corpus and differential are advisory here, since reference is the unit's
+oracle and `test/dialects` is the regression gate.
