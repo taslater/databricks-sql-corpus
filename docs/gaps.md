@@ -200,7 +200,10 @@ Found 2026-09-19 by `scripts/fuzz_variants.py keywords`, with the regression
 confirmed by the databricks-vs-sparksql comparison. The fix is to drop
 LEFT/RIGHT from `RESERVED_KEYWORDS` and enforce the alias restriction where
 aliases are parsed. Pinned by the reference corpus as
-`array-sort.lambda-keyword-parameters`.
+`array-sort.lambda-keyword-parameters`. Fixed on
+`fix/databricks-unreserve-identifiers` (verified +1 must-parse, suite 7038,
+corpus `sqlfluff-sparksql` 124→125, mutation 1327/1327); the branch is pushed
+and held for a PR slot while the throttle holds.
 
 **Parenthesised set-operation operands are rejected.** The
 [set operators reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-setops)
@@ -212,7 +215,11 @@ the same query without per-operand parentheses parses.
 [#8523](https://github.com/sqlfluff/sqlfluff/pull/8523) (open, 2026-09-19)
 adds the `DISTINCT` qualifier on `EXCEPT`/`MINUS` but not parenthesised
 operands, so this is unclaimed. Found by the sqlglot round-trip probe; pinned
-by `set-operators.parenthesised-operands`.
+by `set-operators.parenthesised-operands`. The cause was the `EXCEPT` guard
+meant for wildcard exclusions (`SELECT * EXCEPT (col)`), which refused any
+bracketed operand; narrowed on
+`fix/sparksql-parenthesised-set-operands` (verified +1 must-parse, suite
+7030, rejection 1327/1327) — pushed, awaiting a PR slot.
 
 **`KEYS`, `PIVOT` and `WINDOW` are rejected as unquoted column aliases.** The
 [reserved words reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words)
@@ -223,7 +230,10 @@ sqlglot parses all three as aliases. Repros on `main` at `33d8c8459`:
 `SELECT a AS WINDOW FROM t;` are all rejected at `AS`, while `FETCH` and
 `OVERLAPS` behave the same way. Found 2026-09-19 by
 `scripts/fuzz_variants.py keywords`; no upstream issue found for the alias
-position.
+position. Fixed together with LEFT/RIGHT on
+`fix/databricks-unreserve-identifiers`: the alias grammar is split so an
+explicit `AS` alias may use the three, while an implicit alias still cannot
+consume a following clause keyword.
 
 **Over-acceptance: `GRANT ALL PRIVILEGES, SELECT` parses.** The
 [GRANT reference](https://docs.databricks.com/aws/en/sql/language-manual/security-grant)
