@@ -62,9 +62,9 @@ next batch, not for this one.
 | 4 | `fix/databricks-uc-privileges` | the full securable list (SHARE, CONNECTION, CLEAN ROOM, EXTERNAL LOCATION, EXTERNAL METADATA, PROCEDURE, `[STORAGE\|SERVICE] CREDENTIAL`, bare CATALOG) and bind `ALL PRIVILEGES` vs list | 9 + 2 show-grants + 1 reject | 0 | M/L | **pushed** `848ce72cf`, stacked on #8516; verified +11 must-parse (118→129), +1 caught (81→82), +4 informative; VOLUME cases stay #8512's |
 | 5 | `fix/databricks-json-path` | JSON path `[ * ]` and delimited identifiers | 2 | 0 | S/M | **pushed** `46aa4f862`; verified +2 must-parse (109→111), suite 7030, rejection 100% |
 | 6 | `fix/sparksql-parenthesised-set-operands` | parenthesised set-operation operands | 1 | 1 (q87) | S/M | **pushed** `ff39472cf`; verified +1 must-parse (109→110), suite 7030, rejection 1327/1327 |
-| 7 | `fix/databricks-unreserve-identifiers` | LEFT/RIGHT regression + `KEYS`/`PIVOT`/`WINDOW` as unquoted aliases | 1 | 1 (select_lambda) | M | **pushed** `66aebdaa4`; verified +1 must-parse (109→110), suite 7038, corpus `sqlfluff-sparksql` 124→125, mutation 1327/1327; databricks keeps its own `AliasExpressionSegment` for `FOR` (anonymous PIVOT) |
+| 7+9 | `fix/databricks-identifier-keyword-false-positives` | identifier and keyword false positives: LEFT/RIGHT unreserved (a #8050 regression), `KEYS`/`PIVOT`/`WINDOW` as explicit aliases, `DESCRIBE history.tbl`, `SELECT * FROM stream` | 1 | 1 (select_lambda) | M | **pushed** `7f58e29d3` (unit 7 `66aebdaa4` + unit 9 `163c2f232` cherry-picked); verified suite 7041, reference 110/177 (the `array_sort` lambda case flips), corpus `sqlfluff-sparksql` 124→125, mutation 1327/1327. `MASK` is **not** added: the reference's alias-only restriction is for table aliases, and the shared `AliasExpressionSegment` cannot tell a table alias from a column alias, so a blanket exclude would over-reject `SELECT a AS MASK` |
 | 8 | `fix/templater-placeholder-databricks-params` | placeholder templater: `${dotted}`, `{{ dashboard }}`, `${}` | 0 | 1 | M | **pushed** `eb35e1c62`; verified: dbx-dlt-notebooks 18/19→19/19, failures 104→103, zero regressions, mutation 1327/1327, templater suite 239; four other template-shaped files have secondary gaps (gaps.md) |
-| 9 | `fix/sparksql-identifier-false-positives` | `DESCRIBE history.tbl`, `SELECT * FROM stream` | 0 | 0 | S | **pushed** `163c2f232`; suite 7033; reference unchanged 109/177; corpus failures unchanged 103, mutation 1327/1327 — correctness fix, no counts |
+| 9 | — | `DESCRIBE history.tbl`, `SELECT * FROM stream` | — | — | — | folded into unit 7 (`163c2f232` cherry-picked onto the theme branch); its fixes are correctness-only in the corpus, so they add no count on their own |
 | 10 | `fix/databricks-magic-cell-boundaries` (was `…-percent-line`) | a `%`-prefixed `-- MAGIC` line inside an `%md` cell; plus the `magic_start` / `magic_single_line` / `magic_line` regexes so a trailing space or a final standalone directive cannot swallow the separator | 0 | 1 | S/M | **pushed** `1625e1051`; verified: `my_streaming_table.sql` parses, SCD file advances past the magic cells (now fails later on queued `COPY INTO`), suite 7032, mutation 100% (1326/1326); the lexer regexes need the Rust tables rebuilt to measure (`utils/rustify.py build` + `maturin develop`), done locally |
 
 Covered by existing open PRs, not repeated here: #8512 (3 cases),
@@ -87,9 +87,9 @@ its base has moved and the unit is opened.
 | 4 | `fix/databricks-uc-privileges` | stacked on `c9121aaa8` (#8516) | `848ce72cf` | pushed; rebase onto `main` when #8516 merges, and after #8512 if it lands first |
 | 5 | `fix/databricks-json-path` | `upstream/main` `b52246da5` | `46aa4f862` | pushed, ready |
 | 6 | `fix/sparksql-parenthesised-set-operands` | `upstream/main` `b52246da5` | `ff39472cf` | pushed, ready |
-| 7 | `fix/databricks-unreserve-identifiers` | `upstream/main` `b52246da5` | `66aebdaa4` | pushed, ready |
+| 7+9 | `fix/databricks-identifier-keyword-false-positives` | `upstream/main` `b52246da5` | `7f58e29d3` | pushed, ready (unit 7 branch + unit 9 commit; the separate `fix/sparksql-identifier-false-positives` branch is superseded) |
 | 8 | `fix/templater-placeholder-databricks-params` | `upstream/main` `b52246da5` | `eb35e1c62` | pushed, ready (core templater, not dialect) |
-| 9 | `fix/sparksql-identifier-false-positives` | `upstream/main` `b52246da5` | `163c2f232` | pushed, ready |
+| 9 | — | — | — | folded into unit 7 |
 | 10 | `fix/databricks-magic-cell-boundaries` | `upstream/main` `b52246da5` | `1625e1051` | pushed; lexer regexes inside, so a measurement needs the Rust tables rebuilt (see notes) |
 | — | `personal/combined-2026-09-20` (tag of the same name) | `upstream/main` `b52246da5` | `ba4a00c8b` | the measurement union; never merge, never open a PR from it |
 
@@ -112,8 +112,14 @@ mis-read deltas already).
   Keep #8512 focused on `READ`/`WRITE VOLUME`.
 - **Unit 7 is one PR**: LEFT/RIGHT is a regression of a merged sparksql fix
   (#8050) and the alias-only trio is the same class, found by the same probe.
-- **Unit 9 is one tiny PR**; kept separate from unit 7 because it touches
-  statement grammar, not keyword sets.
+- **Units 7 and 9 are one PR.** Both are the same problem class — a legal
+  identifier rejected because a keyword elsewhere has the same spelling —
+  found by the same probe and settled by the same reference page. Reviewed
+  precedent (SQLFluff's `ATTACH`/`DETACH`/`VACUUM`/`REINDEX`/`ANALYZE`,
+  `CREATE`/`ALTER SESSION POLICY`, our own `DESC`/`DESCRIBE HISTORY` and
+  `DESCRIBE DETAIL`) bundles a statement family or one clause set; 7 and 9
+  are two mechanisms behind one class, and the single PR is the deliberate
+  exception. Everything else stays one construct per PR.
 - Units 1, 2, 5, 6, 8, 10 stand alone.
 
 ## Open order (bang for buck)
@@ -127,9 +133,9 @@ mis-read deltas already).
 | 4 | unit 3, CREATE VIEW (as #8513) | 4 cases + 1 corpus file |
 | 5 | unit 5, JSON path | 2 cases, common in real code |
 | 6 | unit 6, set operands | 1 case + q87 |
-| 7 | unit 7, identifiers | 1 case + select_lambda |
+| 7 | units 7+9, identifier/keyword false positives | 1 case + select_lambda |
 | 8 | unit 8, templating | 1 corpus file, independent reviewer path |
-| 9 | unit 9, false positives | correctness, no counts |
+| 9 | — | folded into unit 7 |
 | 10 | unit 10, magic `%`-line | 1 corpus file, queue entry first |
 
 ## Per-unit bar
