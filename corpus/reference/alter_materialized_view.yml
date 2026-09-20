@@ -1,0 +1,62 @@
+# ALTER MATERIALIZED VIEW. SET OWNER and DROP SCHEDULE parse; the schedule
+# and column clauses are gaps.
+statement: ALTER MATERIALIZED VIEW
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view
+checked: 2026-09-20
+syntax: |
+  ALTER MATERIALIZED VIEW view_name
+    {
+      { ADD | ALTER } schedule |
+      DROP SCHEDULE |
+      ALTER COLUMN column_clause |
+      SET ROW FILTER clause |
+      DROP ROW FILTER |
+      SET TAGS clause |
+      UNSET TAGS clause |
+      SET OWNER TO principal }
+    schedule
+      { SCHEDULE [ REFRESH ] schedule_clause |
+        TRIGGER ON UPDATE [ AT MOST EVERY trigger_interval ] }
+    schedule_clause
+      { EVERY number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } |
+        CRON cron_string [ AT TIME ZONE timezone_id ] }
+    column_clause
+      column_identifier
+      { COMMENT clause |
+        SET MASK clause |
+        DROP MASK |
+        SET TAGS clause |
+        UNSET TAGS clause }
+cases:
+  - id: alter-materialized-view.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER MATERIALIZED VIEW v SET OWNER TO `u`
+  - id: alter-materialized-view.drop-schedule
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER MATERIALIZED VIEW v DROP SCHEDULE
+  - id: alter-materialized-view.add-trigger
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER MATERIALIZED VIEW v ADD TRIGGER ON UPDATE
+  - id: alter-materialized-view.alter-schedule
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER MATERIALIZED VIEW v ALTER SCHEDULE EVERY 2 HOURS
+  - id: alter-materialized-view.alter-column
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER MATERIALIZED VIEW v ALTER COLUMN c COMMENT 'x'
+  - id: alter-materialized-view.comment-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-materialized-view.alter-column
+    omits: "comment"
+    sql: |
+      ALTER MATERIALIZED VIEW v ALTER COLUMN c COMMENT

@@ -380,6 +380,20 @@ parse, but adding the limit fails:
 n+1 FROM r) SELECT * FROM r` is rejected. Pinned by `cte.recursion-limit`.
 Recorded 2026-09-20 by the Tier 3 batch.
 
+**The ALTER family is mostly unsupported.** Seven `ALTER` statements have no
+grammar in the `databricks` dialect, so every documented form is rejected:
+`ALTER CONNECTION` (`alter-connection.*`), `ALTER CREDENTIAL`,
+`ALTER EXTERNAL LOCATION`, `ALTER PROVIDER`, `ALTER RECIPIENT`,
+`ALTER SHARE` and `ALTER STREAMING TABLE`. `ALTER CATALOG` and
+`ALTER SCHEMA` are partial — `OWNER TO`, `SET TAGS` and
+`ENABLE PREDICTIVE OPTIMIZATION` parse, but `SET MANAGED LOCATION`,
+`RETAIN DROPPED TO` and `DEFAULT COLLATION` do not. `ALTER MATERIALIZED
+VIEW` parses `SET OWNER TO` and `DROP SCHEDULE` but not the `ADD`/`ALTER`
+schedule or `ALTER COLUMN` clauses. `ALTER VIEW` and `ALTER VOLUME` parse
+throughout and are pinned. `ALTER DATABASE` is a documented alias of
+`ALTER SCHEMA` with no syntax block of its own, so it is `n/a` in the
+coverage tracker. Recorded 2026-09-20 by the DDL batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

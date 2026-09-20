@@ -84,24 +84,24 @@ Data types is covered page by page: `array_type.yml`, `map_type.yml`,
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.
 
-## DDL statements (13 done, 49 queued, 0 n/a)
+## DDL statements (25 done, 36 queued, 1 n/a)
 
 | page | status |
 | --- | --- |
-| [ALTER CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog) | queued |
-| [ALTER CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection) | queued |
-| [ALTER CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential) | queued |
-| [ALTER DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-database) | queued |
-| [ALTER EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location) | queued |
-| [ALTER MATERIALIZED VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view) | queued |
-| [ALTER PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider) | queued |
-| [ALTER RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient) | queued |
-| [ALTER SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema) | queued |
-| [ALTER SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share) | queued |
-| [ALTER STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table) | queued |
+| [ALTER CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog) | done |
+| [ALTER CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection) | done |
+| [ALTER CREDENTIAL](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-credential) | done |
+| [ALTER DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-database) | n/a |
+| [ALTER EXTERNAL LOCATION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-location) | done |
+| [ALTER MATERIALIZED VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-materialized-view) | done |
+| [ALTER PROVIDER](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider) | done |
+| [ALTER RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient) | done |
+| [ALTER SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema) | done |
+| [ALTER SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share) | done |
+| [ALTER STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table) | done |
 | [ALTER TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table) | done |
-| [ALTER VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view) | queued |
-| [ALTER VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume) | queued |
+| [ALTER VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view) | done |
+| [ALTER VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume) | done |
 | [CREATE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog) | done |
 | [CREATE CONNECTION](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection) | done |
 | [CREATE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-database) | queued |

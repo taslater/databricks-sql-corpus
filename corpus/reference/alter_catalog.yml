@@ -1,0 +1,59 @@
+# ALTER CATALOG. OWNER, TAGS and PREDICTIVE OPTIMIZATION parse; MANAGED
+# LOCATION, RETAIN DROPPED and DEFAULT COLLATION are gaps.
+statement: ALTER CATALOG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-catalog
+checked: 2026-09-20
+syntax: |
+  ALTER CATALOG [ catalog_name ] { DEFAULT COLLATION default_collation_name |
+    [ SET ] OWNER TO principal
+    SET TAGS ( { tag_name = tag_value } [, ...] ) |
+    UNSET TAGS ( tag_name [, ...] ) |
+    { ENABLE | DISABLE | INHERIT } PREDICTIVE OPTIMIZATION |
+    OPTIONS (option value [, ...] ) |
+    SET MANAGED LOCATION location |
+    [ SET ] RETAIN DROPPED TO number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } }
+cases:
+  - id: alter-catalog.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CATALOG c SET OWNER TO `u`
+  - id: alter-catalog.tags
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CATALOG c SET TAGS ('t' = 'v')
+  - id: alter-catalog.predictive
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CATALOG c ENABLE PREDICTIVE OPTIMIZATION
+  - id: alter-catalog.managed-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CATALOG c SET MANAGED LOCATION 's3://b/'
+  - id: alter-catalog.retain-dropped
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CATALOG c RETAIN DROPPED TO 1 DAY
+  - id: alter-catalog.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CATALOG c DEFAULT COLLATION 'UTF8_LCASE'
+  - id: alter-catalog.collation-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-catalog.default-collation
+    omits: "default_collation_name"
+    sql: |
+      ALTER CATALOG c DEFAULT COLLATION
+  - id: alter-catalog.empty-tags
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-catalog.tags
+    omits: "tag_name"
+    sql: |
+      ALTER CATALOG c SET TAGS ()

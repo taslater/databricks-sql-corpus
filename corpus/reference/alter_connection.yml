@@ -1,0 +1,40 @@
+# ALTER CONNECTION. The whole statement is unsupported by the databricks
+# dialect, so every must-parse case is a gap and every partial rejection is
+# vacuous until a grammar lands.
+statement: ALTER CONNECTION
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-connection
+checked: 2026-09-20
+syntax: |
+  ALTER CONNECTION connection_name { [ SET ] OWNER TO principal |
+    RENAME TO new_connection_name |
+    OPTIONS ( option value [, ...] )
+cases:
+  - id: alter-connection.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CONNECTION c SET OWNER TO `u`
+  - id: alter-connection.rename
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CONNECTION c RENAME TO d
+  - id: alter-connection.options
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER CONNECTION c OPTIONS (host 'h')
+  - id: alter-connection.rename-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-connection.rename
+    omits: "new_connection_name"
+    sql: |
+      ALTER CONNECTION c RENAME TO
+  - id: alter-connection.empty-options
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-connection.options
+    omits: "option value"
+    sql: |
+      ALTER CONNECTION c OPTIONS ()

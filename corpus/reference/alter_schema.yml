@@ -1,0 +1,58 @@
+# ALTER SCHEMA. OWNER, DBPROPERTIES, TAGS and PREDICTIVE OPTIMIZATION parse;
+# MANAGED LOCATION, RETAIN DROPPED and DEFAULT COLLATION are gaps.
+statement: ALTER SCHEMA
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema
+checked: 2026-09-20
+syntax: |
+  ALTER SCHEMA schema_name
+      { DEFAULT COLLATION default_collation_name |
+        SET DBPROPERTIES ( { key = val } [, ...] ) |
+        [ SET ] OWNER TO principal
+        SET TAGS ( { tag_name = tag_value } [, ...] ) |
+        UNSET TAGS ( tag_name [, ...] ) |
+        { ENABLE | DISABLE | INHERIT } PREDICTIVE OPTIMIZATION |
+        SET MANAGED LOCATION location |
+        [ SET ] RETAIN DROPPED TO number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } }
+cases:
+  - id: alter-schema.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s SET OWNER TO `u`
+  - id: alter-schema.dbproperties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s SET DBPROPERTIES ('a' = 'b')
+  - id: alter-schema.tags
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s SET TAGS ('t' = 'v')
+  - id: alter-schema.predictive
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s ENABLE PREDICTIVE OPTIMIZATION
+  - id: alter-schema.managed-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s SET MANAGED LOCATION 's3://b/'
+  - id: alter-schema.retain-dropped
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s RETAIN DROPPED TO 1 DAY
+  - id: alter-schema.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SCHEMA s DEFAULT COLLATION 'UTF8_LCASE'
+  - id: alter-schema.empty-dbproperties
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-schema.dbproperties
+    omits: "key"
+    sql: |
+      ALTER SCHEMA s SET DBPROPERTIES ()

@@ -1,0 +1,68 @@
+# ALTER SHARE. The whole statement is unsupported by the databricks dialect,
+# so every must-parse case is a gap and the partial rejection is vacuous until
+# a grammar lands.
+statement: ALTER SHARE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share
+checked: 2026-09-20
+syntax: |
+  ALTER SHARE share_name
+    { alter_add_materialized_view |
+      REMOVE MATERIALIZED VIEW mat_view_name |
+      alter_add_table |
+      REMOVE TABLE table_name |
+      alter_add_schema |
+      REMOVE SCHEMA schema_name |
+      alter_add_view |
+      REMOVE VIEW view_name |
+      alter_add_model |
+      REMOVE MODEL model_name |
+      RENAME TO to_share_name |
+      [ SET ] OWNER TO principal }
+  alter_add_table
+    { { ALTER | ADD } [ TABLE ] table_name [ COMMENT comment ]
+          [ PARTITION clause ] [ AS table_share_name ]
+          [ WITH HISTORY | WITHOUT HISTORY ] }
+  alter_add_schema
+    { { ALTER | ADD } SCHEMA schema_name [ COMMENT comment ]
+  alter_add_view
+    { { ALTER | ADD } VIEW view_name [ COMMENT comment ] [ AS view_share_name ]
+  alter_add_model
+    { { ALTER | ADD } MODEL model_name [ COMMENT comment ] [ AS model_share_name ]
+cases:
+  - id: alter-share.add-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SHARE s ADD TABLE t
+  - id: alter-share.add-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SHARE s ADD SCHEMA sc
+  - id: alter-share.remove-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SHARE s REMOVE TABLE t
+  - id: alter-share.rename
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SHARE s RENAME TO s2
+  - id: alter-share.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER SHARE s OWNER TO `u`
+  - id: alter-share.add-table-full
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      ALTER SHARE s ADD TABLE t COMMENT 'c' PARTITION (p = 1) AS ss.st WITH HISTORY
+  - id: alter-share.add-table-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-share.add-table
+    omits: "table_name"
+    sql: |
+      ALTER SHARE s ADD TABLE

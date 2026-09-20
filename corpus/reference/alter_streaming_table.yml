@@ -1,0 +1,54 @@
+# ALTER STREAMING TABLE. The statement is unsupported by the databricks
+# dialect, including SET OWNER, so every must-parse case is a gap and the
+# partial rejection is vacuous until a grammar lands.
+statement: ALTER STREAMING TABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table
+checked: 2026-09-20
+syntax: |
+  ALTER STREAMING TABLE table_name
+    {
+      { ADD | ALTER } schedule
+      DROP SCHEDULE |
+      ALTER COLUMN column_clause |
+      SET ROW FILTER clause |
+      DROP ROW FILTER |
+      SET TAGS clause |
+      UNSET TAGS clause |
+      SET OWNER TO principal |
+    }
+    schedule
+    { SCHEDULE [ REFRESH ] schedule_clause |
+      TRIGGER ON UPDATE [ AT MOST EVERY trigger_interval ] }
+    schedule_clause
+    { EVERY number { HOUR | HOURS | DAY | DAYS | WEEK | WEEKS } |
+      CRON cron_string [ AT TIME ZONE timezone_id ] }
+    column_clause
+      column_identifier
+      { COMMENT clause |
+        SET MASK clause |
+        DROP MASK |
+        SET TAGS clause |
+        UNSET TAGS clause }
+cases:
+  - id: alter-streaming-table.add-trigger
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER STREAMING TABLE t ADD TRIGGER ON UPDATE
+  - id: alter-streaming-table.alter-schedule
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER STREAMING TABLE t ALTER SCHEDULE EVERY 1 HOUR
+  - id: alter-streaming-table.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER STREAMING TABLE t SET OWNER TO `u`
+  - id: alter-streaming-table.owner-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-streaming-table.owner
+    omits: "principal"
+    sql: |
+      ALTER STREAMING TABLE t SET OWNER TO

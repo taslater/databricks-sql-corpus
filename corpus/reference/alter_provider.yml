@@ -1,0 +1,28 @@
+# ALTER PROVIDER. The whole statement is unsupported by the databricks
+# dialect, so every must-parse case is a gap and the partial rejection is
+# vacuous until a grammar lands.
+statement: ALTER PROVIDER
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-provider
+checked: 2026-09-20
+syntax: |
+  ALTER PROVIDER provider_name
+    { RENAME TO to_provider_name |
+      [ SET ] OWNER TO principal }
+cases:
+  - id: alter-provider.rename
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER PROVIDER p RENAME TO q
+  - id: alter-provider.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER PROVIDER p OWNER TO `u`
+  - id: alter-provider.rename-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-provider.rename
+    omits: "to_provider_name"
+    sql: |
+      ALTER PROVIDER p RENAME TO

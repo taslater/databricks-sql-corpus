@@ -1,0 +1,40 @@
+# ALTER RECIPIENT. The whole statement is unsupported by the databricks
+# dialect, so every must-parse case is a gap and the partial rejection is
+# vacuous until a grammar lands.
+statement: ALTER RECIPIENT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-recipient
+checked: 2026-09-20
+syntax: |
+  ALTER RECIPIENT recipient_name
+    { RENAME TO to_recipient_name |
+      [ SET ] OWNER TO principal |
+      SET PROPERTIES ( property_key [ = ] property_value [, ...] ) |
+      UNSET PROPERTIES ( property_key [, ...] ) }
+cases:
+  - id: alter-recipient.rename
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER RECIPIENT r RENAME TO s
+  - id: alter-recipient.set-properties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER RECIPIENT r SET PROPERTIES ('country' = 'US')
+  - id: alter-recipient.unset-properties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER RECIPIENT r UNSET PROPERTIES ('country')
+  - id: alter-recipient.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER RECIPIENT r OWNER TO `u`
+  - id: alter-recipient.empty-properties
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-recipient.set-properties
+    omits: "property_key"
+    sql: |
+      ALTER RECIPIENT r SET PROPERTIES ()

@@ -1,0 +1,38 @@
+# ALTER VOLUME. rename, owner and tags all parse; this page pins them.
+statement: ALTER VOLUME
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume
+checked: 2026-09-20
+syntax: |
+  ALTER VOLUME volume_name
+      { RENAME TO new_volume_name |
+        [ SET ] OWNER TO principal |
+        SET TAGS clause |
+        UNSET TAGS clause }
+cases:
+  - id: alter-volume.rename
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VOLUME v RENAME TO w
+  - id: alter-volume.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VOLUME v SET OWNER TO `u`
+  - id: alter-volume.tags
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VOLUME v SET TAGS ('t' = 'v')
+  - id: alter-volume.unset-tags
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VOLUME v UNSET TAGS ('t')
+  - id: alter-volume.rename-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-volume.rename
+    omits: "new_volume_name"
+    sql: |
+      ALTER VOLUME v RENAME TO

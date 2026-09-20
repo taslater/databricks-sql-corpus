@@ -1,0 +1,62 @@
+# ALTER VIEW. rename, TBLPROPERTIES, a new body, schema binding and owner
+# all parse; this page pins them.
+statement: ALTER VIEW
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view
+checked: 2026-09-20
+syntax: |
+  ALTER VIEW view_name
+    { rename |
+      SET TBLPROPERTIES clause |
+      UNSET TBLPROPERTIES clause |
+      alter_body |
+      schema_binding |
+      owner_to |
+      SET TAGS clause |
+      UNSET TAGS clause }
+  rename
+    RENAME TO to_view_name
+  alter_body
+    AS { query | yaml_definition }
+  yaml_definition
+    $$
+      yaml_string
+    $$
+  schema_binding
+    WITH SCHEMA { BINDING | [ TYPE ] EVOLUTION | COMPENSATION }
+  property_key
+    { identifier [. ...] | string_literal }
+  owner_to
+    [ SET ] OWNER TO principal
+cases:
+  - id: alter-view.rename
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VIEW v RENAME TO w
+  - id: alter-view.tblproperties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VIEW v SET TBLPROPERTIES ('a' = 'b')
+  - id: alter-view.body
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VIEW v AS SELECT 1
+  - id: alter-view.schema-binding
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VIEW v WITH SCHEMA TYPE EVOLUTION
+  - id: alter-view.owner
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER VIEW v SET OWNER TO `u`
+  - id: alter-view.rename-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-view.rename
+    omits: "to_view_name"
+    sql: |
+      ALTER VIEW v RENAME TO
