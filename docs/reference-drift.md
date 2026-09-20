@@ -113,3 +113,52 @@ month).
 
 Both `drift` and `index-check` run controls built into the harness, not the
 data; the exit code is non-zero only when a control fails.
+
+## Resolved — prose vs braces, and a self-contradiction (2026-09-21)
+
+`sql-pipeline.without-operation` pinned `FROM t` as a **must-reject**, the
+partial form of the pipeline production. But `query.from` on the Query page
+pinned the same statement as **must-parse**. One statement cannot be both, so
+the corpus was measuring a disagreement with itself.
+
+The root cause is the syntax block's own notation. The pipeline page writes
+
+```
+{ FROM | TABLE } relation_name { |> piped_operation } [ ...]
+```
+
+and the braces around `{ |> piped_operation }` read as *required*. The page's
+prose says otherwise, twice: "Any query can have **zero or more** pipe
+operators as a suffix" and "**any query can start a pipeline**". `FROM t` is a
+valid query (its `subquery` production is `FROM table_reference [, ...]`), so
+`query.from` was right and `sql-pipeline.without-operation` was a
+misreading. The case is deleted; `query.from` is the single pin.
+
+Two things changed so this cannot recur:
+
+1. `load_reference` now rejects two cases that carry **different verdicts for
+   the same normalised statement** (whitespace, case and a trailing `;` are
+   ignored). That is a loader error, not a measurement: the rule the corpus
+   needs is that a statement has one answer, and two pages disagreeing is a
+   transcription defect to settle first.
+2. The review rule for transcription is **read the prose before trusting the
+   braces**. `{ }` and `[ ]` in a Databricks syntax block are a rendering of
+   the production, and the page's own sentences qualify them; where they
+   conflict, the prose wins. A page that describes another page's production
+   must be checked against it before a case is added.
+
+The same review also re-read the other disputed cases. These are **not** corpus
+defects — the reference is right and the parser is wrong — so they stay and are
+fixed in the dialect:
+
+| case | reference basis |
+| --- | --- |
+| `create-function.or-replace-with-if-not-exists` | the page says "You cannot specify this parameter with `IF NOT EXISTS`" and the reverse for `OR REPLACE` |
+| `insert.replace-on-parenthesised-query` | the INSERT production is `{ (query) [source_alias] \| query }`, a required choice |
+| `identifier-clause.without-argument` | `IDENTIFIER ( string_expression )` requires the argument |
+
+`hints.coalesce-without-argument` and `hints.broadcast-without-table` are
+marked `disposition: out-of-scope`: a hint is written inside a comment, and a
+grammar does not read comment contents, so the reference's requirement cannot
+be a grammar check. They are excluded from the scored rate and reported
+separately rather than left as permanent failures that flatter or distort it.

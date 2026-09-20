@@ -94,11 +94,24 @@ EXCLUSIVE_ALTERNATIVE = "exclusive-alternative"
 EXTRA = "extra"
 REASONS = (OMISSION, EXCLUSIVE_ALTERNATIVE, EXTRA)
 
+# A disposition records that a case is a known divergence from the reference
+# rather than an unexplained one. It is not a way to make a case pass; it is
+# what keeps the difference between "we know" and "new regression" legible.
+#
+#   parser-limitation  the reference is right and the parser cannot express
+#                      the distinction; counted, and listed separately.
+#   out-of-scope       the reference constrains something a grammar cannot
+#                      decide (the text of a hint comment); excluded from the
+#                      scored totals so it cannot distort the rate.
+PARSER_LIMITATION = "parser-limitation"
+OUT_OF_SCOPE = "out-of-scope"
+DISPOSITIONS = (PARSER_LIMITATION, OUT_OF_SCOPE)
+
 _FILE_KEYS = frozenset({"statement", "doc", "syntax", "checked", "cases"})
 _CASE_KEYS = frozenset(
     {
         "id", "verdict", "anchor", "sql", "from",
-        "omits", "reason", "conflicts", "extra", "note",
+        "omits", "reason", "conflicts", "extra", "note", "disposition",
     }
 )
 
@@ -140,6 +153,7 @@ class ReferenceCase:
     conflicts: tuple[str, ...] = ()
     extra: str = ""
     note: str = ""
+    disposition: str = ""
 
 
 @dataclass(frozen=True)
@@ -188,31 +202,41 @@ class ReferenceReport:
     def of(self, verdict: str) -> list[CaseResult]:
         return [r for r in self.results if r.case.verdict == verdict]
 
+    def scored(self, verdict: str) -> list[CaseResult]:
+        """The cases of a verdict that count towards the rate.
+
+        An `out-of-scope` case tests something a grammar cannot decide, so
+        counting it would make the rate a measure of the tool's remit as much
+        as of its correctness. `parser-limitation` is deliberately *not*
+        excluded: the parser does not satisfy it, and the rate should say so.
+        """
+        return [r for r in self.of(verdict) if r.case.disposition != OUT_OF_SCOPE]
+
     @property
     def controls_ok(self) -> bool:
         return all(r.conforms for r in self.controls)
 
     @property
     def must_parse_total(self) -> int:
-        return len(self.of(MUST_PARSE))
+        return len(self.scored(MUST_PARSE))
 
     @property
     def must_parse_passed(self) -> int:
-        return sum(1 for r in self.of(MUST_PARSE) if r.conforms)
+        return sum(1 for r in self.scored(MUST_PARSE) if r.conforms)
 
     @property
     def must_reject_total(self) -> int:
-        return len(self.of(MUST_REJECT))
+        return len(self.scored(MUST_REJECT))
 
     @property
     def must_reject_caught(self) -> int:
-        return sum(1 for r in self.of(MUST_REJECT) if r.conforms)
+        return sum(1 for r in self.scored(MUST_REJECT) if r.conforms)
 
     @property
     def must_reject_informative(self) -> int:
         """Caught rejections whose full form parses, so the check has teeth."""
         return sum(
-            1 for r in self.of(MUST_REJECT)
+            1 for r in self.scored(MUST_REJECT)
             if r.conforms and self.sibling_parsed(r)
         )
 
@@ -222,13 +246,34 @@ class ReferenceReport:
         nothing about the partial form. The count should fall as gaps close;
         it is the corpus's own health metric."""
         return sum(
-            1 for r in self.of(MUST_REJECT)
+            1 for r in self.scored(MUST_REJECT)
             if r.conforms and not self.sibling_parsed(r)
         )
 
     @property
+    def out_of_scope(self) -> list[CaseResult]:
+        """Cases excluded from the scored totals, whatever their outcome."""
+        return [r for r in self.results if r.case.disposition == OUT_OF_SCOPE]
+
+    @property
     def failures(self) -> list[CaseResult]:
         return [r for r in self.results if not r.conforms]
+
+    @property
+    def acknowledged_failures(self) -> list[CaseResult]:
+        """Known parser limitations, not surprises."""
+        return [
+            r for r in self.failures
+            if r.case.disposition == PARSER_LIMITATION
+        ]
+
+    @property
+    def unexpected_failures(self) -> list[CaseResult]:
+        """Failures with no disposition: the ones worth looking at."""
+        return [
+            r for r in self.failures
+            if r.case.disposition not in DISPOSITIONS
+        ]
 
     def sibling_parsed(self, result: CaseResult) -> bool:
         """True when this case's full-form sibling parses.
@@ -270,6 +315,7 @@ def load_reference(root: pathlib.Path | None = None) -> list[ReferenceCase]:
     """
     cases: list[ReferenceCase] = []
     origins: dict[str, str] = {}
+    verdicts: dict[str, tuple[str, str]] = {}
     for path in _reference_paths(root):
         file_cases = _load_file(path)
         by_id = {c.id: c for c in file_cases}
@@ -280,6 +326,26 @@ def load_reference(root: pathlib.Path | None = None) -> list[ReferenceCase]:
                     f"already defined in {origins[case.id]}"
                 )
             origins[case.id] = path.name
+            # One SQL statement cannot be both documented and non-conforming.
+            # Two pages can describe the same production (the Query and SQL
+            # pipeline pages both define `FROM t`); when they disagree, the
+            # disagreement is a transcription error, not a fact about the
+            # grammar, and it must be settled before the corpus can measure
+            # anything. This is the check `sql-pipeline.without-operation`
+            # needed: the pipeline page's prose allows zero pipe operators
+            # even though its syntax block braces suggest otherwise.
+            key = _normalise_sql(case.sql)
+            if key in verdicts:
+                other_id, other_verdict = verdicts[key]
+                if other_verdict != case.verdict:
+                    raise ReferenceError(
+                        f"{path.name}: case {case.id!r} is {case.verdict} but "
+                        f"{other_id!r} is {other_verdict} for the same "
+                        f"statement {key!r}; two pages cannot disagree about "
+                        "one statement"
+                    )
+            else:
+                verdicts[key] = (case.id, case.verdict)
             if case.from_id:
                 if case.from_id not in by_id:
                     raise ReferenceError(
@@ -390,6 +456,16 @@ def _load_file(path: pathlib.Path) -> list[ReferenceCase]:
 def _normalise_for_check(text: str) -> str:
     """Whitespace- and case-insensitive form for syntax-block containment."""
     return " ".join(text.split()).casefold()
+
+
+def _normalise_sql(sql: str) -> str:
+    """The identity of a statement for the contradiction check.
+
+    Whitespace, case and a trailing statement terminator do not change which
+    statement a case is about, so they must not hide a disagreement between
+    two transcriptions of it.
+    """
+    return _normalise_for_check(sql).rstrip(";").strip()
 
 
 def _checked_date(path: pathlib.Path, value: object) -> str:
@@ -527,6 +603,19 @@ def _load_case(
                 )
     if "note" in raw and not isinstance(raw["note"], str):
         raise ReferenceError(f"{label}: note must be a string")
+    disposition = raw.get("disposition", "")
+    if not isinstance(disposition, str) or (
+        disposition and disposition not in DISPOSITIONS
+    ):
+        raise ReferenceError(
+            f"{label}: disposition must be one of {DISPOSITIONS}, "
+            f"got {disposition!r}"
+        )
+    if disposition and not raw.get("note", "").strip():
+        raise ReferenceError(
+            f"{label}: a `disposition: {disposition}` case needs a `note:` "
+            "recording why it diverges, so the reason is reviewable"
+        )
     return ReferenceCase(
         id=case_id,
         verdict=verdict,
@@ -541,6 +630,7 @@ def _load_case(
         conflicts=conflicts,
         extra=extra,
         note=raw.get("note", ""),
+        disposition=disposition,
     )
 
 
@@ -570,6 +660,7 @@ def reference_payload(report: ReferenceReport) -> dict:
     """
     return {
         "controls_ok": report.controls_ok,
+        "out_of_scope": len(report.out_of_scope),
         "must_parse": {
             "total": report.must_parse_total,
             "passed": report.must_parse_passed,
@@ -608,6 +699,8 @@ def _case_payload(result: CaseResult) -> dict:
     elif result.case.reason == EXTRA:
         payload["reason"] = result.case.reason
         payload["extra"] = result.case.extra
+    if result.case.disposition:
+        payload["disposition"] = result.case.disposition
     return payload
 
 
@@ -633,10 +726,14 @@ def format_reference_report(report: ReferenceReport) -> str:
         f"{report.must_reject_vacuous} vacuous)"
     )
     lines.append(f"controls:    {'ok' if report.controls_ok else 'FAILED'}")
-    if report.failures:
-        lines.append("")
-        lines.append("Cases that do not match the reference:")
-        for result in report.failures:
+    if report.out_of_scope:
+        lines.append(
+            f"out of scope: {len(report.out_of_scope)} case(s) excluded "
+            "from the rates above (a grammar cannot decide them)"
+        )
+
+    def _print_failures(results: list[CaseResult]) -> None:
+        for result in results:
             outcome = (
                 "accepted but must be rejected"
                 if result.case.verdict == MUST_REJECT
@@ -646,8 +743,17 @@ def format_reference_report(report: ReferenceReport) -> str:
             lines.append(f"      {result.case.doc}{result.case.anchor}")
             if result.message:
                 lines.append(f"      {result.message[:100]}")
+
+    if report.unexpected_failures:
+        lines.append("")
+        lines.append("Cases that do not match the reference:")
+        _print_failures(report.unexpected_failures)
+    if report.acknowledged_failures:
+        lines.append("")
+        lines.append("Acknowledged parser limitations (counted, not surprises):")
+        _print_failures(report.acknowledged_failures)
     vacuous = [
-        r for r in report.of(MUST_REJECT)
+        r for r in report.scored(MUST_REJECT)
         if r.conforms and not report.sibling_parsed(r)
     ]
     if vacuous:
@@ -675,8 +781,8 @@ def format_reference_gaps(report: ReferenceReport) -> str:
     would send someone upstream with a repro that parses.
     """
     lines: list[str] = []
-    lines.append(f"reference gaps: {len(report.failures)}")
-    for result in report.failures:
+    lines.append(f"reference gaps: {len(report.unexpected_failures)}")
+    for result in report.unexpected_failures:
         case = result.case
         lines.append("")
         lines.append(f"## {case.id}")
@@ -703,7 +809,7 @@ def format_reference_gaps(report: ReferenceReport) -> str:
             f"vacuous ({report.must_reject_vacuous}) -- not gaps yet, "
             "the full form does not parse either:"
         )
-        for result in report.of(MUST_REJECT):
+        for result in report.scored(MUST_REJECT):
             if result.conforms and not report.sibling_parsed(result):
                 lines.append(f"  {result.case.id}")
     if not report.controls_ok:

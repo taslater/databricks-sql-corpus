@@ -73,12 +73,24 @@ def _reference_diff(base: dict[str, Any], new: dict[str, Any]) -> list[str]:
     if new_ref.get("controls_ok") is False:
         regressed.append("reference controls failed")
 
+    # An out-of-scope case is excluded from the rates, so its outcome is not a
+    # regression signal either; it is reported by count, not by flip.
+    out_of_scope = {
+        cid for cid, case in new_cases.items()
+        if case.get("disposition") == "out-of-scope"
+    }
     flips = [
         cid for cid, case in old_cases.items()
-        if cid in new_cases and case.get("ok") and not new_cases[cid].get("ok")
+        if cid in new_cases
+        and cid not in out_of_scope
+        and case.get("ok")
+        and not new_cases[cid].get("ok")
     ]
     added = [cid for cid in new_cases if cid not in old_cases]
-    failing_on_arrival = [cid for cid in added if not new_cases[cid].get("ok")]
+    failing_on_arrival = [
+        cid for cid in added
+        if not new_cases[cid].get("ok") and cid not in out_of_scope
+    ]
     removed = [cid for cid in old_cases if cid not in new_cases]
     regressed.extend(f"reference case {cid}: conforming -> not" for cid in flips)
     regressed.extend(f"reference case removed: {cid}" for cid in removed)

@@ -66,6 +66,14 @@ cases:
     omits: "part_num"
     sql: |
       SELECT /*+ COALESCE() */ * FROM t
+    disposition: out-of-scope
+    note: |
+      A hint is written inside a comment, and SQLFluff treats comments as
+      trivia: it never parses their contents, so it cannot decide this without
+      a rule that reads comments. The reference requires the argument, but
+      whether the engine rejects a hint it cannot parse is a separate question
+      this corpus does not answer. Excluded from the scored rate until a
+      hint-content check exists somewhere in the toolchain.
   - id: hints.broadcast-without-table
     verdict: must-reject
     anchor: "#syntax"
@@ -73,3 +81,7 @@ cases:
     omits: "table_name"
     sql: |
       SELECT /*+ BROADCAST() */ * FROM t1
+    disposition: out-of-scope
+    note: |
+      Same as `hints.coalesce-without-argument`: the argument is required by
+      the reference, but it lives in a comment the parser does not read.

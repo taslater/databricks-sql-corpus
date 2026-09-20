@@ -1,6 +1,12 @@
 # SQL Pipeline Syntax. The `|>` pipeline operator is unsupported by the
-# databricks dialect, so every must-parse case is a gap and the partial
-# rejection is vacuous until a grammar lands.
+# databricks dialect, so every must-parse case is a gap until a grammar lands.
+#
+# There is deliberately no `without-operation` rejection case here. The syntax
+# block writes `{ |> piped_operation }`, whose braces read as required, but the
+# page's prose is explicit: "Any query can have zero or more pipe operators as
+# a suffix" and "any query can start a pipeline". The bare `FROM t` is
+# therefore a valid query, pinned by `query.from` on the Query page; a
+# must-reject here contradicted it. See docs/reference-drift.md.
 statement: SQL Pipeline Syntax
 doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline
 checked: 2026-09-20
@@ -23,10 +29,3 @@ cases:
     anchor: "#syntax"
     sql: |
       TABLE t |> SELECT a
-  - id: sql-pipeline.without-operation
-    verdict: must-reject
-    anchor: "#syntax"
-    from: sql-pipeline.select
-    omits: "piped_operation"
-    sql: |
-      FROM t

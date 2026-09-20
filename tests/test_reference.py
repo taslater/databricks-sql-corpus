@@ -320,7 +320,7 @@ def test_the_omission_check_ignores_case_and_whitespace(tmp_path):
         tmp_path, "case.yml",
         case_list(
             "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
-            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a FROM t\n"
+            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a\n"
             "from: full\nomits: 'all  |  distinct'",
             syntax="SELECT [ ALL | DISTINCT ] a FROM t",
         ),
@@ -363,7 +363,8 @@ def test_the_conflicts_check_ignores_case_and_whitespace(tmp_path):
         tmp_path, "case.yml",
         case_list(
             "id: full\nverdict: must-parse\nanchor: '#s'\nsql: SELECT a FROM t",
-            "id: mixed\nverdict: must-reject\nanchor: '#s'\nsql: SELECT a FROM t\n"
+            "id: mixed\nverdict: must-reject\nanchor: '#s'\n"
+            "sql: SELECT ALL, DISTINCT ON ( a ) a FROM t\n"
             "from: full\nreason: exclusive-alternative\n"
             "conflicts: [ 'all', 'distinct   on ( a )' ]",
             syntax="SELECT { ALL | DISTINCT ON ( a ) } a FROM t",
@@ -567,7 +568,7 @@ def test_from_must_resolve_within_the_same_file(tmp_path):
     write(
         tmp_path, "b.yml",
         one_case(
-            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT 1\n"
+            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: SELECT\n"
             "from: full\nomits: SELECT 1"
         ),
     )
@@ -1011,3 +1012,115 @@ def test_load_reference_files_on_the_committed_corpus():
     files = reference.load_reference_files()
     assert files
     assert all(f.statement and f.doc and f.syntax and f.checked for f in files)
+
+
+# --- cross-file consistency: one statement, one verdict ---------------------
+def test_the_same_statement_may_not_carry_two_verdicts(tmp_path):
+    write(
+        tmp_path, "a.yml",
+        case_list("id: full-a\nverdict: must-parse\nanchor: '#s'\nsql: FROM t"),
+    )
+    write(
+        tmp_path, "b.yml",
+        case_list(
+            "id: full-b\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1",
+            "id: partial\nverdict: must-reject\nanchor: '#s'\nsql: FROM t\n"
+            "from: full-b\nomits: SELECT 1",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="two pages cannot disagree"):
+        load_reference(tmp_path)
+
+
+def test_the_contradiction_check_ignores_case_whitespace_and_semicolon(tmp_path):
+    write(
+        tmp_path, "a.yml",
+        case_list("id: full-a\nverdict: must-parse\nanchor: '#s'\nsql: FROM t"),
+    )
+    write(
+        tmp_path, "b.yml",
+        case_list(
+            "id: full-b\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1",
+            "id: partial\nverdict: must-reject\nanchor: '#s'\n"
+            "sql: 'FROM   T;'\nfrom: full-b\nomits: SELECT 1",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="two pages cannot disagree"):
+        load_reference(tmp_path)
+
+
+def test_the_same_statement_may_carry_the_same_verdict_twice(tmp_path):
+    write(
+        tmp_path, "a.yml",
+        case_list("id: a\nverdict: must-parse\nanchor: '#s'\nsql: FROM t"),
+    )
+    write(
+        tmp_path, "b.yml",
+        case_list("id: b\nverdict: must-parse\nanchor: '#s'\nsql: 'from T;'"),
+    )
+    assert [c.id for c in load_reference(tmp_path)] == ["a", "b"]
+
+
+# --- disposition: acknowledged divergence, not a hidden failure -------------
+def test_a_disposition_must_be_a_known_value(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\n"
+            "disposition: wishful\nnote: because",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="disposition must be one of"):
+        load_reference(tmp_path)
+
+
+def test_a_disposition_needs_a_note_recording_why(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\n"
+            "disposition: out-of-scope",
+        ),
+    )
+    with pytest.raises(ReferenceError, match="needs a `note:`"):
+        load_reference(tmp_path)
+
+
+def test_out_of_scope_is_excluded_and_parser_limitation_is_counted():
+    def result(id_, verdict, parsed, disposition=""):
+        case = ReferenceCase(
+            id=id_, verdict=verdict, sql="SELECT 1", doc="d", anchor="a",
+            statement="s", disposition=disposition,
+        )
+        return CaseResult(case, parsed)
+
+    report = ReferenceReport(
+        results=[
+            result("ok", MUST_PARSE, parsed=True),
+            result("oos", MUST_REJECT, parsed=True, disposition=reference.OUT_OF_SCOPE),
+            result("lim", MUST_PARSE, parsed=False, disposition=reference.PARSER_LIMITATION),
+            result("bad", MUST_REJECT, parsed=True),
+        ]
+    )
+    # The out-of-scope case does not count in either direction.
+    assert report.must_parse_total == 2
+    assert report.must_parse_passed == 1
+    assert report.must_reject_total == 1
+    assert [r.case.id for r in report.out_of_scope] == ["oos"]
+    # The limitation is counted (the parser does not satisfy it) but split out.
+    assert [r.case.id for r in report.acknowledged_failures] == ["lim"]
+    assert [r.case.id for r in report.unexpected_failures] == ["bad"]
+
+
+def test_a_disposition_is_carried_into_the_report_payload(tmp_path):
+    write(
+        tmp_path, "case.yml",
+        case_list(
+            "id: x\nverdict: must-parse\nanchor: '#s'\nsql: SELECT 1\n"
+            "disposition: out-of-scope\nnote: comments are not parsed",
+        ),
+    )
+    report = ReferenceReport(results=[CaseResult(load_reference(tmp_path)[0], parsed=True)])
+    payload = reference_payload(report)
+    assert payload["out_of_scope"] == 1
+    assert payload["cases"][0]["disposition"] == "out-of-scope"
