@@ -1001,16 +1001,16 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 417,
-      "passed": 246,
-      "rate": 58.992805755395686
+      "total": 540,
+      "passed": 356,
+      "rate": 65.92592592592592
     },
     "must_reject": {
-      "total": 243,
-      "caught": 217,
-      "informative": 113,
-      "vacuous": 104,
-      "rate": 89.30041152263375
+      "total": 294,
+      "caught": 251,
+      "informative": 144,
+      "vacuous": 107,
+      "rate": 85.37414965986395
     },
     "cases": [
       {
@@ -1489,6 +1489,42 @@
         "ok": true,
         "statement": "CACHE SELECT",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cluster-by.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CLUSTER BY clause (SELECT)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cluster-by.multiple",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CLUSTER BY clause (SELECT)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cluster-by.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CLUSTER BY clause (SELECT)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cluster-by.list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CLUSTER BY clause (SELECT)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby",
         "anchor": "#syntax",
         "message": null
       },
@@ -4151,6 +4187,78 @@
         "message": null
       },
       {
+        "id": "cte.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cte.column-list",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "cte.nested",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "cte.recursive",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "cte.recursion-limit",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'WITH RECURSIVE r(n) MAX RECURSION LEVEL ...'"
+      },
+      {
+        "id": "cte.without-query",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cte.trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cte.recursion-without-level",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Common table expression (CTE)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-cte",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "delete-from.bare",
         "verdict": "must-parse",
         "ok": true,
@@ -4275,6 +4383,24 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history",
         "anchor": "#syntax",
         "message": "Line 1, Position 1: Found unparsable section: 'DESC HISTORY t'"
+      },
+      {
+        "id": "distribute-by.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DISTRIBUTE BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "distribute-by.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DISTRIBUTE BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "drop-bloom-filter-index.table",
@@ -4473,6 +4599,83 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-execute-immediate",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "explain.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.extended",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.codegen",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.cost",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.formatted",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.without-statement",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.extended-without-statement",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "explain.extended-and-codegen",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "EXPLAIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "EXTENDED",
+          "CODEGEN"
+        ]
       },
       {
         "id": "from-json.literal-schema",
@@ -4800,6 +5003,254 @@
         "ok": true,
         "statement": "GRANT",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.all",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.expression-list",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.rollup-suffix",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.cube-suffix",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.rollup-function",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.cube-function",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.grouping-sets",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "group-by.aggregate-filter",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.count-distinct",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "group-by.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.all-and-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "GROUP BY ALL",
+          "group_expression"
+        ]
+      },
+      {
+        "id": "group-by.empty-grouping-set",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "group-by.rollup-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GROUP BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "having.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "HAVING clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "having.aggregate-alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "HAVING clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "having.without-group-by",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "HAVING clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "having.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "HAVING clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.coalesce",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.repartition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.repartition-by-range",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.rebalance",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.broadcast",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.merge",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.shuffle-hash",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.shuffle-replicate-nl",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.coalesce-without-argument",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "hints.broadcast-without-table",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "Hints",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-hints",
         "anchor": "#syntax",
         "message": null
       },
@@ -5164,6 +5615,137 @@
         "message": null
       },
       {
+        "id": "join.on",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.using",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.left-outer",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.left-semi",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.left-anti",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.full-outer",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.cross",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.natural",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.natural-left",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.lateral",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "join.without-right-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.on-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.using-empty",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "join.natural-with-criteria",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "JOIN",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "NATURAL",
+          "join_criteria"
+        ]
+      },
+      {
         "id": "json-path.identifier",
         "verdict": "must-parse",
         "ok": true,
@@ -5362,6 +5944,42 @@
         "message": null
       },
       {
+        "id": "limit.number",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LIMIT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "limit.all",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LIMIT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "limit.constant-function",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LIMIT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "limit.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LIMIT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "load-data.bare",
         "verdict": "must-parse",
         "ok": true,
@@ -5488,6 +6106,33 @@
         "message": null,
         "reason": "extra",
         "extra": "valueType"
+      },
+      {
+        "id": "match-recognize.simple",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "MATCH_RECOGNIZE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 33: Found unparsable section: '(PATTERN (a) DEFINE a AS TRUE)'"
+      },
+      {
+        "id": "match-recognize.full",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "MATCH_RECOGNIZE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize",
+        "anchor": "#examples",
+        "message": "Line 1, Position 42: Found unparsable section: '(PARTITION BY symbol ORDER BY tstamp MEA...'"
+      },
+      {
+        "id": "match-recognize.without-pattern",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MATCH_RECOGNIZE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "merge-into.delete",
@@ -5747,6 +6392,42 @@
         ]
       },
       {
+        "id": "offset.number",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "OFFSET clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 24: Found unparsable section: '3'"
+      },
+      {
+        "id": "offset.with-limit",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "OFFSET clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset",
+        "anchor": "#examples",
+        "message": "Line 1, Position 38: Found unparsable section: 'OFFSET 0'"
+      },
+      {
+        "id": "offset.constant-function",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "OFFSET clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset",
+        "anchor": "#examples",
+        "message": "Line 1, Position 28: Found unparsable section: \"OFFSET length('SPARK')\""
+      },
+      {
+        "id": "offset.without-expression",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "OFFSET clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "optimize.bare",
         "verdict": "must-parse",
         "ok": true,
@@ -5860,6 +6541,119 @@
         "ok": true,
         "statement": "OPTIMIZE",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "order-by.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ORDER BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "order-by.direction-and-nulls",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ORDER BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "order-by.all",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ORDER BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "order-by.multiple",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "ORDER BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "order-by.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "ORDER BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "order-by.all-and-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "ORDER BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "ALL",
+          "expression"
+        ]
+      },
+      {
+        "id": "pivot.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "PIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "pivot.aggregate-alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "PIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "pivot.multi-column-for",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "PIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "pivot.without-aggregate",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "PIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "pivot.in-without-expression-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "PIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "pivot.for-without-in",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "PIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot",
         "anchor": "#syntax",
         "message": null
       },
@@ -6076,6 +6870,123 @@
         "ok": true,
         "statement": "Securable objects (GRANT / REVOKE / SHOW GRANTS)",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "qualify.window-in-select",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "QUALIFY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-qualify",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "qualify.window-in-qualify",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "QUALIFY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-qualify",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "qualify.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "QUALIFY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-qualify",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.select",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.parenthesised",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.values",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.with-cte",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.set-operator",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.order-by",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.limit",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "query.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'TABLE t'"
+      },
+      {
+        "id": "query.from",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FROM t'"
+      },
+      {
+        "id": "query.without-subquery",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Query",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-query",
         "anchor": "#syntax",
         "message": null
       },
@@ -6413,6 +7324,164 @@
         "message": null
       },
       {
+        "id": "select-clause.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "select-clause.all",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "select-clause.distinct",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "select-clause.star",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "select-clause.star-except",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "select-clause.qualified-star",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "select-clause.hints",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "select-clause.without-named-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "select-clause.all-and-distinct",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "SELECT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "ALL",
+          "DISTINCT"
+        ]
+      },
+      {
+        "id": "subselect.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "subselect.multiple-from",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "subselect.lateral-view",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "subselect.named-expression",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "subselect.star-except",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "subselect.from-without-reference",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "subselect.except-empty",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "subselect.except-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SELECT (subselect)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "set-operators.except-distinct",
         "verdict": "must-parse",
         "ok": false,
@@ -6548,6 +7617,33 @@
         "message": null
       },
       {
+        "id": "sort-by.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SORT BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "sort-by.direction-and-nulls",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "SORT BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "sort-by.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SORT BY clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "expression.subscript-array",
         "verdict": "must-parse",
         "ok": true,
@@ -6661,6 +7757,96 @@
         "ok": true,
         "statement": "SQL expression",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "sql-pipeline.select",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SQL Pipeline Syntax",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FROM t |> SELECT a'"
+      },
+      {
+        "id": "sql-pipeline.where",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SQL Pipeline Syntax",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FROM t |> WHERE a > 1'"
+      },
+      {
+        "id": "sql-pipeline.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "SQL Pipeline Syntax",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'TABLE t |> SELECT a'"
+      },
+      {
+        "id": "sql-pipeline.without-operation",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "SQL Pipeline Syntax",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-pipeline",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "star.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "* (star) clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "star.qualified",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "* (star) clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "star.except",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "* (star) clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "star.qualified-except",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "* (star) clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "star.except-empty",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "* (star) clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "star.except-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "* (star) clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star",
         "anchor": "#syntax",
         "message": null
       },
@@ -6780,6 +7966,281 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "table-reference.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.tablesample",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.stream",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.stream-parenthesised",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.join",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.pivot",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.unpivot",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.values",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.tvf",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.version-as-of",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.timestamp-as-of",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "table-reference.options",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#examples",
+        "message": "Line 1, Position 21: Found unparsable section: '(CREDENTIAL c)'"
+      },
+      {
+        "id": "table-reference.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "table reference",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tablesample.percent",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "TABLESAMPLE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tablesample.rows",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "TABLESAMPLE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tablesample.bucket",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "TABLESAMPLE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tablesample.repeatable",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "TABLESAMPLE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 56: Found unparsable section: '(123)'"
+      },
+      {
+        "id": "tablesample.without-sample",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "TABLESAMPLE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tablesample.repeatable-without-seed",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "TABLESAMPLE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sampling",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tvf.expression-arguments",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Table-valued function (TVF) invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "tvf.table-alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Table-valued function (TVF) invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "tvf.explode",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "Table-valued function (TVF) invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "tvf.argument-list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "Table-valued function (TVF) invocation",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-tvf",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unpivot.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNPIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unpivot.include-nulls",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNPIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unpivot.exclude-nulls",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNPIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unpivot.multi-value",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UNPIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "unpivot.without-value-column",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "UNPIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "unpivot.include-and-exclude",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UNPIVOT clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "INCLUDE NULLS",
+          "EXCLUDE NULLS"
+        ]
       },
       {
         "id": "update.bare",
@@ -6963,6 +8424,60 @@
         ]
       },
       {
+        "id": "values.tuples",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VALUES clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "values.scalars",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VALUES clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "values.table-alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VALUES clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "values.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "VALUES clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "values.empty-tuple",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "VALUES clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "values.trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "VALUES clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "variant.column",
         "verdict": "must-parse",
         "ok": true,
@@ -7008,6 +8523,87 @@
         "message": null,
         "reason": "extra",
         "extra": "VARIANT"
+      },
+      {
+        "id": "where.basic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "WHERE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "where.is-null",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "WHERE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "where.exists-subquery",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "WHERE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "where.between",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "WHERE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "where.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "WHERE clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "window.single",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "WINDOW clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "window.multiple",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "WINDOW clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "window.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "WINDOW clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "window.without-spec",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "WINDOW clause",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-named-window",
+        "anchor": "#syntax",
+        "message": null
       }
     ]
   }
