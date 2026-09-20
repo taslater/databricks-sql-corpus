@@ -84,7 +84,7 @@ Data types is covered page by page: `array_type.yml`, `map_type.yml`,
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.
 
-## DDL statements (6 done, 56 queued, 0 n/a)
+## DDL statements (7 done, 55 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -99,7 +99,7 @@ writes the type as input, so a case would have to invent the position.
 | [ALTER SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-schema) | queued |
 | [ALTER SHARE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-share) | queued |
 | [ALTER STREAMING TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-streaming-table) | queued |
-| [ALTER TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table) | queued |
+| [ALTER TABLE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table) | done |
 | [ALTER VIEW](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-view) | queued |
 | [ALTER VOLUME](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-volume) | queued |
 | [CREATE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-catalog) | done |
@@ -150,6 +150,13 @@ writes the type as input, so a case would have to invent the position.
 | [USE CATALOG](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-catalog) | queued |
 | [USE DATABASE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-usedb) | queued |
 | [USE SCHEMA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-use-schema) | queued |
+
+ALTER TABLE's syntax block only names its clause productions; each lives on a
+sub-page, which is still queued and where the clause's partial forms belong
+(`sql-ref-syntax-ddl-alter-table-manage-column`, `...-add-constraint`,
+`...-drop-constraint`, `...-manage-partition`, `sql-ref-syntax-ddl-row-filter`,
+`sql-ref-syntax-ddl-cluster-by`, `sql-ref-syntax-ddl-tblproperties`). The
+`alter_table.yml` file pins the clause menu itself.
 
 ## DML statements (0 done, 4 queued, 0 n/a)
 
