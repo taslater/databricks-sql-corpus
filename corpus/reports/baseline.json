@@ -1001,16 +1001,16 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 314,
-      "passed": 197,
-      "rate": 62.738853503184714
+      "total": 417,
+      "passed": 246,
+      "rate": 58.992805755395686
     },
     "must_reject": {
-      "total": 161,
-      "caught": 141,
-      "informative": 80,
-      "vacuous": 61,
-      "rate": 87.5776397515528
+      "total": 243,
+      "caught": 217,
+      "informative": 113,
+      "vacuous": 104,
+      "rate": 89.30041152263375
     },
     "cases": [
       {
@@ -1437,6 +1437,60 @@
         "message": null,
         "reason": "extra",
         "extra": "elementType"
+      },
+      {
+        "id": "cache-select.star",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CACHE SELECT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CACHE SELECT * FROM boxes'"
+      },
+      {
+        "id": "cache-select.columns-and-where",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CACHE SELECT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CACHE SELECT width, length FROM boxes WH...'"
+      },
+      {
+        "id": "cache-select.without-column",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CACHE SELECT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cache-select.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CACHE SELECT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cache-select.where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CACHE SELECT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "cache-select.column-list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CACHE SELECT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-cache",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "colon-colon.cast-to-int",
@@ -2038,6 +2092,249 @@
         "message": null
       },
       {
+        "id": "create-connection.bare",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION c TYPE POSTGRESQL OPTI...'"
+      },
+      {
+        "id": "create-connection.if-not-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION IF NOT EXISTS c TYPE P...'"
+      },
+      {
+        "id": "create-connection.comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION c TYPE POSTGRESQL OPTI...'"
+      },
+      {
+        "id": "create-connection.dotted-option-key",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION c TYPE POSTGRESQL OPTI...'"
+      },
+      {
+        "id": "create-connection.string-option-key",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION c TYPE POSTGRESQL OPTI...'"
+      },
+      {
+        "id": "create-connection.secret-value",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION c TYPE POSTGRESQL OPTI...'"
+      },
+      {
+        "id": "create-connection.all-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE CONNECTION IF NOT EXISTS c TYPE H...'"
+      },
+      {
+        "id": "create-connection.server-synonym",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE SERVER c TYPE POSTGRESQL OPTIONS ...'"
+      },
+      {
+        "id": "create-connection.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-connection.without-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-connection.without-type-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-connection.without-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-connection.empty-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-connection.without-option-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-connection.options-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE CONNECTION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-connection",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.bare",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE EXTERNAL LOCATION s3_remote URL '...\""
+      },
+      {
+        "id": "create-external-location.comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE EXTERNAL LOCATION s3_remote URL '...\""
+      },
+      {
+        "id": "create-external-location.if-not-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE EXTERNAL LOCATION IF NOT EXISTS s...'"
+      },
+      {
+        "id": "create-external-location.backticked-names",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#examples",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE EXTERNAL LOCATION `s3-remote` URL...'"
+      },
+      {
+        "id": "create-external-location.all-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE EXTERNAL LOCATION IF NOT EXISTS `...'"
+      },
+      {
+        "id": "create-external-location.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.without-url-keyword",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.without-url-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.without-with",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.empty-with",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.without-credential-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-external-location.without-comment-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE EXTERNAL LOCATION",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-location",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "create-flow.append-by-name",
         "verdict": "must-parse",
         "ok": false,
@@ -2548,6 +2845,123 @@
         "message": null
       },
       {
+        "id": "create-recipient.bare",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE RECIPIENT other_org'"
+      },
+      {
+        "id": "create-recipient.if-not-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE RECIPIENT IF NOT EXISTS other_org...'"
+      },
+      {
+        "id": "create-recipient.using-id",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE RECIPIENT r USING ID 'azure:westu...\""
+      },
+      {
+        "id": "create-recipient.comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE RECIPIENT r COMMENT 'x'\""
+      },
+      {
+        "id": "create-recipient.properties-with-equals",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE RECIPIENT r PROPERTIES (k = 'v')\""
+      },
+      {
+        "id": "create-recipient.properties-without-equals",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE RECIPIENT r PROPERTIES (k 'v')\""
+      },
+      {
+        "id": "create-recipient.properties-dotted-key",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE RECIPIENT r PROPERTIES (a.b = 'v'...\""
+      },
+      {
+        "id": "create-recipient.all-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE RECIPIENT IF NOT EXISTS r USING I...'"
+      },
+      {
+        "id": "create-recipient.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-recipient.without-sharing-identifier",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-recipient.empty-properties",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-recipient.without-property-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-recipient.without-comment-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE RECIPIENT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-recipient",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "create-schema.plain",
         "verdict": "must-parse",
         "ok": true,
@@ -2742,6 +3156,69 @@
         "ok": true,
         "statement": "CREATE SCHEMA",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-schema",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-share.bare",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE SHARE customer_share'"
+      },
+      {
+        "id": "create-share.if-not-exists",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE SHARE IF NOT EXISTS customer_shar...'"
+      },
+      {
+        "id": "create-share.comment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"CREATE SHARE customer_share COMMENT 'x'\""
+      },
+      {
+        "id": "create-share.all-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE SHARE IF NOT EXISTS customer_shar...'"
+      },
+      {
+        "id": "create-share.without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-share.without-name-with-comment",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-share.without-comment-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE SHARE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-share",
         "anchor": "#syntax",
         "message": null
       },
@@ -3674,6 +4151,78 @@
         "message": null
       },
       {
+        "id": "delete-from.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "delete-from.where",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "delete-from.alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "delete-from.not-in-subquery",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "delete-from.exists-subquery",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "delete-from.with-cte",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "delete-from.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "delete-from.where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DELETE FROM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-delete-from",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "describe-detail.table",
         "verdict": "must-parse",
         "ok": true,
@@ -3726,6 +4275,60 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-describe-history",
         "anchor": "#syntax",
         "message": "Line 1, Position 1: Found unparsable section: 'DESC HISTORY t'"
+      },
+      {
+        "id": "drop-bloom-filter-index.table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP BLOOM FILTER INDEX",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP BLOOMFILTER INDEX ON TABLE t'"
+      },
+      {
+        "id": "drop-bloom-filter-index.without-table-keyword",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP BLOOM FILTER INDEX",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP BLOOMFILTER INDEX ON t'"
+      },
+      {
+        "id": "drop-bloom-filter-index.columns",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "DROP BLOOM FILTER INDEX",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'DROP BLOOMFILTER INDEX ON TABLE t FOR CO...'"
+      },
+      {
+        "id": "drop-bloom-filter-index.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP BLOOM FILTER INDEX",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-bloom-filter-index.empty-columns",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP BLOOM FILTER INDEX",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "drop-bloom-filter-index.columns-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "DROP BLOOM FILTER INDEX",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-drop-bloomfilter-index",
+        "anchor": "#syntax",
+        "message": null
       },
       {
         "id": "drop-view.plain",
@@ -3953,6 +4556,141 @@
         "message": null
       },
       {
+        "id": "fsck-repair-table.bare",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FSCK REPAIR TABLE t'"
+      },
+      {
+        "id": "fsck-repair-table.metadata-only",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FSCK REPAIR TABLE t METADATA ONLY'"
+      },
+      {
+        "id": "fsck-repair-table.verify-all-files",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FSCK REPAIR TABLE t VERIFY ALL FILES'"
+      },
+      {
+        "id": "fsck-repair-table.verify-files-between",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FSCK REPAIR TABLE t VERIFY FILES MODIFIE...'"
+      },
+      {
+        "id": "fsck-repair-table.dry-run",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FSCK REPAIR TABLE t DRY RUN'"
+      },
+      {
+        "id": "fsck-repair-table.metadata-only-dry-run",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'FSCK REPAIR TABLE t METADATA ONLY DRY RU...'"
+      },
+      {
+        "id": "fsck-repair-table.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "fsck-repair-table.metadata-without-only",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "fsck-repair-table.verify-all-without-files",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "fsck-repair-table.between-without-end",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "fsck-repair-table.between-without-start",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "FSCK REPAIR TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-fsck",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "generate.symlink-manifest",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "GENERATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-generate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "generate.without-mode",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GENERATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-generate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "generate.without-table-keyword",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GENERATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-generate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "generate.without-table-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "GENERATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-generate",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "grant.all-privileges",
         "verdict": "must-parse",
         "ok": true,
@@ -4062,6 +4800,366 @@
         "ok": true,
         "statement": "GRANT",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/security-grant",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.values",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.select",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.overwrite",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.overwrite-table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.into-table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.column-list",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.by-name",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.schema-evolution",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'INSERT WITH SCHEMA EVOLUTION INTO t SELE...'"
+      },
+      {
+        "id": "insert.partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.replace-where",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.replace-using",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.replace-on",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 23: Found unparsable section: 'ON a = s.a SELECT * FROM s'"
+      },
+      {
+        "id": "insert.replace-on-parenthesised-query",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 23: Found unparsable section: 'ON a = s.a (SELECT * FROM s) AS s'"
+      },
+      {
+        "id": "insert.replace-on-target-alias",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'INSERT INTO t AS tgt REPLACE ON tgt.a = ...'"
+      },
+      {
+        "id": "insert.with-cte",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.without-query",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.without-into-or-overwrite",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.empty-column-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.column-list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.empty-replace-using",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.replace-where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.replace-on-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert.empty-partition",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "INSERT",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.select",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.local",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.options",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.options-with-equals",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.path-in-options",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.values",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.empty-options",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory.option-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.stored-as",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.local-stored-as",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.row-format-delimited",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
+        "anchor": "#examples",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.stored-as-without-format",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "insert-overwrite-directory-hive.row-format-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "INSERT OVERWRITE DIRECTORY with Hive format",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive",
         "anchor": "#syntax",
         "message": null
       },
@@ -4260,6 +5358,78 @@
         "ok": true,
         "statement": "LATERAL VIEW",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-lateral-view",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.local",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.overwrite",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.partition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.without-path",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.without-into-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "load-data.empty-partition",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "LOAD DATA",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load",
         "anchor": "#syntax",
         "message": null
       },
@@ -4577,6 +5747,123 @@
         ]
       },
       {
+        "id": "optimize.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.where",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.zorder",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.zorder-multiple-columns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.where-and-zorder",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.full",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: 'FULL'"
+      },
+      {
+        "id": "optimize.full-where",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: \"FULL WHERE date >= '2025-01-01'\""
+      },
+      {
+        "id": "optimize.all-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 17: Found unparsable section: \"FULL WHERE date >= '2025-01-01' ZORDER B...\""
+      },
+      {
+        "id": "optimize.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.full-where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.empty-zorder-list",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "optimize.zorder-list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "OPTIMIZE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-optimize",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
         "id": "privileges.catalog",
         "verdict": "must-parse",
         "ok": false,
@@ -4834,6 +6121,213 @@
         "ok": true,
         "statement": "read_files",
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reorg-table.purge",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REORG TABLE events APPLY (PURGE)'"
+      },
+      {
+        "id": "reorg-table.purge-with-where",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"REORG TABLE events WHERE date >= '2022-0...\""
+      },
+      {
+        "id": "reorg-table.without-table-keyword",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REORG events APPLY (PURGE)'"
+      },
+      {
+        "id": "reorg-table.upgrade-uniform",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REORG TABLE events APPLY (UPGRADE UNIFOR...'"
+      },
+      {
+        "id": "reorg-table.checkpoint",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REORG TABLE events APPLY (CHECKPOINT)'"
+      },
+      {
+        "id": "reorg-table.set-parquet",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'REORG TABLE events APPLY (SET PARQUET (F...'"
+      },
+      {
+        "id": "reorg-table.without-apply",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reorg-table.empty-purge",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reorg-table.upgrade-without-key",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reorg-table.upgrade-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reorg-table.set-parquet-empty",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "reorg-table.where-without-predicate",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "REORG TABLE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-reorg-table",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.version",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.timestamp",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.timestamp-function",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#parameters",
+        "message": null
+      },
+      {
+        "id": "restore.without-table",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'RESTORE employee TO VERSION AS OF 1'"
+      },
+      {
+        "id": "restore.without-to",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'RESTORE TABLE employee VERSION AS OF 1'"
+      },
+      {
+        "id": "restore.timestamp-arithmetic",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#parameters",
+        "message": "Line 1, Position 63: Found unparsable section: \"- INTERVAL '1' HOUR\""
+      },
+      {
+        "id": "restore.without-version",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.without-time-travel",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.timestamp-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.version-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "restore.without-table-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "RESTORE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-restore",
         "anchor": "#syntax",
         "message": null
       },
@@ -5286,6 +6780,187 @@
         "doc": "https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "update.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.where",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.multiple-assignments",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.alias",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.default",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.struct-field",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.with-cte",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.without-set",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.without-column",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "update.trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "UPDATE",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-update",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "vacuum.bare",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax-1",
+        "message": null
+      },
+      {
+        "id": "vacuum.dry-run",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "vacuum.full",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 10: Found unparsable section: 'FULL'"
+      },
+      {
+        "id": "vacuum.lite",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 10: Found unparsable section: 'LITE'"
+      },
+      {
+        "id": "vacuum.without-table",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax-1",
+        "message": null
+      },
+      {
+        "id": "vacuum.full-and-lite",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "FULL",
+          "LITE"
+        ]
+      },
+      {
+        "id": "vacuum.dry-run-and-full",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "VACUUM",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "FULL",
+          "DRY RUN"
+        ]
       },
       {
         "id": "variant.column",
