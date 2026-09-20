@@ -100,6 +100,44 @@ and `create-view.using-data-source-equals`. The parenthesised clause list
 `WITH ( SCHEMA BINDING )` from the `with_clause` production is rejected too
 (`create-view.with-parenthesised-clause`). No pull request covers either.
 
+**`CREATE TABLE` rejects two documented table clauses and accepts three
+non-conforming forms.** The
+[CREATE TABLE [USING] reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-table-using)
+clause list includes `LOCATION path [ WITH ( CREDENTIAL credential_name ) ]`
+and `DEFAULT COLLATION default_collation_name`, and its top-level statement is
+three exclusive alternatives: `[CREATE OR] REPLACE { TEMP | TEMPORARY } TABLE`,
+`CREATE [EXTERNAL] TABLE [ IF NOT EXISTS ]` and `CREATE { TEMP | TEMPORARY }
+TABLE`. On `main` at `33d8c8459` and released 4.3.0:
+
+| form | reference | databricks |
+| --- | --- | --- |
+| `CREATE TABLE t (a INT) LOCATION 's3://b/t' WITH (CREDENTIAL cred)` | must parse | rejected |
+| `CREATE TABLE t (a STRING) DEFAULT COLLATION UTF8_BINARY` | must parse | rejected |
+| `CREATE TEMP EXTERNAL TABLE t (a INT)` | must reject | accepted |
+| `CREATE OR REPLACE TEMP TABLE IF NOT EXISTS t (a INT)` | must reject | accepted |
+| `CREATE TABLE t (CONSTRAINT pk PRIMARY KEY (a))` | must reject | accepted |
+
+The root cause is a wiring gap. Databricks defines a
+`CreateTableUsingStatementSegment` (`dialect_databricks.py:1946`) whose clause
+set is the Databricks `TableClausesSegment`, and that segment lists
+`LocationWithCredentialGrammar` (`dialect_databricks.py:344`) -- the
+credential-aware location that would close the first gap. But neither name is
+inserted into `StatementSegment` (`dialect_databricks.py:1669`), so
+`CREATE TABLE` is parsed by the inherited SparkSQL `TableDefinitionSegment`
+(`dialect_sparksql.py:910`): its clause set is the SparkSQL `AnySetOf(...)`,
+which has no `DEFAULT COLLATION` and reaches the plain `LocationGrammar`, and
+its loose `OrReplace? Temporary? EXTERNAL? TABLE IfNotExists?` prefix is what
+accepts the two mixed forms. The constraint-only column list comes from the
+same segment's `OneOf(ColumnFieldDefinitionSegment, TableConstraintSegment)`,
+which lets a table constraint take the place of the required first column.
+
+Pinned by the reference corpus as `create-table.location-credential`,
+`create-table.default-collation`, `create-table.external-temp`,
+`create-table.replace-with-if-not-exists` and
+`create-table.constraint-without-column`. Found 2026-09-20 by the Tier 2
+batch; no corpus file uses any of the five. `CREATE CATALOG ... DEFAULT
+COLLATION` is a separate, already-open gap (`create-catalog.default-collation`).
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as
