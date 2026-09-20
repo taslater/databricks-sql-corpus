@@ -1,0 +1,31 @@
+# SET. The bare, -v and key/value forms parse; this page pins them.
+statement: SET
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set
+checked: 2026-09-20
+syntax: |
+  SET
+
+  SET [ -v ]
+
+  SET parameter_key [ = parameter_value ]
+cases:
+  - id: set.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET
+  - id: set.verbose
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET -v
+  - id: set.key-value
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET ansi_mode = true
+  - id: set.key
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET ansi_mode

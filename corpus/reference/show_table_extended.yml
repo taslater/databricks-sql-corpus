@@ -1,0 +1,25 @@
+# SHOW TABLE EXTENDED. The statement with a schema, pattern and partition
+# parses; this page pins it.
+statement: SHOW TABLE EXTENDED
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-table
+checked: 2026-09-20
+syntax: |
+  SHOW TABLE EXTENDED [ { IN | FROM } schema_name ] LIKE regex_pattern    [ PARTITION clause ]
+cases:
+  - id: show-table-extended.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW TABLE EXTENDED LIKE 'employee'
+  - id: show-table-extended.with-partition
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SHOW TABLE EXTENDED IN default LIKE 'employee' PARTITION (grade = 1)
+  - id: show-table-extended.without-pattern
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-table-extended.basic
+    omits: "regex_pattern"
+    sql: |
+      SHOW TABLE EXTENDED LIKE

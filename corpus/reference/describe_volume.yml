@@ -1,0 +1,19 @@
+# DESCRIBE VOLUME. The statement parses; this page pins it.
+statement: DESCRIBE VOLUME
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-volume
+checked: 2026-09-20
+syntax: |
+  DESCRIBE VOLUME volume_name
+cases:
+  - id: describe-volume.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE VOLUME v
+  - id: describe-volume.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: describe-volume.basic
+    omits: "volume_name"
+    sql: |
+      DESCRIBE VOLUME

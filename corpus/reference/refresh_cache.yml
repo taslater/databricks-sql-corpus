@@ -1,0 +1,19 @@
+# REFRESH CACHE. The statement parses; this page pins it.
+statement: REFRESH CACHE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh
+checked: 2026-09-20
+syntax: |
+  REFRESH resource_path
+cases:
+  - id: refresh-cache.string-literal
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REFRESH 'hdfs://path/to/table'
+  - id: refresh-cache.without-path
+    verdict: must-reject
+    anchor: "#syntax"
+    from: refresh-cache.string-literal
+    omits: "resource_path"
+    sql: |
+      REFRESH

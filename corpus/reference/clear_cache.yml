@@ -1,0 +1,12 @@
+# CLEAR CACHE. The statement parses; this page pins it.
+statement: CLEAR CACHE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-clear-cache
+checked: 2026-09-20
+syntax: |
+  CLEAR CACHE
+cases:
+  - id: clear-cache.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CLEAR CACHE

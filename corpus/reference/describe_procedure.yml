@@ -1,0 +1,24 @@
+# DESCRIBE PROCEDURE. DESC/DESCRIBE and EXTENDED parse; this page pins them.
+statement: DESCRIBE PROCEDURE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-procedure
+checked: 2026-09-20
+syntax: |
+  { DESC | DESCRIBE } PROCEDURE [ EXTENDED ] procedure_name
+cases:
+  - id: describe-procedure.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE PROCEDURE p
+  - id: describe-procedure.desc-extended
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESC PROCEDURE EXTENDED p
+  - id: describe-procedure.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: describe-procedure.basic
+    omits: "procedure_name"
+    sql: |
+      DESCRIBE PROCEDURE

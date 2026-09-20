@@ -1,0 +1,25 @@
+# REFRESH TABLE. The statement with and without the TABLE keyword parses;
+# this page pins it.
+statement: REFRESH TABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-cache-refresh-table
+checked: 2026-09-20
+syntax: |
+  REFRESH [TABLE] table_name
+cases:
+  - id: refresh-table.with-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REFRESH TABLE t
+  - id: refresh-table.without-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REFRESH t
+  - id: refresh-table.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: refresh-table.with-keyword
+    omits: "table_name"
+    sql: |
+      REFRESH TABLE

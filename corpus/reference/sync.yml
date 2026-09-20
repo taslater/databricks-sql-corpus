@@ -1,0 +1,33 @@
+# SYNC. The statement is unsupported by the databricks dialect, so the
+# documented forms are gaps.
+statement: SYNC
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-sync
+checked: 2026-09-20
+syntax: |
+  SYNC { SCHEMA target_schema [AS EXTERNAL] FROM source_schema |
+         TABLE target_table [AS EXTERNAL] FROM source_table }
+    [SET OWNER principal]
+    [DRY RUN]
+cases:
+  - id: sync.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SYNC TABLE main.default.t FROM hive_metastore.default.t
+  - id: sync.schema-external
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SYNC SCHEMA main.s AS EXTERNAL FROM hive_metastore.s
+  - id: sync.owner-dry-run
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SYNC TABLE main.default.t FROM hive_metastore.default.t SET OWNER `u` DRY RUN
+  - id: sync.without-source
+    verdict: must-reject
+    anchor: "#syntax"
+    from: sync.table
+    omits: "source_table"
+    sql: |
+      SYNC TABLE main.default.t FROM

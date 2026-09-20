@@ -1,0 +1,27 @@
+# ANALYZE TABLE … COMPUTE STORAGE METRICS. The statement and its inventory
+# option parse; this page pins them.
+statement: ANALYZE TABLE … COMPUTE STORAGE METRICS
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-storage-metrics
+checked: 2026-09-20
+syntax: |
+  ANALYZE TABLE table_name COMPUTE STORAGE METRICS
+    [ USING INVENTORY LOCATION inventory_path
+      CONF conf_name ]
+cases:
+  - id: analyze-compute-storage-metrics.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ANALYZE TABLE t COMPUTE STORAGE METRICS
+  - id: analyze-compute-storage-metrics.inventory
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      ANALYZE TABLE t COMPUTE STORAGE METRICS USING INVENTORY LOCATION 's3://b/p/' CONF 'cfg'
+  - id: analyze-compute-storage-metrics.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: analyze-compute-storage-metrics.basic
+    omits: "table_name"
+    sql: |
+      ANALYZE TABLE COMPUTE STORAGE METRICS

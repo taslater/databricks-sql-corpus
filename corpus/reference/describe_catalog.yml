@@ -1,0 +1,24 @@
+# DESCRIBE CATALOG. DESC/DESCRIBE and EXTENDED parse; this page pins them.
+statement: DESCRIBE CATALOG
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-catalog
+checked: 2026-09-20
+syntax: |
+  { DESC | DESCRIBE } CATALOG [ EXTENDED ] catalog_name
+cases:
+  - id: describe-catalog.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE CATALOG c
+  - id: describe-catalog.desc-extended
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESC CATALOG EXTENDED c
+  - id: describe-catalog.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: describe-catalog.basic
+    omits: "catalog_name"
+    sql: |
+      DESCRIBE CATALOG

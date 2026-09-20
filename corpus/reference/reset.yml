@@ -1,0 +1,18 @@
+# RESET. The statement with and without a parameter key parses; this page
+# pins it.
+statement: RESET
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-reset
+checked: 2026-09-20
+syntax: |
+  RESET [ parameter_key ]
+cases:
+  - id: reset.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      RESET
+  - id: reset.parameter
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      RESET ansi_mode

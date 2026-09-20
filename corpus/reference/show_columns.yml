@@ -1,0 +1,24 @@
+# SHOW COLUMNS. IN/FROM and an optional schema parse; this page pins them.
+statement: SHOW COLUMNS
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-columns
+checked: 2026-09-20
+syntax: |
+  SHOW COLUMNS { IN | FROM } table_name [ { IN | FROM } schema_name ]
+cases:
+  - id: show-columns.in
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW COLUMNS IN t
+  - id: show-columns.from-with-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW COLUMNS FROM t FROM s
+  - id: show-columns.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-columns.in
+    omits: "table_name"
+    sql: |
+      SHOW COLUMNS IN

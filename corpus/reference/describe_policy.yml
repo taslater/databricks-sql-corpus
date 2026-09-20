@@ -1,0 +1,25 @@
+# DESCRIBE POLICY. The statement is unsupported by the databricks dialect, so
+# the documented forms are gaps.
+statement: DESCRIBE POLICY
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-policy
+checked: 2026-09-20
+syntax: |
+  { DESC | DESCRIBE } POLICY policy_name ON { METASTORE | CATALOG catalog_name | SCHEMA schema_name | TABLE table_name }
+cases:
+  - id: describe-policy.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE POLICY p ON TABLE t
+  - id: describe-policy.schema
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      DESC POLICY p ON SCHEMA s
+  - id: describe-policy.without-target
+    verdict: must-reject
+    anchor: "#syntax"
+    from: describe-policy.table
+    omits: "METASTORE"
+    sql: |
+      DESCRIBE POLICY p

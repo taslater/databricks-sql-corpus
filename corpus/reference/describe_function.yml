@@ -1,0 +1,24 @@
+# DESCRIBE FUNCTION. DESC/DESCRIBE and EXTENDED parse; this page pins them.
+statement: DESCRIBE FUNCTION
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-function
+checked: 2026-09-20
+syntax: |
+  { DESC | DESCRIBE } FUNCTION [ EXTENDED ] function_name
+cases:
+  - id: describe-function.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE FUNCTION f
+  - id: describe-function.desc-extended
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESC FUNCTION EXTENDED f
+  - id: describe-function.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: describe-function.basic
+    omits: "function_name"
+    sql: |
+      DESCRIBE FUNCTION

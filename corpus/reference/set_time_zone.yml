@@ -1,0 +1,30 @@
+# SET TIME ZONE. The LOCAL, zone-name and interval forms parse; this page
+# pins them.
+statement: SET TIME ZONE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-conf-mgmt-set-timezone
+checked: 2026-09-20
+syntax: |
+  SET TIME ZONE { LOCAL | time_zone_value | interval_literal }
+cases:
+  - id: set-time-zone.local
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SET TIME ZONE LOCAL
+  - id: set-time-zone.zone-name
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SET TIME ZONE 'America/Los_Angeles'
+  - id: set-time-zone.interval
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SET TIME ZONE INTERVAL '08:30:00' HOUR TO SECOND
+  - id: set-time-zone.without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: set-time-zone.local
+    omits: "time_zone_value"
+    sql: |
+      SET TIME ZONE

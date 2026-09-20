@@ -1,0 +1,25 @@
+# DESCRIBE QUERY. The statement with and without the QUERY keyword parses;
+# this page pins them.
+statement: DESCRIBE QUERY
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-describe-query
+checked: 2026-09-20
+syntax: |
+  { DESC | DESCRIBE } [ QUERY ] input_statement
+cases:
+  - id: describe-query.with-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE QUERY SELECT age, sum(age) FROM person GROUP BY age
+  - id: describe-query.without-keyword
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      DESCRIBE SELECT 1
+  - id: describe-query.without-statement
+    verdict: must-reject
+    anchor: "#syntax"
+    from: describe-query.with-keyword
+    omits: "input_statement"
+    sql: |
+      DESCRIBE QUERY

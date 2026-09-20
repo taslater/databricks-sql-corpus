@@ -1,0 +1,25 @@
+# CALL. The statement is unsupported by the databricks dialect, so the
+# documented forms are gaps.
+statement: CALL
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-call
+checked: 2026-09-20
+syntax: |
+  CALL procedure_name( [ argument [, …] ]                     [ namedParameter => argument ] [, ...] )
+cases:
+  - id: call.positional
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CALL area_of_rectangle(5, 10, area, acc)
+  - id: call.named-parameters
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CALL area_of_rectangle(y => 10, x => 5, area => area, acc => acc)
+  - id: call.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: call.positional
+    omits: "procedure_name"
+    sql: |
+      CALL (1)

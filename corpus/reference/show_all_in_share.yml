@@ -1,0 +1,20 @@
+# SHOW ALL IN SHARE. The statement is unsupported by the databricks dialect,
+# so the documented form is a gap.
+statement: SHOW ALL IN SHARE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-all-in-share
+checked: 2026-09-20
+syntax: |
+  SHOW ALL IN SHARE share_name
+cases:
+  - id: show-all-in-share.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW ALL IN SHARE s
+  - id: show-all-in-share.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-all-in-share.basic
+    omits: "share_name"
+    sql: |
+      SHOW ALL IN SHARE

@@ -1,0 +1,23 @@
+# SHOW TABLES DROPPED. The statement is unsupported by the databricks
+# dialect, so the documented forms are gaps.
+statement: SHOW TABLES DROPPED
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables-dropped
+checked: 2026-09-20
+syntax: |
+  SHOW TABLES DROPPED [ { FROM | IN } schema_name ] [ LIMIT maxResults ]
+cases:
+  - id: show-tables-dropped.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW TABLES DROPPED
+  - id: show-tables-dropped.in-schema
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SHOW TABLES DROPPED IN c.s
+  - id: show-tables-dropped.limit
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW TABLES DROPPED LIMIT 5

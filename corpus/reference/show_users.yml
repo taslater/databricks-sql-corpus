@@ -1,0 +1,18 @@
+# SHOW USERS. The statement is unsupported by the databricks dialect, so the
+# documented forms are gaps.
+statement: SHOW USERS
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-users
+checked: 2026-09-20
+syntax: |
+  SHOW USERS [ [ LIKE ] pattern_expression ]
+cases:
+  - id: show-users.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW USERS
+  - id: show-users.like
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SHOW USERS LIKE '*SEr*'

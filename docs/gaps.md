@@ -457,6 +457,29 @@ the table and schema securables parse. One over-acceptance: `IDENTIFIER()`
 with no argument parses (`identifier-clause.without-argument`). Recorded
 2026-09-20 by the final batch.
 
+**The auxiliary `SHOW` and `DESCRIBE` surface is partly unsupported.**
+Wholly rejected statements: `SYNC`, `LIST`, `CALL`, `SET RECIPIENT`,
+`ANALYZE TABLE … COMPUTE STORAGE METRICS`, `DESCRIBE EXTERNAL LOCATION`,
+`DESCRIBE POLICY`, `SHOW ALL IN SHARE`, `SHOW CATALOGS`, `SHOW CONNECTIONS`,
+`SHOW CREDENTIALS`, `SHOW EXTERNAL LOCATIONS`, `SHOW GROUPS`,
+`SHOW POLICIES`, `SHOW PROCEDURES`, `SHOW PROVIDERS`, `SHOW RECIPIENTS`,
+`SHOW SHARES`, `SHOW SHARES IN PROVIDER`, `SHOW TABLES DROPPED` and
+`SHOW USERS` (pinned as `<statement>.*`). Four are partial: `DESC CATALOG
+EXTENDED` and `DESC PROCEDURE EXTENDED` are rejected while the plain
+`DESCRIBE` forms parse; `DESCRIBE STORAGE CREDENTIAL c` is rejected while
+`DESCRIBE CREDENTIAL c` parses; and `SHOW COLUMNS FROM t FROM s` is rejected
+while `SHOW COLUMNS IN t` parses. Several over-acceptances are pinned: the
+object name is optional in the `DESCRIBE` forms (`describe-*.without-name`)
+and the `ON` target is optional in `SHOW POLICIES`
+(`show-policies.without-target`). Everything else in the section parses —
+`ANALYZE … COMPUTE STATISTICS`, `CACHE TABLE`, `CLEAR CACHE`,
+`REFRESH CACHE`/`FUNCTION`/`TABLE`, `UNCACHE TABLE`, `SHOW CREATE TABLE`,
+`SHOW FUNCTIONS`, `SHOW PARTITIONS`, `SHOW SCHEMAS`, `SHOW TABLES`,
+`SHOW TBLPROPERTIES`, `SHOW VIEWS`, `SHOW VOLUMES`, `RESET`, `SET`,
+`SET TIME ZONE` and `SET variable`. `DESCRIBE DATABASE` and
+`SHOW DATABASES` are alias pages with no syntax block, so they are `n/a`.
+Recorded 2026-09-20 by the final batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

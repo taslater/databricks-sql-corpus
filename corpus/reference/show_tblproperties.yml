@@ -1,0 +1,26 @@
+# SHOW TBLPROPERTIES. The statement with an optional property key parses;
+# this page pins it.
+statement: SHOW TBLPROPERTIES
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tblproperties
+checked: 2026-09-20
+syntax: |
+  SHOW TBLPROPERTIES table_name   [ ( [unquoted_property_key | property_key_as_string_literal] ) ]
+  unquoted_property_key  key_part1 [. ...]
+cases:
+  - id: show-tblproperties.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW TBLPROPERTIES t
+  - id: show-tblproperties.key
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SHOW TBLPROPERTIES t ('created.date')
+  - id: show-tblproperties.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-tblproperties.basic
+    omits: "table_name"
+    sql: |
+      SHOW TBLPROPERTIES

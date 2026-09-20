@@ -1,0 +1,25 @@
+# SHOW POLICIES. The statement is unsupported by the databricks dialect, so
+# the documented forms are gaps.
+statement: SHOW POLICIES
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-policies
+checked: 2026-09-20
+syntax: |
+  SHOW [ EFFECTIVE ] POLICIES ON { METASTORE | CATALOG catalog_name | SCHEMA schema_name | TABLE table_name }
+cases:
+  - id: show-policies.schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW POLICIES ON SCHEMA s
+  - id: show-policies.effective
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SHOW EFFECTIVE POLICIES ON SCHEMA s
+  - id: show-policies.without-target
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-policies.schema
+    omits: "METASTORE"
+    sql: |
+      SHOW POLICIES ON

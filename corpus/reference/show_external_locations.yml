@@ -1,0 +1,13 @@
+# SHOW EXTERNAL LOCATIONS. The statement is unsupported by the databricks
+# dialect, so the documented form is a gap.
+statement: SHOW EXTERNAL LOCATIONS
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-locations
+checked: 2026-09-20
+syntax: |
+  SHOW EXTERNAL LOCATIONS
+cases:
+  - id: show-external-locations.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW EXTERNAL LOCATIONS

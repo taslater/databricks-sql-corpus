@@ -1,0 +1,32 @@
+# ANALYZE TABLE … COMPUTE STATISTICS. The table and tables forms parse; this
+# page pins them.
+statement: ANALYZE TABLE … COMPUTE STATISTICS
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-analyze-compute-statistics
+checked: 2026-09-20
+syntax: |
+  ANALYZE TABLE table_name [ PARTITION clause ]
+      COMPUTE [ DELTA ] STATISTICS [ NOSCAN | FOR COLUMNS col1 [, ...] | FOR ALL COLUMNS ]
+  ANALYZE TABLES [ { FROM | IN } schema_name ] COMPUTE STATISTICS [ NOSCAN ]
+cases:
+  - id: analyze-compute-statistics.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ANALYZE TABLE students COMPUTE STATISTICS NOSCAN
+  - id: analyze-compute-statistics.column-stats
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ANALYZE TABLE students COMPUTE STATISTICS FOR COLUMNS age
+  - id: analyze-compute-statistics.tables-in-schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ANALYZE TABLES IN s COMPUTE STATISTICS
+  - id: analyze-compute-statistics.without-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: analyze-compute-statistics.table
+    omits: "table_name"
+    sql: |
+      ANALYZE TABLE COMPUTE STATISTICS

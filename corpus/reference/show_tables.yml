@@ -1,0 +1,18 @@
+# SHOW TABLES. The statement with an optional schema and pattern parses; this
+# page pins it.
+statement: SHOW TABLES
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-show-tables
+checked: 2026-09-20
+syntax: |
+  SHOW TABLES [ { FROM | IN } schema_name ] [ [ LIKE ] regex_pattern ]
+cases:
+  - id: show-tables.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW TABLES
+  - id: show-tables.from-like
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SHOW TABLES FROM default LIKE 'sam*'
