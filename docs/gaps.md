@@ -328,20 +328,31 @@ that is not worth a pull request.)
 
 ## Templating, not dialect
 
-Four corpus files fail on parameter syntax rather than grammar. SQLFluff's
-`placeholder` templater with `param_style = dollar` already handles `${name}`
-and `$name`, declared or not. It does **not** handle:
+Databricks parameter syntax is not Jinja. Notebook widget parameters
+(`${name}`, `${dotted.name}`, `$name`, `${}`) and dashboard parameters
+(`{{ name }}`) appear in corpus SQL, and SQLFluff's `placeholder` templater
+with `param_style = dollar` covers only the first of those shapes. The
+`databricks` param_style now on
+`fix/templater-placeholder-databricks-params` (pushed 2026-09-20) covers all
+four, with the empty `${}` falling back to the positional counter.
 
-| shape | example |
+The corpus now measures with that syntax configured (`SqlFluffRunner` passes
+the equivalent `param_regex`, so released SQLFluff can still run the
+baseline). Effect on the corpus: `dbx-dlt-notebooks` goes 18/19 → 19/19 on
+the dashboard file, failures 104 → 103, zero regressions, mutation 100%.
+
+Four files still fail on parameter syntax *and* something else, so the
+templater alone does not flip them — each needs its own fix:
+
+| file | remaining blocker |
 | --- | --- |
-| dotted | `${test.nrows}` |
-| dashboard | `{{ station_list }}` |
-| empty | `${}` |
+| `my_streaming_table.sql` | a `-- MAGIC %pip` mention inside an `%md` cell (unit 10) |
+| `identifier-clause.sql` | Spark's `SET hivevar:name = value` |
+| `Generating Surrogate Keys.sql` | `count(DISTINCT sk)FROM` without whitespace |
+| `Clean Up.sql` | `USE CATALOG ${catalog}` left unterminated before the next statement |
 
-`src/dbsqlparse/preprocess.py` is the reference implementation for all three
-and is kept for that reason. The fix upstream is widening the `dollar` regex
-in `src/sqlfluff/core/templaters/placeholder.py`, or adding a `databricks`
-param style.
+`src/dbsqlparse/preprocess.py` remains the reference implementation for the
+parameter shapes and is kept for that reason.
 
 ## Not gaps
 

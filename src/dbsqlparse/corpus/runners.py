@@ -69,6 +69,18 @@ class SqlFluffRunner:
         from sqlfluff.core import FluffConfig, Linter
 
         self.dialect = dialect
+        # Databricks parameter syntax is not Jinja: notebook widget
+        # parameters (`${name}`, `${dotted.name}`, `$name`, `${}`) and
+        # dashboard parameters (`{{ name }}`) are templated away by the
+        # placeholder templater instead. Written as a regex rather than the
+        # `databricks` param_style so that the committed baseline -- which
+        # tracks released SQLFluff -- can still be measured; switch to the
+        # style once a release carries it.
+        param_regex = (
+            r"(?<![:\w\x5c])(?:\$\{(?P<param_name>[A-Za-z_][A-Za-z0-9_.]*)?\}"
+            r"|\{\{\s*(?P<param_name>[A-Za-z_][A-Za-z0-9_.]*)\s*\}\}"
+            r"|\$(?P<param_name>[A-Za-z_][A-Za-z0-9_]*))"
+        )
         # A rule must be named and then excluded: an empty `rules` means "all".
         self._linter = Linter(
             config=FluffConfig(
@@ -76,7 +88,11 @@ class SqlFluffRunner:
                     "dialect": dialect,
                     "rules": "LT01",
                     "exclude_rules": "LT01",
-                }
+                    "templater": "placeholder",
+                },
+                configs={
+                    "templater": {"placeholder": {"param_regex": param_regex}}
+                },
             )
         )
 

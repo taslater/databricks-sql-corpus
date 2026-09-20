@@ -42,7 +42,7 @@ new failure. Of the 16 corpus constructs, 8 are ours (units 3, 6, 7, 8, 10),
 | 5 | `fix/databricks-json-path` | JSON path `[ * ]` and delimited identifiers | 2 | 0 | S/M | **pushed** `46aa4f862`; verified +2 must-parse (109→111), suite 7030, rejection 100% |
 | 6 | `fix/sparksql-parenthesised-set-operands` | parenthesised set-operation operands | 1 | 1 (q87) | S/M | **pushed** `ff39472cf`; verified +1 must-parse (109→110), suite 7030, rejection 1327/1327 |
 | 7 | `fix/databricks-unreserve-identifiers` | LEFT/RIGHT regression + `KEYS`/`PIVOT`/`WINDOW` as unquoted aliases | 1 | 1 (select_lambda) | M | **pushed** `66aebdaa4`; verified +1 must-parse (109→110), suite 7038, corpus `sqlfluff-sparksql` 124→125, mutation 1327/1327; databricks keeps its own `AliasExpressionSegment` for `FOR` (anonymous PIVOT) |
-| 8 | `fix/templater-placeholder-databricks-params` | placeholder templater: `${dotted}`, `{{ dashboard }}`, `${}` | 0 | 4 | M | to build, core not dialect |
+| 8 | `fix/templater-placeholder-databricks-params` | placeholder templater: `${dotted}`, `{{ dashboard }}`, `${}` | 0 | 1 | M | **pushed** `eb35e1c62`; verified: dbx-dlt-notebooks 18/19→19/19, failures 104→103, zero regressions, mutation 1327/1327, templater suite 239; four other template-shaped files have secondary gaps (gaps.md) |
 | 9 | `fix/sparksql-identifier-false-positives` | `DESCRIBE history.tbl`, `SELECT * FROM stream` | 0 | 0 | S | to build |
 | 10 | `fix/databricks-magic-cell-percent-line` | a `%`-prefixed `-- MAGIC` line inside an `%md` cell | 0 | 1 | S/M | to build, add a queue entry first |
 
@@ -67,6 +67,7 @@ its base has moved and the unit is opened.
 | 5 | `fix/databricks-json-path` | `upstream/main` `b52246da5` | `46aa4f862` | pushed, ready |
 | 6 | `fix/sparksql-parenthesised-set-operands` | `upstream/main` `b52246da5` | `ff39472cf` | pushed, ready |
 | 7 | `fix/databricks-unreserve-identifiers` | `upstream/main` `b52246da5` | `66aebdaa4` | pushed, ready |
+| 8 | `fix/templater-placeholder-databricks-params` | `upstream/main` `b52246da5` | `eb35e1c62` | pushed, ready (core templater, not dialect) |
 | — | `personal/combined-2026-09-20` (tag of the same name) | `upstream/main` `b52246da5` | `ba4a00c8b` | the measurement union; never merge, never open a PR from it |
 
 Measuring a branch: the corpus `.venv` is pinned to the `sqlfluff/` checkout
@@ -104,7 +105,7 @@ mis-read deltas already).
 | 5 | unit 5, JSON path | 2 cases, common in real code |
 | 6 | unit 6, set operands | 1 case + q87 |
 | 7 | unit 7, identifiers | 1 case + select_lambda |
-| 8 | unit 8, templating | 4 corpus files, independent reviewer path |
+| 8 | unit 8, templating | 1 corpus file, independent reviewer path |
 | 9 | unit 9, false positives | correctness, no counts |
 | 10 | unit 10, magic `%`-line | 1 corpus file, queue entry first |
 
