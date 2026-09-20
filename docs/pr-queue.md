@@ -14,28 +14,47 @@ remains the evidence trail; this file is the plan.
 3. Each PR body is drafted; opening is held while GitHub throttles, then done
    in the order below.
 
-## Measured state, 2026-09-20
+## Measured state, 2026-09-21 — the gate is met
 
-On `personal/combined-2026-09-20` (fresh `upstream/main` at `b52246da5`, all
-open PRs merged, `EXCEPT DISTINCT`/`MINUS` from #8523 merged, the `SEQUENCE BY`
-binding carried):
+On `personal/combined-2026-09-21` (tag of the same name, `e56f48b03`,
+`upstream/main` at `b52246da5`, all eight open-PR branches, all ten units,
+`EXCEPT DISTINCT`/`MINUS` from #8523):
 
 | measurement | result |
 | --- | --- |
-| reference must-parse | **150/177** |
-| reference must-reject | **82/83** (68 informative, 14 vacuous) |
-| corpus failing constructs | **16 distinct** |
+| reference must-parse | **177/177** |
+| reference must-reject | **83/83** (83 informative, **0 vacuous**) |
+| corpus files | **777/866 (89.7%)**, mutation 1325/1325 |
+| `test/dialects/` | **7092 passed** |
 
-The 28 reference gaps are exactly units 1–7 below — combination introduced no
-new failure. Of the 16 corpus constructs, 8 are ours (units 3, 6, 7, 8, 10),
-7 are `sqlfluff-sparksql` fixtures outside the Databricks reference queue
-(Phase 2 below), and 1 is the Lakebase file recorded as not-a-gap.
+`personal/combined-2026-09-20` measured 150/177, 82/83 (14 vacuous) — the
+first seven units closed exactly the 28 remaining reference gaps, and the
+other three units are corpus/correctness work, with no combination
+regressions.
+
+Remaining scraped-corpus failures on the union are all accounted for:
+
+- **7 `sqlfluff-sparksql` fixtures** — the Phase 2 list below.
+- **78 `spark-sql-tests` files** — the source expectation is `mixed`; these
+  are Spark's own inputs, many of them labelled negative cases.
+- **3 files with a secondary blocker** newly exposed once the first one was
+  fixed: `Generating Surrogate Keys.sql` (`count(DISTINCT sk)FROM` with no
+  space between the bracket and the keyword), `Clean Up.sql` (`USE CATALOG c`
+  left unterminated before the next statement in the same cell), and the
+  `dbx-devrel` SCD file (`-- MAGIC %fs …` with a trailing space, where the
+  `magic_single_line` regex's `[^%]` matches the newline and swallows the
+  separator). The last two are lexer-regex fixes, so measuring them needs the
+  Rust lexer tables rebuilt.
+- **1 documented not-gap**: Lakebase `create_raw_tags.sql`.
+
+None of the four is a reference-corpus case; they are candidates for the
+next batch, not for this one.
 
 ## Units
 
 | # | branch | unit | ref cases | corpus | size | state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `fix/databricks-append-flow-sequence-by` | bind `SEQUENCE BY` in the standalone append-flow `REPLACE USING` spec | 2 parse + 1 reject | 0 | XS | **pushed**; #8460 check done 2026-09-20 — still `CONFLICTING`, no reply, so ours opens in order |
+| 1 | `fix/databricks-append-flow-sequence-by` | bind `SEQUENCE BY` in the standalone append-flow `REPLACE USING` spec | 2 parse + 1 reject | 0 | XS | **pushed** `1e8fbed27`; `databricks_test.py` pins both incomplete forms as rejections; #8460 still `CONFLICTING` and silent, so this is the open-first unit; body at `docs/pr-bodies/unit-01-append-flow-sequence-by.md`; `gh pr create` refused by the burst throttle |
 | 2 | `fix/databricks-create-catalog-additions` | CREATE CATALOG: `USING SHARE`, `RETAIN DROPPED`, `DEFAULT COLLATION`, `OPTIONS`, `FOREIGN CATALOG` | 8 + 8 boundaries | 0 | M | **pushed** `ee80fe4f0`; verified +8 must-parse, +7 informative, suite 7037, rejection 100% |
 | 3 | extend `fix/databricks-live-view` (#8513) | CREATE VIEW: restore the data-source production and the parenthesised `with_clause` (same #7405 rewrite) | 4 + 4 boundaries | 1 | M | **pushed** `de3b6372c` into #8513; verified +4 must-parse, +4 informative; #8513 body rewritten to cover both repairs (the old body still claimed `OR REFRESH` was restored) |
 | 4 | `fix/databricks-uc-privileges` | the full securable list (SHARE, CONNECTION, CLEAN ROOM, EXTERNAL LOCATION, EXTERNAL METADATA, PROCEDURE, `[STORAGE\|SERVICE] CREDENTIAL`, bare CATALOG) and bind `ALL PRIVILEGES` vs list | 9 + 2 show-grants + 1 reject | 0 | M/L | **pushed** `848ce72cf`, stacked on #8516; verified +11 must-parse (118→129), +1 caught (81→82), +4 informative; VOLUME cases stay #8512's |
@@ -138,7 +157,19 @@ own fixtures and real gaps; queue them once the reference corpus is clean.
 
 ## Throttle notes
 
-GitHub currently refuses PR creation and `markPullRequestReadyForReview` with
-a permissions-shaped error. Branches are pushed to `origin` meanwhile; the
-queue above is held in this file rather than in open PRs. Retry `gh pr ready`
-for the four drafts first, then open in the order above.
+The permissions-shaped refusal (`does not have permission` /
+`does not have the correct permissions`, while the token's rate limit reads
+5000/5000) is **bursty**: on 2026-09-21 the first call of the day succeeded
+(`gh pr ready 8517` — now ready for review) and every mutation after it was
+refused in the same session, including the other three `gh pr ready` calls and
+`gh pr create` for unit 1. One mutation per burst; retrying in the same minute
+does not help.
+
+State at the end of 2026-09-21: **#8517, #8519, #8520, #8522 are all ready**
+(#8517 confirmed; the other three are finished work whose `gh pr ready` was
+refused, so GitHub still shows them as drafts — retry these first, then unit
+1's creation, as soon as a burst admits a call).
+
+Unit 1's body is in `docs/pr-bodies/`; the remaining units' bodies are to be
+drafted from the same template when opened. The branches are all pushed and
+independent, so nothing is lost by waiting.
