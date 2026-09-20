@@ -1,0 +1,19 @@
+# DISTRIBUTE BY clause. The expression list parses; this page pins it.
+statement: DISTRIBUTE BY clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby
+checked: 2026-09-20
+syntax: |
+  DISTRIBUTE BY expression [, ...]
+cases:
+  - id: distribute-by.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t DISTRIBUTE BY a
+  - id: distribute-by.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: distribute-by.basic
+    omits: "expression"
+    sql: |
+      SELECT a FROM t DISTRIBUTE BY

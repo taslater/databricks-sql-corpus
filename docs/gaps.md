@@ -304,6 +304,28 @@ FILTER INDEX` is not transcribed: its page is a deprecation notice with no
 syntax block, so it is `n/a` in the coverage tracker. Recorded 2026-09-20 by
 the DML batch.
 
+**`OFFSET` is unsupported.** The
+[OFFSET reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset)
+gives `OFFSET integer_expression`, usually alongside `LIMIT` and `ORDER BY`.
+The `databricks` dialect has no OFFSET grammar: `SELECT * FROM t OFFSET 3`,
+`SELECT * FROM t ORDER BY a LIMIT ALL OFFSET 0`, `OFFSET length('SPARK')` and
+the plain `LIMIT n OFFSET m` form all fail. Pinned by `offset.*`. Because
+`OFFSET` is not a keyword there, the partial form `SELECT * FROM t OFFSET`
+parses with `OFFSET` as an implicit alias — the case
+`offset.without-expression` will conform once the clause lands. Recorded
+2026-09-20 by the Tier 3 batch.
+
+**Over-acceptances: mixing `ALL` with its alternative.** Three productions
+make a leading `ALL` exclusive — `SELECT [ ALL | DISTINCT ] …`, `GROUP BY ALL`
+versus `GROUP BY group_expression …`, and `ORDER BY ALL …` versus `ORDER BY
+expression …` — but the `databricks` dialect accepts the mixed forms:
+`SELECT ALL DISTINCT a FROM t`, `SELECT a FROM t GROUP BY ALL, a` and
+`SELECT * FROM t ORDER BY ALL, a`. Pinned by
+`select-clause.all-and-distinct`, `group-by.all-and-list` and
+`order-by.all-and-list`. `GROUP BY ALL`, `ORDER BY ALL` and `SELECT ALL` each
+parse on their own, so the over-acceptance is only in the mixture. Recorded
+2026-09-20 by the Tier 3 batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

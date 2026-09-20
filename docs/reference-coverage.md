@@ -167,7 +167,7 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [INSERT OVERWRITE DIRECTORY with Hive format](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-insert-overwrite-directory-hive) | done |
 | [LOAD DATA](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-dml-load) | done |
 
-## Data retrieval statements (2 done, 27 queued, 0 n/a)
+## Data retrieval statements (13 done, 16 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
@@ -176,20 +176,20 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [SELECT (subselect)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select) | queued |
 | [VALUES clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-values) | queued |
 | [EXPLAIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-explain) | queued |
-| [SELECT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list) | queued |
+| [SELECT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list) | done |
 | [\* (star) clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-star) | queued |
 | [table reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-table-reference) | queued |
 | [JOIN](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-join) | queued |
-| [WHERE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where) | queued |
-| [GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby) | queued |
-| [HAVING clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having) | queued |
-| [QUALIFY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-qualify) | queued |
-| [ORDER BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby) | queued |
-| [SORT BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby) | queued |
-| [CLUSTER BY clause (SELECT)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby) | queued |
-| [DISTRIBUTE BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby) | queued |
-| [LIMIT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit) | queued |
-| [OFFSET clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset) | queued |
+| [WHERE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-where) | done |
+| [GROUP BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby) | done |
+| [HAVING clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having) | done |
+| [QUALIFY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-qualify) | done |
+| [ORDER BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby) | done |
+| [SORT BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby) | done |
+| [CLUSTER BY clause (SELECT)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-clusterby) | done |
+| [DISTRIBUTE BY clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-distributeby) | done |
+| [LIMIT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit) | done |
+| [OFFSET clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-offset) | done |
 | [MATCH_RECOGNIZE clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-match-recognize) | queued |
 | [PIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-pivot) | queued |
 | [UNPIVOT clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-unpivot) | queued |

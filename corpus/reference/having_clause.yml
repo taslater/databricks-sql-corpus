@@ -1,0 +1,30 @@
+# HAVING clause. All documented forms parse, including with an aggregate
+# alias and without a GROUP BY; this page pins them.
+statement: HAVING clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-having
+checked: 2026-09-20
+syntax: |
+  HAVING boolean_expression
+cases:
+  - id: having.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT city, sum(q) FROM t GROUP BY city HAVING sum(q) > 15
+  - id: having.aggregate-alias
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT city, sum(q) AS s FROM t GROUP BY city HAVING s > 15
+  - id: having.without-group-by
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT sum(q) FROM t HAVING sum(q) > 10
+  - id: having.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: having.basic
+    omits: "boolean_expression"
+    sql: |
+      SELECT a FROM t HAVING

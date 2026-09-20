@@ -1,0 +1,31 @@
+# LIMIT clause. A literal, ALL, and a constant function expression parse;
+# this page pins them. A non-literal expression and a negative limit are
+# documented as invalid but are runtime errors, not grammar.
+statement: LIMIT clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-limit
+checked: 2026-09-20
+syntax: |
+  LIMIT { ALL | integer_expression }
+cases:
+  - id: limit.number
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t LIMIT 2
+  - id: limit.all
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t LIMIT ALL
+  - id: limit.constant-function
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM t ORDER BY a LIMIT length('SPARK')
+  - id: limit.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: limit.number
+    omits: "integer_expression"
+    sql: |
+      SELECT * FROM t LIMIT

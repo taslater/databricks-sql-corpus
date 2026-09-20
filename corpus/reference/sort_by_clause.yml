@@ -1,0 +1,29 @@
+# SORT BY clause. The expression, sort-direction and NULLS forms parse; this
+# page pins them. The syntax block reproduces the page's own `DEC` typo.
+statement: SORT BY clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-sortby
+checked: 2026-09-20
+syntax: |
+  SORT BY { expression [ sort_direction nulls_sort_oder ] } [, ...]
+  sort_direction
+    [ ASC | DEC ]
+  nulls_sort_order
+    [ NULLS FIRST | NULLS LAST ]
+cases:
+  - id: sort-by.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t SORT BY a
+  - id: sort-by.direction-and-nulls
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a FROM t SORT BY a DESC NULLS LAST
+  - id: sort-by.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: sort-by.basic
+    omits: "expression"
+    sql: |
+      SELECT a FROM t SORT BY

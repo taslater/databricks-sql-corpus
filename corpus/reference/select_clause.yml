@@ -1,0 +1,58 @@
+# SELECT clause. Hints, ALL/DISTINCT, named expressions and the star
+# clause (with EXCEPT) all parse; mixing ALL and DISTINCT is over-accepted.
+statement: SELECT clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-column-list
+checked: 2026-09-20
+syntax: |
+  SELECT [ hints ] [ ALL | DISTINCT ] { named_expression | star_clause } [, ...]
+cases:
+  - id: select-clause.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, b FROM t
+  - id: select-clause.all
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT ALL a FROM t
+  - id: select-clause.distinct
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT DISTINCT a FROM t
+  - id: select-clause.star
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t
+  - id: select-clause.star-except
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * EXCEPT (c4) FROM t
+  - id: select-clause.qualified-star
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT t2.* FROM t2
+  - id: select-clause.hints
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT /*+ REPARTITION(1) */ a FROM t
+  - id: select-clause.without-named-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: select-clause.basic
+    omits: "named_expression"
+    sql: |
+      SELECT FROM t
+  - id: select-clause.all-and-distinct
+    verdict: must-reject
+    anchor: "#syntax"
+    from: select-clause.basic
+    reason: exclusive-alternative
+    conflicts: [ "ALL", "DISTINCT" ]
+    sql: |
+      SELECT ALL DISTINCT a FROM t

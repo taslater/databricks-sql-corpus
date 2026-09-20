@@ -1,0 +1,90 @@
+# GROUP BY clause. ALL, the expression list with WITH ROLLUP/CUBE, the
+# ROLLUP/CUBE/GROUPING SETS forms and the aggregate FILTER suffix all parse;
+# mixing GROUP BY ALL with a list is over-accepted.
+statement: GROUP BY clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-groupby
+checked: 2026-09-20
+syntax: |
+  GROUP BY ALL
+  GROUP BY group_expression [, ...] [ WITH ROLLUP | WITH CUBE ]
+  GROUP BY { group_expression | { ROLLUP | CUBE | GROUPING SETS } ( grouping_set [, ...] ) } [, ...]
+  grouping_set
+    { expression |
+      ( [ expression [, ...] ] ) }
+
+  aggregate_name ( [ DISTINCT ] expression [, ...] ) [ FILTER ( WHERE boolean_expression ) ]
+cases:
+  - id: group-by.all
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, count(*) FROM t GROUP BY ALL
+  - id: group-by.expression-list
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, count(*) FROM t GROUP BY a
+  - id: group-by.rollup-suffix
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, b, count(*) FROM t GROUP BY a, b WITH ROLLUP
+  - id: group-by.cube-suffix
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, b, count(*) FROM t GROUP BY a, b WITH CUBE
+  - id: group-by.rollup-function
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, count(*) FROM t GROUP BY ROLLUP (a)
+  - id: group-by.cube-function
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT a, count(*) FROM t GROUP BY CUBE (a)
+  - id: group-by.grouping-sets
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT a, count(*) FROM t GROUP BY GROUPING SETS ((a, b), (a), ())
+  - id: group-by.aggregate-filter
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT sum(x) FILTER (WHERE a > 0) FROM t
+  - id: group-by.count-distinct
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT count(DISTINCT a) FROM t
+  - id: group-by.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: group-by.expression-list
+    omits: "group_expression"
+    sql: |
+      SELECT a FROM t GROUP BY
+  - id: group-by.all-and-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: group-by.all
+    reason: exclusive-alternative
+    conflicts: [ "GROUP BY ALL", "group_expression" ]
+    sql: |
+      SELECT a FROM t GROUP BY ALL, a
+  - id: group-by.empty-grouping-set
+    verdict: must-reject
+    anchor: "#syntax"
+    from: group-by.grouping-sets
+    omits: "grouping_set"
+    sql: |
+      SELECT a FROM t GROUP BY GROUPING SETS ()
+  - id: group-by.rollup-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: group-by.rollup-function
+    omits: "expression"
+    sql: |
+      SELECT a FROM t GROUP BY ROLLUP (a, )

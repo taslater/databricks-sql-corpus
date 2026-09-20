@@ -1,0 +1,49 @@
+# ORDER BY clause. The expression forms, sort direction and NULLS ordering
+# parse, including ORDER BY ALL; mixing ALL with an expression list is
+# over-accepted.
+statement: ORDER BY clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-qry-select-orderby
+checked: 2026-09-20
+syntax: |
+  ORDER BY { { ALL [ sort_direction] [ nulls_sort_oder ] } |
+             { expression [ sort_direction ] [ nulls_sort_oder ] } [, ...] }
+  sort_direction
+    [ ASC | DESC ]
+  nulls_sort_order
+    [ NULLS FIRST | NULLS LAST ]
+cases:
+  - id: order-by.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t ORDER BY a
+  - id: order-by.direction-and-nulls
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t ORDER BY a DESC NULLS FIRST
+  - id: order-by.all
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM t ORDER BY ALL ASC
+  - id: order-by.multiple
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t ORDER BY a ASC, b DESC
+  - id: order-by.without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: order-by.basic
+    omits: "expression"
+    sql: |
+      SELECT * FROM t ORDER BY
+  - id: order-by.all-and-list
+    verdict: must-reject
+    anchor: "#syntax"
+    from: order-by.all
+    reason: exclusive-alternative
+    conflicts: [ "ALL", "expression" ]
+    sql: |
+      SELECT * FROM t ORDER BY ALL, a
