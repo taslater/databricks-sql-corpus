@@ -1001,16 +1001,16 @@
   "reference": {
     "controls_ok": true,
     "must_parse": {
-      "total": 258,
-      "passed": 161,
-      "rate": 62.4031007751938
+      "total": 314,
+      "passed": 197,
+      "rate": 62.738853503184714
     },
     "must_reject": {
-      "total": 120,
-      "caught": 107,
-      "informative": 64,
-      "vacuous": 43,
-      "rate": 89.16666666666667
+      "total": 161,
+      "caught": 141,
+      "informative": 80,
+      "vacuous": 61,
+      "rate": 87.5776397515528
     },
     "cases": [
       {
@@ -1574,6 +1574,281 @@
         "message": null
       },
       {
+        "id": "copy-into.minimal",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.by-position",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t BY POSITION FROM 's3://examp...\""
+      },
+      {
+        "id": "copy-into.column-list",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t (a, b) FROM 's3://example-bu...\""
+      },
+      {
+        "id": "copy-into.select-from",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM (SELECT a, b FROM 's3:/...\""
+      },
+      {
+        "id": "copy-into.validate-all",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.validate-rows",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.files",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.pattern",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.format-options",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.copy-options",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.source-credential",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.source-temporary-credential",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.source-encryption",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.source-credential-and-encryption",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t FROM 's3://example-bucket/p'...\""
+      },
+      {
+        "id": "copy-into.all-clauses",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: \"COPY INTO t (a) FROM 's3://example-bucke...\""
+      },
+      {
+        "id": "copy-into.empty-column-list",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.column-list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.validate-without-unit",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.validate-without-number",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.empty-files",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.file-list-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.empty-format-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.format-option-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.empty-copy-options",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.copy-option-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.fileformat-without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.from-without-source",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.credential-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.empty-encryption",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "copy-into.files-and-pattern",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "COPY INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-copy-into",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "FILES =",
+          "PATTERN ="
+        ]
+      },
+      {
         "id": "create-catalog.plain",
         "verdict": "must-parse",
         "ok": true,
@@ -1851,6 +2126,372 @@
         "doc": "https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow",
         "anchor": "#syntax",
         "message": null
+      },
+      {
+        "id": "create-function.sql-scalar",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.temporary",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.or-replace",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.if-not-exists",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.no-params",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.multiple-params",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.param-default",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.param-comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.param-default-comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.language-sql",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.deterministic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.not-deterministic",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.contains-sql",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.reads-sql-data",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.function-comment",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.default-collation",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FUNCTION f(x STRING) RETURNS STRI...'"
+      },
+      {
+        "id": "create-function.returns-table",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.returns-table-no-signature",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.return-query-scalar",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.no-returns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.python-as",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.language-scala",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FUNCTION f(x INT) RETURNS INT LAN...'"
+      },
+      {
+        "id": "create-function.language-java",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'CREATE FUNCTION f(x INT) RETURNS INT LAN...'"
+      },
+      {
+        "id": "create-function.python-environment",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 49: Found unparsable section: 'ENVIRONMENT (dependencies = \\'[\"a\"]\\') AS ...'"
+      },
+      {
+        "id": "create-function.or-replace-with-if-not-exists",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "OR REPLACE",
+          "IF NOT EXISTS"
+        ]
+      },
+      {
+        "id": "create-function.contains-sql-and-reads-sql-data",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "CONTAINS SQL",
+          "READS SQL DATA"
+        ]
+      },
+      {
+        "id": "create-function.param-without-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.param-default-without-expression",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.param-comment-without-text",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.trailing-comma-params",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.empty-returns-table",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.column-without-type",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.column-comment-without-text",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.language-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.default-collation-without-name",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.empty-environment",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.environment-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.without-body",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "create-function.mixed-body",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "CREATE FUNCTION (SQL, Python, Scala, and Java)",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "AS dollar_quoted_string",
+          "RETURN { expression | query }"
+        ]
       },
       {
         "id": "create-materialized-view.expectations-only",
@@ -3677,6 +4318,263 @@
         "message": null,
         "reason": "extra",
         "extra": "valueType"
+      },
+      {
+        "id": "merge-into.delete",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.update-set-star",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.update-set-columns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.update-default",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.update-except",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.insert-star",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.insert-except",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.insert-columns",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.not-matched-by-target",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.matched-condition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.not-matched-condition",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.by-source-delete",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.by-source-update",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.multiple-when",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.with-schema-evolution",
+        "verdict": "must-parse",
+        "ok": false,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": "Line 1, Position 1: Found unparsable section: 'MERGE WITH SCHEMA EVOLUTION INTO t USING...'"
+      },
+      {
+        "id": "merge-into.aliases",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.cte",
+        "verdict": "must-parse",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.without-on",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.update-without-value",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.update-except-empty",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.insert-except-empty",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.insert-trailing-comma",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.insert-empty-values",
+        "verdict": "must-reject",
+        "ok": false,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.matched-without-condition",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.not-matched-without-condition",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.by-source-without-condition",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.without-when",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null
+      },
+      {
+        "id": "merge-into.mixed-matched-action",
+        "verdict": "must-reject",
+        "ok": true,
+        "statement": "MERGE INTO",
+        "doc": "https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into",
+        "anchor": "#syntax",
+        "message": null,
+        "reason": "exclusive-alternative",
+        "conflicts": [
+          "DELETE",
+          "UPDATE SET"
+        ]
       },
       {
         "id": "privileges.catalog",
