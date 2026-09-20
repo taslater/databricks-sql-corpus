@@ -1,0 +1,27 @@
+# CREATE VIEW (pipelines). The pipeline form parses; this page pins it.
+statement: CREATE VIEW (pipelines)
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view
+checked: 2026-09-20
+syntax: |
+  CREATE VIEW view_name
+    [ COMMENT view_comment ]
+    [ TBLPROPERTIES ]
+    AS query
+cases:
+  - id: create-view-pipeline.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v AS SELECT 1
+  - id: create-view-pipeline.comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE VIEW v COMMENT 'x' AS SELECT 1
+  - id: create-view-pipeline.without-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-view-pipeline.basic
+    omits: "query"
+    sql: |
+      CREATE VIEW v AS

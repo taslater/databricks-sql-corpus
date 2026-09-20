@@ -1,0 +1,20 @@
+# SHOW GRANTS TO RECIPIENT. The statement is unsupported by the databricks
+# dialect, so the documented form is a gap.
+statement: SHOW GRANTS TO RECIPIENT
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-to-recipient
+checked: 2026-09-20
+syntax: |
+  SHOW GRANTS TO RECIPIENT recipient_name
+cases:
+  - id: show-grants-to-recipient.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS TO RECIPIENT a_corp
+  - id: show-grants-to-recipient.without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: show-grants-to-recipient.basic
+    omits: "recipient_name"
+    sql: |
+      SHOW GRANTS TO RECIPIENT

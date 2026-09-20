@@ -430,6 +430,33 @@ alone parses with `FOREIGN` taken as an alias
 throughout. `USE DATABASE` is a documented alias of `USE SCHEMA` with no
 syntax block, so it is `n/a`. Recorded 2026-09-20 by the DDL batch.
 
+**SQL scripting is unsupported.** All twelve control-flow statements have no
+grammar in the `databricks` dialect, so every documented form is rejected:
+the `BEGIN … END` compound statement, `CASE`, `FOR`, `GET DIAGNOSTICS`,
+`IF`, `ITERATE`, `LEAVE`, `LOOP`, `REPEAT`, `RESIGNAL`, `SIGNAL` and
+`WHILE` (pinned as `compound-stmt.*`, `case-stmt.*`, `for-stmt.*`,
+`get-diagnostics.*`, `if-stmt.*`, `iterate-stmt.*`, `leave-stmt.*`,
+`loop-stmt.*`, `repeat-stmt.*`, `resignal-stmt.*`, `signal-stmt.*` and
+`while-stmt.*`). Recorded 2026-09-20 by the final batch.
+
+**The group and share security statements are unsupported.** `ALTER GROUP`,
+`CREATE GROUP`, `DENY`, `DROP GROUP`, `GRANT … ON SHARE`,
+`MSCK REPAIR … PRIVILEGES`, `REVOKE … ON SHARE`, `SHOW GRANTS ON SHARE` and
+`SHOW GRANTS TO RECIPIENT` have no grammar in the `databricks` dialect, so
+every documented form is rejected. Recorded 2026-09-20 by the final batch.
+
+**`CREATE TABLE … FLOW` and `GRANT ON ANY FILE` are partial gaps.** On the
+[pipeline CREATE TABLE … FLOW page](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow)
+the `FLOW INSERT [ONCE] BY NAME query` clause and the standalone
+`CREATE FLOW … AS INSERT INTO … BY NAME` form are rejected (`create-table-flow.*`),
+while `AUTO CDC …` flow bodies, the pipeline `CREATE MATERIALIZED VIEW`,
+`CREATE TEMPORARY VIEW` and pipeline `CREATE VIEW` all parse. On the
+[Hive metastore privileges page](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms)
+`GRANT READ FILES ON ANY FILE` is rejected (`privileges-hms.any-file`) while
+the table and schema securables parse. One over-acceptance: `IDENTIFIER()`
+with no argument parses (`identifier-clause.without-argument`). Recorded
+2026-09-20 by the final batch.
+
 **The Unity Catalog connectivity and sharing DDL is unsupported.** Four
 statements have no grammar in the `databricks` or `sparksql` dialect, so
 every documented form is rejected at position 1:

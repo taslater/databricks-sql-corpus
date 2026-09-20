@@ -1,0 +1,23 @@
+# FOR statement. Scripting is unsupported by the databricks dialect, so the
+# documented form is a gap.
+statement: FOR statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt
+checked: 2026-09-20
+syntax: |
+  [ label : ] FOR [ variable_name AS ] query
+    DO
+    { stmt ; } [...]
+    END FOR [ label ]
+cases:
+  - id: for-stmt.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN DECLARE sum INT DEFAULT 0; FOR row AS SELECT num FROM range(1, 20) AS t(num) DO SET sum = sum + row.num; END FOR; VALUES (sum); END
+  - id: for-stmt.without-do
+    verdict: must-reject
+    anchor: "#syntax"
+    from: for-stmt.basic
+    omits: "DO"
+    sql: |
+      BEGIN FOR row AS SELECT 1 DO END FOR; END

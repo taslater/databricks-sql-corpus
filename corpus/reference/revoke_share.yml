@@ -1,0 +1,20 @@
+# REVOKE ON SHARE. The statement is unsupported by the databricks dialect, so
+# the documented form is a gap.
+statement: REVOKE ON SHARE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-revoke-share
+checked: 2026-09-20
+syntax: |
+  REVOKE SELECT ON SHARE share_name FROM RECIPIENT recipient_name
+cases:
+  - id: revoke-share.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE SELECT ON SHARE s FROM RECIPIENT r
+  - id: revoke-share.without-share
+    verdict: must-reject
+    anchor: "#syntax"
+    from: revoke-share.basic
+    omits: "share_name"
+    sql: |
+      REVOKE SELECT ON SHARE FROM RECIPIENT r

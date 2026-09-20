@@ -1,0 +1,21 @@
+# SIGNAL statement. Scripting is unsupported by the databricks dialect, so
+# the documented forms are gaps.
+statement: SIGNAL statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/signal-stmt
+checked: 2026-09-20
+syntax: |
+  SIGNAL { condition_name
+           [ SET { MESSAGE_ARGUMENTS = argument_map |
+                   MESSAGE_TEXT = message_str } ]
+         | SQLSTATE [VALUE] sqlstate [ SET MESSAGE_TEXT = message_str ] }
+cases:
+  - id: signal-stmt.condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN SIGNAL USER_RAISED_EXCEPTION; END
+  - id: signal-stmt.sqlstate
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'nope'; END

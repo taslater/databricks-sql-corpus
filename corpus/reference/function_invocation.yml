@@ -1,0 +1,33 @@
+# Function invocation. Positional arguments, named parameters, the star
+# argument and table arguments parse; this page pins them.
+statement: Function invocation
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation
+checked: 2026-09-20
+syntax: |
+  function_name ( [ argExpr | table_argument | star_clause ] [, ...]
+                  [ namedParameter => [ argExpr | table_argument ] [, ...] )
+  table_argument
+    { TABLE ( { table_name | query } )
+      [ table_partition ]
+      [ table_order ]
+  table_partitioning
+    { WITH SINGLE PARTITION |
+      { PARTITION | DISTRIBUTE } BY { partition_expr | ( partition_expr [, ...] ) } }
+  table_ordering
+    { { ORDER | SORT } BY { order_by_expr | ( order_by_expr [, ...] } }
+cases:
+  - id: function-invocation.positional
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT substr('hello', 3, 2)
+  - id: function-invocation.star-argument
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT array(*) FROM t
+  - id: function-invocation.named-parameter
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT * FROM read_files('s3://b/p', format => 'csv', schema => 'id int')

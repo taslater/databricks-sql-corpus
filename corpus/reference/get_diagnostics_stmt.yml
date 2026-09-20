@@ -1,0 +1,37 @@
+# GET DIAGNOSTICS statement. Scripting is unsupported by the databricks
+# dialect, so the documented forms are gaps.
+statement: GET DIAGNOSTICS statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt
+checked: 2026-09-20
+syntax: |
+  GET DIAGNOSTICS CONDITION 1
+    { variable_name = condition_info_item } [, ...]
+  GET DIAGNOSTICS
+    { variable_name = statement_info_item } [, ...]
+  condition_info_item
+    { MESSAGE_TEXT |
+      RETURNED_SQLSTATE |
+      MESSAGE_ARGUMENTS |
+      CONDITION_IDENTIFIER |
+      LINE_NUMBER }
+  statement_info_item
+    { TRANSACTION_ACTIVE |
+      ROW_COUNT }
+cases:
+  - id: get-diagnostics.row-count
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN GET DIAGNOSTICS rc = ROW_COUNT; END
+  - id: get-diagnostics.condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN DECLARE msg STRING; GET DIAGNOSTICS CONDITION 1 msg = MESSAGE_TEXT; END
+  - id: get-diagnostics.without-item
+    verdict: must-reject
+    anchor: "#syntax"
+    from: get-diagnostics.row-count
+    omits: "statement_info_item"
+    sql: |
+      BEGIN GET DIAGNOSTICS rc = ; END

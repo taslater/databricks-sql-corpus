@@ -1,0 +1,22 @@
+# LOOP statement. Scripting is unsupported by the databricks dialect, so the
+# documented form is a gap.
+statement: LOOP statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/loop-stmt
+checked: 2026-09-20
+syntax: |
+  [ label : ] LOOP
+    { stmt ; } [...]
+    END LOOP [ label ]
+cases:
+  - id: loop-stmt.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN DECLARE num INT DEFAULT 0; sumNumbers: LOOP SET num = num + 1; IF num > 10 THEN LEAVE sumNumbers; END IF; END LOOP sumNumbers; END
+  - id: loop-stmt.without-end
+    verdict: must-reject
+    anchor: "#syntax"
+    from: loop-stmt.basic
+    omits: "END LOOP"
+    sql: |
+      BEGIN LOOP SET a = 1;

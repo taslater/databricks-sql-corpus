@@ -1,0 +1,50 @@
+# CREATE MATERIALIZED VIEW (pipelines). The pipeline form is unsupported by
+# the databricks dialect, so the documented forms are gaps.
+statement: CREATE MATERIALIZED VIEW (pipelines)
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view
+checked: 2026-09-20
+syntax: |
+  CREATE [OR REFRESH] [PRIVATE] MATERIALIZED VIEW
+    view_name
+    [ column_list ]
+    [ view_clauses ]
+    AS query
+  column_list
+     ( { column_name column_type column_properties } [, ...]
+      [ CONSTRAINT expectation_name EXPECT (expectation_expr)
+        [ ON VIOLATION { FAIL UPDATE | DROP ROW } ] ] [, ...]
+      [ , table_constraint ] [...] )
+     column_properties
+        { NOT NULL | COMMENT column_comment | column_constraint | MASK clause } [ ... ]
+  view_clauses
+    { USING { DELTA | ICEBERG } |
+      PARTITIONED BY (col [, ...]) |
+      CLUSTER BY clause |
+      LOCATION path |
+      COMMENT view_comment |
+      TBLPROPERTIES clause |
+      REFRESH POLICY refresh_clause |
+      WITH { ROW FILTER clause } } [...]
+cases:
+  - id: create-materialized-view-pipeline.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE MATERIALIZED VIEW v AS SELECT 1
+  - id: create-materialized-view-pipeline.or-refresh
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE OR REFRESH MATERIALIZED VIEW v AS SELECT 1
+  - id: create-materialized-view-pipeline.cluster-by
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE OR REFRESH MATERIALIZED VIEW v CLUSTER BY AUTO AS SELECT 1
+  - id: create-materialized-view-pipeline.without-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-materialized-view-pipeline.basic
+    omits: "query"
+    sql: |
+      CREATE MATERIALIZED VIEW v AS

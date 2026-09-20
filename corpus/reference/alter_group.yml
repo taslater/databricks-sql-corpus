@@ -1,0 +1,27 @@
+# ALTER GROUP. The statement is unsupported by the databricks dialect, so the
+# documented forms are gaps.
+statement: ALTER GROUP
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group
+checked: 2026-09-20
+syntax: |
+  ALTER GROUP parent_principal { ADD | DROP }
+      { GROUP group_principal [, ...] |
+        USER user_principal [, ...] } [...]
+cases:
+  - id: alter-group.add-group
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER GROUP g ADD GROUP h
+  - id: alter-group.drop-user
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      ALTER GROUP g DROP USER `u`
+  - id: alter-group.without-principal
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-group.add-group
+    omits: "parent_principal"
+    sql: |
+      ALTER GROUP ADD GROUP h

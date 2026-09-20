@@ -1,0 +1,30 @@
+# MSCK REPAIR PRIVILEGES. The statement is unsupported by the databricks
+# dialect, so the documented forms are gaps.
+statement: MSCK REPAIR PRIVILEGES
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-msck
+checked: 2026-09-20
+syntax: |
+  MSCK REPAIR object PRIVILEGES
+  object
+    { [ SCHEMA | DATABASE ] schema_name |
+      FUNCTION function_name |
+      TABLE table_name
+      VIEW view_name |
+      ANONYMOUS FUNCTION |
+      ANY FILE }
+cases:
+  - id: msck-repair-privileges.schema
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MSCK REPAIR SCHEMA s PRIVILEGES
+  - id: msck-repair-privileges.table
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      MSCK REPAIR TABLE t PRIVILEGES
+  - id: msck-repair-privileges.anonymous-function
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      MSCK REPAIR ANONYMOUS FUNCTION PRIVILEGES

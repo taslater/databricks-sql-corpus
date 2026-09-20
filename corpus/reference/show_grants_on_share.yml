@@ -1,0 +1,13 @@
+# SHOW GRANTS ON SHARE. The statement is unsupported by the databricks
+# dialect, so the documented form is a gap.
+statement: SHOW GRANTS ON SHARE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-on-share
+checked: 2026-09-20
+syntax: |
+  SHOW GRANTS ON SHARE
+cases:
+  - id: show-grants-on-share.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SHOW GRANTS ON SHARE shared_date

@@ -1,0 +1,32 @@
+# CASE statement. Scripting is unsupported by the databricks dialect, so the
+# documented forms are gaps.
+statement: CASE statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt
+checked: 2026-09-20
+syntax: |
+  CASE expr
+    { WHEN opt THEN { thenStmt ; } [...] } [...]
+    [ ELSE { elseStmt ; } [...] ]
+  END CASE
+  CASE
+    { WHEN cond THEN { thenStmt ; } [...] } [...]
+    [ ELSE { elseStmt ; } [...] ]
+  END CASE
+cases:
+  - id: case-stmt.simple
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN DECLARE choice INT DEFAULT 3; CASE choice WHEN 1 THEN VALUES (1); WHEN 2 THEN VALUES (2); ELSE VALUES (0); END CASE; END
+  - id: case-stmt.searched
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      BEGIN DECLARE choice INT DEFAULT 3; CASE WHEN choice < 2 THEN VALUES (1); WHEN choice < 4 THEN VALUES (2); ELSE VALUES (0); END CASE; END
+  - id: case-stmt.without-end
+    verdict: must-reject
+    anchor: "#syntax"
+    from: case-stmt.simple
+    omits: "END CASE"
+    sql: |
+      BEGIN CASE 1 WHEN 1 THEN VALUES (1);

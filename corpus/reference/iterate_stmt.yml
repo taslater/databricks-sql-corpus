@@ -1,0 +1,20 @@
+# ITERATE statement. Scripting is unsupported by the databricks dialect, so
+# the documented form is a gap.
+statement: ITERATE statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/iterate-stmt
+checked: 2026-09-20
+syntax: |
+  ITERATE label
+cases:
+  - id: iterate-stmt.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN DECLARE num INT DEFAULT 0; sumNumbers: LOOP SET num = num + 1; IF num > 10 THEN LEAVE sumNumbers; END IF; IF num % 2 = 0 THEN ITERATE sumNumbers; END IF; END LOOP sumNumbers; END
+  - id: iterate-stmt.without-label
+    verdict: must-reject
+    anchor: "#syntax"
+    from: iterate-stmt.basic
+    omits: "label"
+    sql: |
+      BEGIN LOOP ITERATE; END LOOP; END

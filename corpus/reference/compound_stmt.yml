@@ -1,0 +1,37 @@
+# BEGIN END compound statement. Scripting is unsupported by the databricks
+# dialect, so the documented forms are gaps.
+statement: BEGIN END compound statement
+doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt
+checked: 2026-09-20
+syntax: |
+  [ label : ] BEGIN [ ATOMIC ] [ { declare_variable | declare_condition } ; [...] ] [ declare_cursor ; [...] ] [ declare_handler ; [...] ] [ SQL_statement ; [...] ] END [ label ]
+  declare_variable
+    DECLARE variable_name [, ...] datatype [ DEFAULT default_expr ]
+  declare_condition
+    DECLARE condition_name CONDITION [ FOR SQLSTATE [ VALUE ] sqlstate ]
+  declare_cursor
+    DECLARE cursor_name [ ASENSITIVE | INSENSITIVE ] CURSOR FOR query [ FOR READ ONLY ]
+  declare_handler
+    DECLARE handler_type HANDLER FOR condition_values handler_action
+  handler_type
+    EXIT | CONTINUE
+  condition_values
+    { { SQLSTATE [ VALUE ] sqlstate | condition_name } [, ...] | { SQLEXCEPTION | NOT FOUND } [, ...] }
+cases:
+  - id: compound-stmt.atomic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN ATOMIC INSERT INTO accounts VALUES (1, 'Alice', 1000); UPDATE accounts SET balance = balance + 100 WHERE id = 1; END
+  - id: compound-stmt.declare-and-handler
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      BEGIN DECLARE a INT DEFAULT 1; DECLARE EXIT HANDLER FOR DIVIDE_BY_ZERO BEGIN VALUES (0); END; SET a = 10; VALUES (a); END
+  - id: compound-stmt.without-body
+    verdict: must-reject
+    anchor: "#syntax"
+    from: compound-stmt.atomic
+    omits: "SQL_statement"
+    sql: |
+      BEGIN ATOMIC END

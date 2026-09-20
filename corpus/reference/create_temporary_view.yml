@@ -1,0 +1,32 @@
+# CREATE TEMPORARY VIEW (pipelines). The statement and its column list parse;
+# this page pins them.
+statement: CREATE TEMPORARY VIEW (pipelines)
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view
+checked: 2026-09-20
+syntax: |
+  CREATE TEMPORARY VIEW view_name
+    [(
+      [ col_name [ COMMENT col_comment ] [, ...] ]
+      [ column_constraint ] [, ...]
+    )]
+    [ COMMENT view_comment ]
+    [ TBLPROPERTIES ]
+    AS query
+cases:
+  - id: create-temporary-view.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TEMPORARY VIEW v AS SELECT 1
+  - id: create-temporary-view.column-list
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE TEMPORARY VIEW v (a, b) AS SELECT 1, 2
+  - id: create-temporary-view.without-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-temporary-view.basic
+    omits: "query"
+    sql: |
+      CREATE TEMPORARY VIEW v AS

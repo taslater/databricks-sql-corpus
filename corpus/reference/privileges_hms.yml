@@ -1,0 +1,37 @@
+# Privileges and securable objects in the Hive metastore. The Hive-metastore
+# securable list parses; this page pins it.
+statement: Privileges and securable objects in the Hive metastore
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms
+checked: 2026-09-20
+syntax: |
+    securable_object
+      { ANY FILE |
+        CATALOG [ catalog_name ] |
+        { SCHEMA | DATABASE } schema_name |
+        FUNCTION function_name |
+        [ TABLE ] table_name |
+        VIEW view_name
+        }
+cases:
+  - id: privileges-hms.table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT SELECT ON TABLE t TO `u`
+  - id: privileges-hms.schema-usage
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      REVOKE USAGE ON SCHEMA s FROM `u`
+  - id: privileges-hms.any-file
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      GRANT READ FILES ON ANY FILE TO `u`
+  - id: privileges-hms.table-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: privileges-hms.table
+    omits: "table_name"
+    sql: |
+      GRANT SELECT ON TABLE TO `u`

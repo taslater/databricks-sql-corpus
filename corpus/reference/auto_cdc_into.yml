@@ -1,0 +1,42 @@
+# AUTO CDC INTO. The AUTO CDC flow forms are unsupported by the databricks
+# dialect, so the documented forms are gaps.
+statement: AUTO CDC INTO
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into
+checked: 2026-09-20
+syntax: |
+  CREATE OR REFRESH STREAMING TABLE table_name;
+  CREATE FLOW flow_name AS AUTO CDC [ONCE] INTO table_name
+  FROM source
+  KEYS (keys)
+  [IGNORE NULL UPDATES [ON {columnList | * EXCEPT (exceptColumnList)}]]
+  [APPLY AS DELETE WHEN condition]
+  [APPLY AS TRUNCATE WHEN condition]
+  SEQUENCE BY orderByColumn
+  [SYSTEM SEQUENCE BY systemOrderByColumn]
+  [COLUMNS {columnList | * EXCEPT (exceptColumnList)}]
+  [STORED AS {SCD TYPE 1 | SCD TYPE 2 | BITEMPORAL}]
+  [TRACK HISTORY ON {columnList | * EXCEPT (exceptColumnList)}]
+  [COLUMNS TO UPDATE columnName]
+cases:
+  - id: auto-cdc-into.minimal
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW flow AS AUTO CDC INTO target FROM stream(cdc.users) KEYS (userId) SEQUENCE BY sequenceNum
+  - id: auto-cdc-into.full
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW flow AS AUTO CDC INTO target FROM stream(cdc_data.users) KEYS (userId) APPLY AS DELETE WHEN operation = 'DELETE' SEQUENCE BY sequenceNum COLUMNS * EXCEPT (operation, sequenceNum) STORED AS SCD TYPE 2 TRACK HISTORY ON * EXCEPT (city)
+  - id: auto-cdc-into.once
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW flow AS AUTO CDC ONCE INTO target FROM stream(cdc.users) KEYS (userId) SEQUENCE BY sequenceNum
+  - id: auto-cdc-into.without-keys
+    verdict: must-reject
+    anchor: "#syntax"
+    from: auto-cdc-into.minimal
+    omits: "KEYS"
+    sql: |
+      CREATE FLOW flow AS AUTO CDC INTO target FROM stream(cdc.users) SEQUENCE BY sequenceNum

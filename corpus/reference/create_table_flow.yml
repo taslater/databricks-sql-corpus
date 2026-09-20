@@ -1,0 +1,52 @@
+# CREATE TABLE ... FLOW (pipelines). The FLOW clause is unsupported by the
+# databricks dialect, so the documented forms are gaps.
+statement: CREATE TABLE ... FLOW (pipelines)
+doc: https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow
+checked: 2026-09-20
+syntax: |
+  CREATE TABLE
+    table_name
+    [ table_specification ]
+    [ table_clauses ]
+    [ flow_clause ]
+  table_specification
+    ( { column_identifier column_type [column_properties] } [, ...]
+      [ CONSTRAINT expectation_name EXPECT (expectation_expr)
+          [ ON VIOLATION { FAIL UPDATE | DROP ROW } ] ] [, ...] )
+  table_clauses
+    { PARTITIONED BY (col [, ...]) |
+      CLUSTER BY clause |
+      LOCATION path |
+      COMMENT table_comment |
+      TBLPROPERTIES clause |
+      WITH { ROW FILTER clause } } [ ... ]
+  flow_clause
+    FLOW INSERT [ONCE] BY NAME query
+cases:
+  - id: create-table-flow.basic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t FLOW INSERT BY NAME SELECT 1
+  - id: create-table-flow.once
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t FLOW INSERT ONCE BY NAME SELECT 1
+  - id: create-table-flow.with-partition
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE TABLE t PARTITIONED BY (b) FLOW INSERT BY NAME SELECT 1, 2
+  - id: create-table-flow.standalone-flow
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FLOW f AS INSERT INTO t BY NAME SELECT 1
+  - id: create-table-flow.without-query
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-table-flow.basic
+    omits: "query"
+    sql: |
+      CREATE TABLE t FLOW INSERT BY NAME

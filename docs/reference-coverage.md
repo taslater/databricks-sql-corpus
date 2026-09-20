@@ -22,7 +22,7 @@ The notebook magic-cell cases (`magic_cells.yml`) come from outside both
 indexes; the Unity Catalog privileges reference supplies the privilege
 names for the GRANT-family cases. Both are listed below.
 
-## General reference (4 done, 3 queued, 44 n/a)
+## General reference (7 done, 0 queued, 44 n/a)
 
 | page | status |
 | --- | --- |
@@ -31,7 +31,7 @@ names for the GRANT-family cases. Both are listed below.
 | [Reserved words and schemas](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-reserved-words) | n/a |
 | [Identifiers](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers) | n/a |
 | [Names](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names) | n/a |
-| [IDENTIFIER clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause) | queued |
+| [IDENTIFIER clause](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause) | done |
 | [SQL expression](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-expression) | done |
 | [NULL semantics](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-null-semantics) | n/a |
 | [Parameter markers](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-parameter-marker) | n/a |
@@ -62,10 +62,10 @@ names for the GRANT-family cases. Both are listed below.
 | [User-defined aggregate functions (UDAFs)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-udf-aggregate) | n/a |
 | [External user-defined scalar functions (UDFs)](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-udf-scalar) | n/a |
 | [Integration with Hive UDFs, UDAFs, and UDTFs](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-functions-udf-hive) | n/a |
-| [Function invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation) | queued |
+| [Function invocation](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-function-invocation) | done |
 | [Principal](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-principal) | n/a |
 | [Privileges and securable objects in Unity Catalog](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges) | done |
-| [Privileges and securable objects in the Hive metastore](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms) | queued |
+| [Privileges and securable objects in the Hive metastore](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-privileges-hms) | done |
 | [External locations](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-external-locations) | n/a |
 | [External tables](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-external-tables) | n/a |
 | [Credentials](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-storage-credentials) | n/a |
@@ -221,22 +221,22 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [RESTORE](https://docs.databricks.com/aws/en/sql/language-manual/delta-restore) | done |
 | [VACUUM](https://docs.databricks.com/aws/en/sql/language-manual/delta-vacuum) | done |
 
-## SQL scripting (0 done, 12 queued, 0 n/a)
+## SQL scripting (12 done, 0 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
-| [BEGIN END compound statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt) | queued |
-| [CASE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt) | queued |
-| [FOR statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt) | queued |
-| [GET DIAGNOSTICS statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt) | queued |
-| [IF THEN ELSE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/if-stmt) | queued |
-| [ITERATE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/iterate-stmt) | queued |
-| [LEAVE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/leave-stmt) | queued |
-| [LOOP statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/loop-stmt) | queued |
-| [REPEAT statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/repeat-stmt) | queued |
-| [RESIGNAL statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/resignal-stmt) | queued |
-| [SIGNAL statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/signal-stmt) | queued |
-| [WHILE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/while-stmt) | queued |
+| [BEGIN END compound statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt) | done |
+| [CASE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt) | done |
+| [FOR statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt) | done |
+| [GET DIAGNOSTICS statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/get-diagnostics-stmt) | done |
+| [IF THEN ELSE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/if-stmt) | done |
+| [ITERATE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/iterate-stmt) | done |
+| [LEAVE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/leave-stmt) | done |
+| [LOOP statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/loop-stmt) | done |
+| [REPEAT statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/repeat-stmt) | done |
+| [RESIGNAL statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/resignal-stmt) | done |
+| [SIGNAL statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/signal-stmt) | done |
+| [WHILE statement](https://docs.databricks.com/aws/en/sql/language-manual/control-flow/while-stmt) | done |
 
 ## Auxiliary statements (2 done, 55 queued, 9 n/a)
 
@@ -309,35 +309,35 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [PUT INTO](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-connector-put-into) | n/a |
 | [REMOVE](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-aux-connector-remove) | n/a |
 
-## Security (3 done, 9 queued, 0 n/a)
+## Security (12 done, 0 queued, 0 n/a)
 
 | page | status |
 | --- | --- |
-| [ALTER GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group) | queued |
-| [CREATE GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-create-group) | queued |
-| [DENY](https://docs.databricks.com/aws/en/sql/language-manual/security-deny) | queued |
-| [DROP GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-drop-group) | queued |
+| [ALTER GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-alter-group) | done |
+| [CREATE GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-create-group) | done |
+| [DENY](https://docs.databricks.com/aws/en/sql/language-manual/security-deny) | done |
+| [DROP GROUP](https://docs.databricks.com/aws/en/sql/language-manual/security-drop-group) | done |
 | [GRANT](https://docs.databricks.com/aws/en/sql/language-manual/security-grant) | done |
-| [GRANT ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-grant-share) | queued |
-| [MSCK REPAIR PRIVILEGES](https://docs.databricks.com/aws/en/sql/language-manual/security-msck) | queued |
+| [GRANT ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-grant-share) | done |
+| [MSCK REPAIR PRIVILEGES](https://docs.databricks.com/aws/en/sql/language-manual/security-msck) | done |
 | [REVOKE](https://docs.databricks.com/aws/en/sql/language-manual/security-revoke) | done |
-| [REVOKE ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-revoke-share) | queued |
+| [REVOKE ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-revoke-share) | done |
 | [SHOW GRANTS](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant) | done |
-| [SHOW GRANTS ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-on-share) | queued |
-| [SHOW GRANTS TO RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-to-recipient) | queued |
+| [SHOW GRANTS ON SHARE](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-on-share) | done |
+| [SHOW GRANTS TO RECIPIENT](https://docs.databricks.com/aws/en/sql/language-manual/security-show-grant-to-recipient) | done |
 
-## Lakeflow pipelines (2 done, 5 queued, 1 n/a)
+## Lakeflow pipelines (7 done, 0 queued, 1 n/a)
 
 | page | status |
 | --- | --- |
 | [Pipeline SQL language reference](https://docs.databricks.com/aws/en/ldp/developer/sql-ref) | n/a |
-| [AUTO CDC INTO](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into) | queued |
+| [AUTO CDC INTO](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-apply-changes-into) | done |
 | [CREATE FLOW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-flow) | done |
-| [CREATE MATERIALIZED VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view) | queued |
+| [CREATE MATERIALIZED VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-materialized-view) | done |
 | [CREATE STREAMING TABLE](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-streaming-table) | done |
-| [CREATE TABLE ... FLOW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow) | queued |
-| [CREATE TEMPORARY VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view) | queued |
-| [CREATE VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view) | queued |
+| [CREATE TABLE ... FLOW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-table-flow) | done |
+| [CREATE TEMPORARY VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-temporary-view) | done |
+| [CREATE VIEW](https://docs.databricks.com/aws/en/ldp/developer/ldp-sql-ref-create-view) | done |
 
 ## Not statement pages, still in the corpus
 

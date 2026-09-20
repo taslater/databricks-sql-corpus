@@ -1,0 +1,31 @@
+# IDENTIFIER clause. The literal and expression forms parse; this page pins
+# them.
+statement: IDENTIFIER clause
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-names-identifier-clause
+checked: 2026-09-20
+syntax: |
+  IDENTIFIER ( strLiteral )
+  IDENTIFIER ( strExpr )
+cases:
+  - id: identifier-clause.use-catalog
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      USE CATALOG IDENTIFIER(mycat)
+  - id: identifier-clause.select
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT IDENTIFIER('col') FROM t
+  - id: identifier-clause.create-table
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      CREATE TABLE IDENTIFIER('mytab') (c1 INT)
+  - id: identifier-clause.without-argument
+    verdict: must-reject
+    anchor: "#syntax"
+    from: identifier-clause.select
+    omits: "strExpr"
+    sql: |
+      SELECT IDENTIFIER() FROM t
