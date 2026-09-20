@@ -1,0 +1,192 @@
+# MERGE INTO. Dense WHEN-clause grammar with a bracketed condition on each
+# branch and a star/list action with its own EXCEPT. WITH SCHEMA EVOLUTION
+# is the one gap; the actions and their partial forms all reject correctly.
+statement: MERGE INTO
+doc: https://docs.databricks.com/aws/en/sql/language-manual/delta-merge-into
+checked: 2026-09-20
+syntax: |
+  [ common_table_expression ]
+  MERGE [ WITH SCHEMA EVOLUTION ] INTO target_table_name [target_alias]
+      USING source_table_reference [source_alias]
+      ON merge_condition
+      { WHEN MATCHED [ AND matched_condition ] THEN matched_action |
+        WHEN NOT MATCHED [BY TARGET] [ AND not_matched_condition ] THEN not_matched_action |
+        WHEN NOT MATCHED BY SOURCE [ AND not_matched_by_source_condition ] THEN not_matched_by_source_action } [...]
+
+  matched_action
+  { DELETE |
+    UPDATE SET * [ EXCEPT ( column [, ...] ) ] |
+    UPDATE SET { column = { expr | DEFAULT } } [, ...] }
+
+  not_matched_action
+  { INSERT * [ EXCEPT ( column [, ...] ) ] |
+    INSERT (column1 [, ...] ) VALUES ( expr | DEFAULT ] [, ...] )
+
+  not_matched_by_source_action
+  { DELETE |
+    UPDATE SET { column = { expr | DEFAULT } } [, ...] }
+cases:
+  - id: merge-into.delete
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN DELETE
+  - id: merge-into.update-set-star
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET *
+  - id: merge-into.update-set-columns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET a = s.a
+  - id: merge-into.update-default
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET a = DEFAULT
+  - id: merge-into.update-except
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET * EXCEPT (b)
+  - id: merge-into.insert-star
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED THEN INSERT *
+  - id: merge-into.insert-except
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED THEN INSERT * EXCEPT (b)
+  - id: merge-into.insert-columns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED THEN INSERT (a, b) VALUES (s.a, DEFAULT)
+  - id: merge-into.not-matched-by-target
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED BY TARGET THEN INSERT *
+  - id: merge-into.matched-condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED AND t.x < s.x THEN UPDATE SET a = s.a
+  - id: merge-into.not-matched-condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED AND s.x > 0 THEN INSERT *
+  - id: merge-into.by-source-delete
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED BY SOURCE THEN DELETE
+  - id: merge-into.by-source-update
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED BY SOURCE THEN UPDATE SET a = DEFAULT
+  - id: merge-into.multiple-when
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED AND t.flag THEN DELETE WHEN MATCHED THEN UPDATE SET a = s.a
+  - id: merge-into.with-schema-evolution
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE WITH SCHEMA EVOLUTION INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET *
+    note: Rejected by the databricks dialect on main; WITH SCHEMA EVOLUTION has no grammar.
+  - id: merge-into.aliases
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO t AS tgt USING s AS src ON tgt.k = src.k WHEN MATCHED THEN DELETE
+  - id: merge-into.cte
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      WITH c AS (SELECT 1 AS k) MERGE INTO t USING c ON t.k = c.k WHEN MATCHED THEN DELETE
+  - id: merge-into.without-on
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.delete
+    omits: "merge_condition"
+    sql: |
+      MERGE INTO t USING s WHEN MATCHED THEN DELETE
+  - id: merge-into.update-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.update-set-columns
+    omits: "expr | DEFAULT"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET a =
+  - id: merge-into.update-except-empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.update-except
+    omits: "column"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN UPDATE SET * EXCEPT ()
+  - id: merge-into.insert-except-empty
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.insert-except
+    omits: "column"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED THEN INSERT * EXCEPT ()
+  - id: merge-into.insert-trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.insert-columns
+    omits: "column1"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED THEN INSERT (a, ) VALUES (1)
+  - id: merge-into.insert-empty-values
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.insert-columns
+    omits: "expr | DEFAULT"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED THEN INSERT (a) VALUES ()
+  - id: merge-into.matched-without-condition
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.matched-condition
+    omits: "matched_condition"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED AND THEN DELETE
+  - id: merge-into.not-matched-without-condition
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.not-matched-condition
+    omits: "not_matched_condition"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED AND THEN INSERT *
+  - id: merge-into.by-source-without-condition
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.by-source-delete
+    omits: "not_matched_by_source_condition"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN NOT MATCHED BY SOURCE AND THEN DELETE
+  - id: merge-into.without-when
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.delete
+    omits: "WHEN MATCHED"
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k
+  - id: merge-into.mixed-matched-action
+    verdict: must-reject
+    anchor: "#syntax"
+    from: merge-into.delete
+    reason: exclusive-alternative
+    conflicts: [ "DELETE", "UPDATE SET" ]
+    sql: |
+      MERGE INTO t USING s ON t.k = s.k WHEN MATCHED THEN DELETE UPDATE SET a = s.a
