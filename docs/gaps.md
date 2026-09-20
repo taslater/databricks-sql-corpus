@@ -176,6 +176,36 @@ table `DEFAULT COLLATION` is the same missing clause as the CREATE TABLE gap
 above. Found 2026-09-20 by the Tier 2 batch; no corpus file uses any of the
 twelve.
 
+**`CREATE FUNCTION` rejects the Scala/Java surface and `ENVIRONMENT`, and
+accepts three non-conforming forms.** The
+[CREATE FUNCTION reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function)
+covers `LANGUAGE SQL`/`PYTHON`/`SCALA`/`JAVA`, the `ENVIRONMENT` and
+`HANDLER` clauses, and a `DEFAULT COLLATION` characteristic.
+`FunctionDefinitionGrammar` (`dialect_databricks.py:1726`) binds only
+`LANGUAGE { SQL | PYTHON }` (`dialect_databricks.py:1733`), with no
+`ENVIRONMENT`, `HANDLER` or default collation, so on `main` at `33d8c8459`
+and released 4.3.0:
+
+| form | reference | databricks |
+| --- | --- | --- |
+| `CREATE FUNCTION f(x INT) RETURNS INT LANGUAGE SCALA ENVIRONMENT (java_dependencies = '["x.jar"]') HANDLER 'com.example.X.f'` | must parse | rejected |
+| the same with `LANGUAGE JAVA` | must parse | rejected |
+| `CREATE FUNCTION f() RETURNS INT LANGUAGE PYTHON ENVIRONMENT (dependencies = '["a"]') AS $$ … $$` | must parse | rejected |
+| `CREATE FUNCTION f(x STRING) RETURNS STRING DEFAULT COLLATION UTF8_BINARY RETURN x` | must parse | rejected |
+| `CREATE OR REPLACE FUNCTION IF NOT EXISTS f() RETURNS INT RETURN 1` | must reject | accepted |
+| `CREATE FUNCTION f() RETURNS INT CONTAINS SQL READS SQL DATA RETURN 1` | must reject | accepted |
+| `CREATE FUNCTION f() RETURNS INT RETURN 1 AS $$ return 1 $$` | must reject | accepted |
+
+The three accepted forms are exclusivity the grammar does not enforce: the
+reference says `OR REPLACE` and `IF NOT EXISTS` cannot coexist, makes
+`CONTAINS SQL` and `READS SQL DATA` alternatives of one bracket, and makes
+`AS`/`RETURN`/`HANDLER` exclusive body forms. The `OR REPLACE` /
+`IF NOT EXISTS` pair is the same over-acceptance the CREATE TABLE entry
+records, on a second statement; `DEFAULT COLLATION` is the same missing
+characteristic family as CREATE TABLE, ALTER TABLE and CREATE SCHEMA. Pinned
+by `create-function.*`; found 2026-09-20 by the Tier 2 batch; no corpus file
+uses any of the seven.
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as

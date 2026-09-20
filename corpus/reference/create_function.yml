@@ -1,0 +1,269 @@
+# CREATE FUNCTION (SQL, Python, Scala, and Java). The page covers four
+# languages; the dialect implements SQL and Python only. ENVIRONMENT,
+# HANDLER and LANGUAGE SCALA/JAVA are the Scala/Java surface and are
+# rejected; the DEFAULT COLLATION characteristic is rejected too. Two
+# over-acceptances: OR REPLACE with IF NOT EXISTS, and CONTAINS SQL with
+# READS SQL DATA (the reference makes both pairs exclusive).
+statement: CREATE FUNCTION (SQL, Python, Scala, and Java)
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-create-sql-function
+checked: 2026-09-20
+syntax: |
+  CREATE [OR REPLACE] [TEMPORARY] FUNCTION [IF NOT EXISTS]
+      function_name ( [ function_parameter [, ...] ] )
+      { [ RETURNS data_type ] |
+        RETURNS TABLE [ ( column_spec [, ...]) ] }
+      [ characteristic [...] ]
+      { AS dollar_quoted_string | RETURN { expression | query } | HANDLER handler_name }
+
+  function_parameter
+      parameter_name data_type [DEFAULT default_expression] [COMMENT parameter_comment]
+
+  column_spec
+      column_name data_type [COMMENT column_comment]
+
+  characteristic
+    { LANGUAGE { SQL | PYTHON | SCALA | JAVA } |
+      [NOT] DETERMINISTIC |
+      COMMENT function_comment |
+      [CONTAINS SQL | READS SQL DATA] |
+      DEFAULT COLLATION default_collation_name } |
+      environment
+
+  environment
+    ENVIRONMENT ( { environment_key = environment_value } [, ...] )
+cases:
+  - id: create-function.sql-scalar
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x DOUBLE) RETURNS DOUBLE RETURN x * 2
+  - id: create-function.temporary
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TEMPORARY FUNCTION f() RETURNS STRING RETURN 'x'
+  - id: create-function.or-replace
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE OR REPLACE FUNCTION f(x DOUBLE) RETURNS DOUBLE RETURN x * 2
+  - id: create-function.if-not-exists
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION IF NOT EXISTS f() RETURNS INT RETURN 1
+  - id: create-function.no-params
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT RETURN 1
+  - id: create-function.multiple-params
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT, y INT) RETURNS INT RETURN x + y
+  - id: create-function.param-default
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT DEFAULT 1) RETURNS INT RETURN x
+  - id: create-function.param-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT COMMENT 'a param') RETURNS INT RETURN x
+  - id: create-function.param-default-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT DEFAULT 1 COMMENT 'a param') RETURNS INT RETURN x
+  - id: create-function.language-sql
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT) RETURNS INT LANGUAGE SQL RETURN x
+  - id: create-function.deterministic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT DETERMINISTIC RETURN 1
+  - id: create-function.not-deterministic
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT NOT DETERMINISTIC RETURN 1
+  - id: create-function.contains-sql
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT CONTAINS SQL RETURN 1
+  - id: create-function.reads-sql-data
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT READS SQL DATA RETURN 1
+  - id: create-function.function-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT COMMENT 'a function' RETURN 1
+  - id: create-function.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x STRING) RETURNS STRING DEFAULT COLLATION UTF8_BINARY RETURN x
+    note: Rejected by the databricks dialect on main; the DEFAULT COLLATION characteristic has no grammar.
+  - id: create-function.returns-table
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS TABLE(a INT) RETURN SELECT 1 AS a
+  - id: create-function.returns-table-no-signature
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS TABLE RETURN SELECT 1 AS a
+  - id: create-function.return-query-scalar
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT RETURN SELECT 1
+  - id: create-function.no-returns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURN 1
+    note: RETURNS is optional for a SQL function; the type is derived from the body.
+  - id: create-function.python-as
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT LANGUAGE PYTHON AS $$ return 1 $$
+  - id: create-function.language-scala
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT) RETURNS INT LANGUAGE SCALA ENVIRONMENT (java_dependencies = '["x.jar"]') HANDLER 'com.example.X.f'
+    note: Rejected by the databricks dialect on main; LANGUAGE SCALA, HANDLER and ENVIRONMENT have no grammar.
+  - id: create-function.language-java
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f(x INT) RETURNS INT LANGUAGE JAVA ENVIRONMENT (java_dependencies = '["x.jar"]') HANDLER 'com.example.X.f'
+    note: Rejected by the databricks dialect on main.
+  - id: create-function.python-environment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT LANGUAGE PYTHON ENVIRONMENT (dependencies = '["a"]') AS $$
+      return 1
+      $$
+    note: Rejected by the databricks dialect on main; ENVIRONMENT has no grammar.
+  - id: create-function.or-replace-with-if-not-exists
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.or-replace
+    reason: exclusive-alternative
+    conflicts: [ "OR REPLACE", "IF NOT EXISTS" ]
+    sql: |
+      CREATE OR REPLACE FUNCTION IF NOT EXISTS f() RETURNS INT RETURN 1
+  - id: create-function.contains-sql-and-reads-sql-data
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.contains-sql
+    reason: exclusive-alternative
+    conflicts: [ "CONTAINS SQL", "READS SQL DATA" ]
+    sql: |
+      CREATE FUNCTION f() RETURNS INT CONTAINS SQL READS SQL DATA RETURN 1
+  - id: create-function.param-without-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.sql-scalar
+    omits: "data_type"
+    sql: |
+      CREATE FUNCTION f(x) RETURNS INT RETURN x
+  - id: create-function.param-default-without-expression
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.param-default
+    omits: "default_expression"
+    sql: |
+      CREATE FUNCTION f(x INT DEFAULT) RETURNS INT RETURN x
+  - id: create-function.param-comment-without-text
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.param-comment
+    omits: "parameter_comment"
+    sql: |
+      CREATE FUNCTION f(x INT COMMENT) RETURNS INT RETURN x
+  - id: create-function.trailing-comma-params
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.multiple-params
+    omits: "function_parameter"
+    sql: |
+      CREATE FUNCTION f(x INT, ) RETURNS INT RETURN x
+  - id: create-function.empty-returns-table
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.returns-table
+    omits: "column_spec"
+    sql: |
+      CREATE FUNCTION f() RETURNS TABLE() RETURN SELECT 1
+  - id: create-function.column-without-type
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.returns-table
+    omits: "data_type"
+    sql: |
+      CREATE FUNCTION f() RETURNS TABLE(a) RETURN SELECT 1
+  - id: create-function.column-comment-without-text
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.returns-table
+    omits: "column_comment"
+    sql: |
+      CREATE FUNCTION f() RETURNS TABLE(a INT COMMENT) RETURN SELECT 1
+  - id: create-function.language-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.language-sql
+    omits: "{ SQL | PYTHON | SCALA | JAVA }"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT LANGUAGE RETURN 1
+  - id: create-function.default-collation-without-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.default-collation
+    omits: "default_collation_name"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT DEFAULT COLLATION RETURN 1
+  - id: create-function.empty-environment
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.python-environment
+    omits: "environment_key = environment_value"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT LANGUAGE PYTHON ENVIRONMENT () AS $$ return 1 $$
+  - id: create-function.environment-without-value
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.python-environment
+    omits: "environment_value"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT LANGUAGE PYTHON ENVIRONMENT (dependencies =) AS $$ return 1 $$
+  - id: create-function.without-body
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.sql-scalar
+    omits: "HANDLER handler_name"
+    sql: |
+      CREATE FUNCTION f() RETURNS INT
+  - id: create-function.mixed-body
+    verdict: must-reject
+    anchor: "#syntax"
+    from: create-function.sql-scalar
+    reason: exclusive-alternative
+    conflicts: [ "AS dollar_quoted_string", "RETURN { expression | query }" ]
+    sql: |
+      CREATE FUNCTION f() RETURNS INT RETURN 1 AS $$ return 1 $$
