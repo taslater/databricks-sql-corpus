@@ -1,0 +1,271 @@
+# ALTER TABLE. The page's syntax block is a required menu of clause
+# alternatives, each naming a production defined on a sub-page; the
+# concrete clause forms below come from the page's own parameter and
+# example blocks. This file is therefore clause-coverage regression
+# pinning -- a rewrite that drops a whole clause (the #7405 shape) goes
+# red -- plus twelve documented clauses the dialect rejects. Clause
+# partial forms belong to the sub-pages and stay queued.
+statement: ALTER TABLE
+doc: https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table
+checked: 2026-09-20
+syntax: |
+  ALTER TABLE table_name
+      { RENAME TO clause |
+        ADD COLUMN clause |
+        ALTER COLUMN clause |
+        DROP COLUMN clause |
+        RENAME COLUMN clause |
+        DEFAULT COLLATION clause |
+        ADD CONSTRAINT clause |
+        DROP CONSTRAINT clause |
+        DROP FEATURE clause |
+        ADD PARTITION clause |
+        DROP PARTITION clause |
+        PARTITION SET LOCATION clause |
+        RENAME PARTITION clause |
+        RECOVER PARTITIONS clause |
+        SET { ROW FILTER clause } |
+        DROP ROW FILTER |
+        SET TBLPROPERTIES clause |
+        UNSET TBLPROPERTIES clause |
+        SET SERDE clause |
+        SET LOCATION clause |
+        SET EXTERNAL clause |
+        SET MANAGED clause |
+        UNSET MANAGED clause |
+        SET OWNER TO clause |
+        SET TAGS clause |
+        UNSET TAGS clause |
+        CLUSTER BY clause |
+        REPLACE PARTITIONED BY WITH CLUSTER BY clause |
+        PREDICTIVE OPTIMIZATION clause}
+cases:
+  - id: alter-table.rename-to
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t RENAME TO t2
+  - id: alter-table.add-columns
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ADD COLUMNS (b INT)
+  - id: alter-table.alter-column-comment
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ALTER COLUMN a COMMENT 'a column'
+  - id: alter-table.alter-column-multi
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ALTER COLUMN a COMMENT 'x', b COMMENT 'y'
+    note: Rejected by the databricks dialect on main; the multi-column list is documented on the page.
+  - id: alter-table.alter-column-after
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ALTER COLUMN b AFTER a
+  - id: alter-table.alter-column-set-default
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ALTER COLUMN a SET DEFAULT 0
+  - id: alter-table.rename-column
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t RENAME COLUMN a TO b
+  - id: alter-table.default-collation
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t DEFAULT COLLATION UTF8_BINARY
+    note: Rejected by the databricks dialect on main; same missing table clause as create-table.default-collation.
+  - id: alter-table.drop-feature
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t DROP FEATURE deletionVectors
+  - id: alter-table.drop-feature-truncate
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t DROP FEATURE deletionVectors TRUNCATE HISTORY
+  - id: alter-table.add-partition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ADD IF NOT EXISTS PARTITION (a = 1)
+  - id: alter-table.add-partition-multi
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ADD IF NOT EXISTS PARTITION (a = 1) PARTITION (a = 2)
+  - id: alter-table.drop-partition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t DROP IF EXISTS PARTITION (a = 1)
+  - id: alter-table.partition-set-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t PARTITION (a = 1) SET LOCATION '/p'
+  - id: alter-table.rename-partition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t PARTITION (a = 1) RENAME TO PARTITION (a = 2)
+  - id: alter-table.recover-partitions
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t RECOVER PARTITIONS
+  - id: alter-table.drop-row-filter
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t DROP ROW FILTER
+  - id: alter-table.set-tblproperties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET TBLPROPERTIES ('k' = 'v')
+  - id: alter-table.unset-tblproperties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t UNSET TBLPROPERTIES ('k')
+  - id: alter-table.set-serde
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET SERDE 'org.apache.hadoop'
+  - id: alter-table.set-serde-properties
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET SERDE 'org.apache.hadoop' WITH SERDEPROPERTIES ('k' = 'v')
+  - id: alter-table.set-location
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET LOCATION '/p'
+  - id: alter-table.set-external
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET EXTERNAL
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.set-external-dry-run
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET EXTERNAL DRY RUN
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.set-managed
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET MANAGED
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.set-managed-truncate
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET MANAGED TRUNCATE UNIFORM HISTORY
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.set-managed-move
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET MANAGED MOVE
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.set-managed-copy
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET MANAGED COPY
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.unset-managed
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t UNSET MANAGED
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.unset-managed-truncate
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t UNSET MANAGED TRUNCATE UNIFORM HISTORY
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.set-owner-to
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET OWNER TO p
+  - id: alter-table.owner-to
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t OWNER TO p
+    note: SET is optional before OWNER TO.
+  - id: alter-table.set-tags
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t SET TAGS ('k' = 'v')
+  - id: alter-table.unset-tags
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t UNSET TAGS ('k')
+  - id: alter-table.replace-partitioned-cluster
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t REPLACE PARTITIONED BY WITH CLUSTER BY (a)
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.replace-partitioned-cluster-auto
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t REPLACE PARTITIONED BY WITH CLUSTER BY AUTO
+    note: Rejected by the databricks dialect on main.
+  - id: alter-table.predictive-enable
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t ENABLE PREDICTIVE OPTIMIZATION
+  - id: alter-table.predictive-disable
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t DISABLE PREDICTIVE OPTIMIZATION
+  - id: alter-table.predictive-inherit
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      ALTER TABLE t INHERIT PREDICTIVE OPTIMIZATION
+  - id: alter-table.no-table-name
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-table.rename-to
+    omits: "table_name"
+    sql: |
+      ALTER TABLE RENAME TO t2
+  - id: alter-table.replace-partitioned-without-cluster
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-table.replace-partitioned-cluster
+    omits: "CLUSTER BY clause"
+    sql: |
+      ALTER TABLE t REPLACE PARTITIONED BY WITH
+  - id: alter-table.predictive-without-optimization
+    verdict: must-reject
+    anchor: "#syntax"
+    from: alter-table.predictive-enable
+    omits: "PREDICTIVE OPTIMIZATION clause"
+    sql: |
+      ALTER TABLE t ENABLE

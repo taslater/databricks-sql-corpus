@@ -138,6 +138,37 @@ Pinned by the reference corpus as `create-table.location-credential`,
 batch; no corpus file uses any of the five. `CREATE CATALOG ... DEFAULT
 COLLATION` is a separate, already-open gap (`create-catalog.default-collation`).
 
+**`ALTER TABLE` rejects twelve documented clauses.** The
+[ALTER TABLE reference](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-syntax-ddl-alter-table)
+lists 29 clause alternatives; the Databricks `AlterTableStatementSegment`
+(`dialect_databricks.py:1311`) and the SparkSQL base it extends have no
+grammar for twelve of them. On `main` at `33d8c8459` and released 4.3.0:
+
+| repro | case |
+| --- | --- |
+| `ALTER TABLE t ALTER COLUMN a COMMENT 'x', b COMMENT 'y'` | `alter-table.alter-column-multi` |
+| `ALTER TABLE t DEFAULT COLLATION UTF8_BINARY` | `alter-table.default-collation` |
+| `ALTER TABLE t SET EXTERNAL` | `alter-table.set-external` |
+| `ALTER TABLE t SET EXTERNAL DRY RUN` | `alter-table.set-external-dry-run` |
+| `ALTER TABLE t SET MANAGED` | `alter-table.set-managed` |
+| `ALTER TABLE t SET MANAGED MOVE` | `alter-table.set-managed-move` |
+| `ALTER TABLE t SET MANAGED COPY` | `alter-table.set-managed-copy` |
+| `ALTER TABLE t SET MANAGED TRUNCATE UNIFORM HISTORY` | `alter-table.set-managed-truncate` |
+| `ALTER TABLE t UNSET MANAGED` | `alter-table.unset-managed` |
+| `ALTER TABLE t UNSET MANAGED TRUNCATE UNIFORM HISTORY` | `alter-table.unset-managed-truncate` |
+| `ALTER TABLE t REPLACE PARTITIONED BY WITH CLUSTER BY (a)` | `alter-table.replace-partitioned-cluster` |
+| `ALTER TABLE t REPLACE PARTITIONED BY WITH CLUSTER BY AUTO` | `alter-table.replace-partitioned-cluster-auto` |
+
+The multi-column form is the documented example shape: the page shows
+`ALTER TABLE table ALTER COLUMN bool COMMENT 'boolean column', num AFTER bool,
+str AFTER num, bool SET DEFAULT true`, and the single-column clauses (`AFTER`,
+`COMMENT`, `SET DEFAULT`) each parse — only the comma list does not. The other
+eleven are whole clauses absent from the grammar, several of them exotic
+(Unity Catalog foreign-table conversion and predictive optimization); the
+table `DEFAULT COLLATION` is the same missing clause as the CREATE TABLE gap
+above. Found 2026-09-20 by the Tier 2 batch; no corpus file uses any of the
+twelve.
+
 **Per-field `NOT NULL` and `COLLATE` are rejected in `STRUCT` types.** The
 [STRUCT type reference](https://docs.databricks.com/aws/en/sql/language-manual/data-types/struct-type)
 gives the field production as
