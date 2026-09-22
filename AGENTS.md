@@ -301,10 +301,12 @@ reports `changed`, re-read the page, update `syntax:` and the cases, and bump
 ## Contributing upstream
 
 `docs/gaps.md` is the evidence trail — each entry is a construct with a
-minimal repro verified against SQLFluff `main`. `docs/pr-queue.md` is the
-batch runsheet on top of it: the units that close the reference corpus in
-order, their branches, tips and bases, and the measured deltas. Read it first
-when resuming. The workflow that works:
+minimal repro verified against SQLFluff `main`. `docs/pr-plan.md` is the
+master runsheet for the whole program, and what to read first: it bundles
+every branch and package in `personal/databricks-complete` into the PRs to
+submit. `docs/pr-queue.md` is the detail record for the reference-corpus
+batch on top of it: the units that close the reference corpus in order, their
+branches, tips and bases, and the measured deltas. The workflow that works:
 
 1. `make gaps` to find or confirm a construct.
 2. Reproduce it in one line before touching any grammar.

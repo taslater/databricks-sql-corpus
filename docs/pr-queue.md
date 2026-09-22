@@ -1,5 +1,9 @@
 # Upstream PR queue: closing the reference corpus
 
+> This is the detail record for the reference-corpus batch. For the whole
+> program — every branch and package in `personal/databricks-complete`, bundled
+> into submittable PRs — read `docs/pr-plan.md` first.
+
 Goal: every case in `corpus/reference/` conforms — **177/177 must-parse,
 83/83 must-reject caught, 0 vacuous** — before the next batch of upstream PRs
 is opened. This file is the runsheet: what each unit contains, what it
