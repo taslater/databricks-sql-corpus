@@ -270,3 +270,24 @@ and SECURITY are each a pushed branch off `upstream/main` (SECURITY carries the
 `docs/pr-bodies/`. Opening is draft-first: the burst throttle refuses
 `CreatePullRequest` account-wide, so each is attempted once as a draft and left
 pushed if refused.
+
+**All twelve drafts were opened on 2026-09-21** — the throttle lifted for the
+burst and every call was admitted:
+
+| bundle | draft PR |
+| --- | --- |
+| CORE | [#8543](https://github.com/sqlfluff/sqlfluff/pull/8543) |
+| TMPL | [#8544](https://github.com/sqlfluff/sqlfluff/pull/8544) |
+| LEX | [#8545](https://github.com/sqlfluff/sqlfluff/pull/8545) |
+| PARSER | [#8546](https://github.com/sqlfluff/sqlfluff/pull/8546) |
+| ALTER | [#8547](https://github.com/sqlfluff/sqlfluff/pull/8547) |
+| CREATE | [#8548](https://github.com/sqlfluff/sqlfluff/pull/8548) |
+| DROP | [#8549](https://github.com/sqlfluff/sqlfluff/pull/8549) |
+| MAINT | [#8550](https://github.com/sqlfluff/sqlfluff/pull/8550) |
+| SCRIPTING | [#8551](https://github.com/sqlfluff/sqlfluff/pull/8551) |
+| QUERY | [#8552](https://github.com/sqlfluff/sqlfluff/pull/8552) |
+| INGEST | [#8553](https://github.com/sqlfluff/sqlfluff/pull/8553) |
+| SECURITY | [#8554](https://github.com/sqlfluff/sqlfluff/pull/8554) |
+
+They are drafts on purpose (the user's call): no `gh pr ready` is attempted.
+The Wave 0 drafts (#8519, #8520, #8522) are likewise left as they are.
