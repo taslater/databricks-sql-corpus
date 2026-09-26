@@ -86,7 +86,8 @@ never linked.
 | [Information schema](https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-information-schema) | n/a |
 
 Data types is covered page by page: `array_type.yml`, `map_type.yml`,
-`struct_type.yml` and `variant_type.yml` transcribe its per-type pages.
+`struct_type.yml`, `variant_type.yml`, `decimal_type.yml`, `int_type.yml`,
+`geography_type.yml` and `geometry_type.yml` transcribe its per-type pages.
 `OBJECT` is deliberately uncovered: its page documents
 `OBJECT < [fieldName [:] fieldType [, ...] ] >` but shows no statement that
 writes the type as input, so a case would have to invent the position.

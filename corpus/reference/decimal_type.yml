@@ -1,0 +1,71 @@
+# DECIMAL type. The argument list is `( p [ , s ] )`: the precision is
+# required, the scale is optional, and nothing follows the scale. The partial
+# forms below are the must-reject cases for #8589 -- before the fix SQLFluff
+# accepted any number of arguments (`DECIMAL(10, 2, 3)`) as well as an empty
+# or malformed list (`DECIMAL()`, `DECIMAL(, 2)`, `DECIMAL(10, )`).
+statement: DECIMAL
+doc: https://docs.databricks.com/aws/en/sql/language-manual/data-types/decimal-type
+checked: 2026-09-26
+syntax: |
+  { DECIMAL | DEC | NUMERIC } [ (  p [ , s ] ) ]
+cases:
+  - id: decimal.column
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a DECIMAL)
+  - id: decimal.precision
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a DECIMAL(10))
+  - id: decimal.precision-scale
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a DECIMAL(10, 2))
+  - id: decimal.dec-alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a DEC(5))
+  - id: decimal.numeric-alias
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (a NUMERIC(1, 2))
+  - id: decimal.cast
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT CAST(x AS DECIMAL(10, 2))
+  - id: decimal.three-arguments
+    verdict: must-reject
+    anchor: "#syntax"
+    from: decimal.precision-scale
+    reason: extra
+    extra: ", s"
+    sql: |
+      CREATE TABLE t (a DECIMAL(10, 2, 3))
+    note: The production takes a precision and at most one scale.
+  - id: decimal.empty-arguments
+    verdict: must-reject
+    anchor: "#syntax"
+    from: decimal.precision
+    omits: "p"
+    sql: |
+      CREATE TABLE t (a DECIMAL())
+  - id: decimal.missing-precision
+    verdict: must-reject
+    anchor: "#syntax"
+    from: decimal.precision-scale
+    omits: "p"
+    sql: |
+      CREATE TABLE t (a DECIMAL(, 2))
+  - id: decimal.trailing-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: decimal.precision-scale
+    omits: "s"
+    sql: |
+      CREATE TABLE t (a DECIMAL(10, ))

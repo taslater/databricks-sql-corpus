@@ -1,0 +1,41 @@
+# GEOGRAPHY type. The production takes exactly one `srid | ANY` argument in
+# mandatory parentheses. This is a regression-pinning transcription for the
+# arity work in #8589: before the fix the type was not recognised by the
+# databricks dialect at all.
+statement: GEOGRAPHY
+doc: https://docs.databricks.com/aws/en/sql/language-manual/data-types/geography-type
+checked: 2026-09-26
+syntax: |
+  GEOGRAPHY ( { srid | ANY } )
+cases:
+  - id: geography.srid
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (g GEOGRAPHY(4326))
+  - id: geography.any
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      CREATE TABLE t (g GEOGRAPHY(ANY))
+  - id: geography.cast
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT CAST(x AS GEOGRAPHY(4326))
+  - id: geography.two-arguments
+    verdict: must-reject
+    anchor: "#syntax"
+    from: geography.srid
+    reason: extra
+    extra: "srid"
+    sql: |
+      CREATE TABLE t (g GEOGRAPHY(4326, 1))
+    note: The bracket takes exactly one srid.
+  - id: geography.without-arguments
+    verdict: must-reject
+    anchor: "#syntax"
+    from: geography.srid
+    omits: "( { srid | ANY } )"
+    sql: |
+      CREATE TABLE t (g GEOGRAPHY)
