@@ -31,3 +31,15 @@ cases:
     anchor: "#examples"
     sql: |
       SELECT * FROM read_files('s3://b/p', format => 'csv', schema => 'id int')
+  - id: function-invocation.argument-without-comma
+    verdict: must-reject
+    anchor: "#syntax"
+    from: function-invocation.positional
+    omits: "[, ...]"
+    sql: |
+      SELECT a FROM t WHERE foo(SELECT * FROM u, v w.x = u.id)
+    note: >-
+      `v w.x = u.id` is two adjacent argExprs with no separating comma
+      (and a scalar query must be parenthesised). The ANSI function-contents
+      grammar over-accepts the adjacency; found by databricks-sql-quickcheck,
+      2026-09-26.

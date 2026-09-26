@@ -26,6 +26,18 @@ cases:
     anchor: "#examples"
     sql: |
       SELECT * FROM t WHERE a BETWEEN 1 AND 2
+  - id: where.exists-without-query
+    verdict: must-reject
+    anchor: "#examples"
+    from: where.exists-subquery
+    omits: "boolean_expression"
+    sql: |
+      SELECT a FROM t WHERE EXISTS (* FROM u)
+    note: >-
+      EXISTS takes a query, so `* FROM u` is not a boolean_expression.
+      The ANSI function-contents grammar over-accepts it as the argument
+      list of a function named EXISTS; found by databricks-sql-quickcheck,
+      2026-09-26.
   - id: where.without-expression
     verdict: must-reject
     anchor: "#syntax"
