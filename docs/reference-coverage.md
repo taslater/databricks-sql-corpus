@@ -357,3 +357,4 @@ sub-page, which is still queued and where the clause's partial forms belong
 | [`from_json` function](https://docs.databricks.com/aws/en/sql/language-manual/functions/from_json) | done |
 | [`from_xml` function](https://docs.databricks.com/aws/en/sql/language-manual/functions/from_xml) | done |
 | [`read_files` table-valued function](https://docs.databricks.com/aws/en/sql/language-manual/functions/read_files) | done |
+| [`is [not] distinct from` operator](https://docs.databricks.com/aws/en/sql/language-manual/functions/isdistinct) | done |

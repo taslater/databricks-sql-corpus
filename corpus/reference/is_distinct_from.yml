@@ -1,0 +1,65 @@
+# IS [NOT] DISTINCT FROM. Tier 1.5 regression-pinning: a null-safe comparison
+# operator, which SQLFluff parses today. It is here because its FROM is not a
+# query clause, and a checker that reads every FROM as one fires on valid SQL
+# (databricks-sql-quickcheck#43: `(a IS DISTINCT FROM b)` after AND, OR, ON
+# or IN). The bracketed and MERGE cases combine this page with the operand
+# positions the query and MERGE pages document.
+statement: IS DISTINCT FROM
+doc: https://docs.databricks.com/aws/en/sql/language-manual/functions/isdistinct
+checked: 2026-11-06
+syntax: |
+  expr1 is [not] distinct from expr2
+cases:
+  - id: is-distinct-from.basic
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT NULL is distinct from 5
+  - id: is-distinct-from.not
+    verdict: must-parse
+    anchor: "#examples"
+    sql: |
+      SELECT NULL is not distinct from 5
+  - id: is-distinct-from.in-where
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t WHERE a IS DISTINCT FROM b
+  - id: is-distinct-from.bracketed-after-and
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t WHERE x AND (a IS NOT DISTINCT FROM b)
+    note: The operator's FROM inside a bracket that a query may also occupy.
+  - id: is-distinct-from.bracketed-after-or
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t WHERE (a IS DISTINCT FROM b) OR (c IS NOT DISTINCT FROM d)
+  - id: is-distinct-from.in-join-condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      SELECT * FROM t JOIN u ON (t.a IS NOT DISTINCT FROM u.a) WHERE t.b = 1
+  - id: is-distinct-from.in-merge-matched-condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      MERGE INTO target USING source ON target.id = source.id
+      WHEN MATCHED AND (target.a IS DISTINCT FROM source.b) THEN
+        UPDATE SET target.a = source.b
+    note: The matched_condition of MERGE INTO, which takes any boolean expression.
+  - id: is-distinct-from.without-from
+    verdict: must-reject
+    anchor: "#syntax"
+    from: is-distinct-from.in-where
+    omits: "from"
+    sql: |
+      SELECT * FROM t WHERE a IS DISTINCT b
+  - id: is-distinct-from.without-right-operand
+    verdict: must-reject
+    anchor: "#syntax"
+    from: is-distinct-from.in-where
+    omits: "expr2"
+    sql: |
+      SELECT * FROM t WHERE a IS DISTINCT FROM
