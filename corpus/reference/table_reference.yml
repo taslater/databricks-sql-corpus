@@ -87,6 +87,21 @@ cases:
     sql: |
       SELECT * FROM t WITH(CREDENTIAL c)
     note: A documented example form; rejected by the databricks dialect on main.
+  - id: table-reference.subquery-alias-column-list
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      SELECT * FROM (SELECT 1 a, 2 b) AS x (c1, c2)
+    note: A table_alias may carry a column_identifier list, here on a subquery.
+  - id: table-reference.alias-column-named-like-keyword
+    verdict: must-parse
+    anchor: "#parameters"
+    sql: |
+      SELECT * FROM (SELECT 1 a, 2 b) x (values, b)
+    note: >-
+      `values` is a valid column_identifier, so the list may open with a word
+      that also opens a query. Parses on a Databricks SQL warehouse
+      (databricks-sql-quickcheck#55).
   - id: table-reference.without-table
     verdict: must-reject
     anchor: "#syntax"
@@ -94,3 +109,14 @@ cases:
     omits: "table_name"
     sql: |
       SELECT * FROM
+  - id: table-reference.query-after-alias
+    verdict: must-reject
+    anchor: "#syntax"
+    from: table-reference.subquery-alias-column-list
+    reason: extra
+    extra: "( query )"
+    sql: |
+      SELECT * FROM (SELECT 1) x (SELECT 2) y
+    note: >-
+      Nothing after an alias but its column list takes a second query bracket.
+      A syntax error on a Databricks SQL warehouse (databricks-sql-quickcheck#55).
