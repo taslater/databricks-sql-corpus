@@ -1,5 +1,5 @@
-# BEGIN END compound statement. Scripting is unsupported by the databricks
-# dialect, so the documented forms are gaps.
+# BEGIN END compound statement. Cases added on 2026-11-06 were
+# each run on a Databricks SQL warehouse (databricks-sql-quickcheck#11).
 statement: BEGIN END compound statement
 doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/compound-stmt
 checked: 2026-09-20
@@ -28,10 +28,38 @@ cases:
     anchor: "#examples"
     sql: |
       BEGIN DECLARE a INT DEFAULT 1; DECLARE EXIT HANDLER FOR DIVIDE_BY_ZERO BEGIN VALUES (0); END; SET a = 10; VALUES (a); END
-  - id: compound-stmt.without-body
+  - id: compound-stmt.empty
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN END
+    note: "The statement list is bracketed in the syntax, so a block may be empty. Parses on a Databricks SQL warehouse."
+  - id: compound-stmt.atomic-empty
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN ATOMIC END
+    note: "Accepted on a Databricks SQL warehouse: the statement list is optional, with or without ATOMIC."
+  - id: compound-stmt.nested-labelled-blocks
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN a: BEGIN VALUES (1); END a; b: BEGIN VALUES (2); END b; END
+  - id: compound-stmt.sibling-label-reuse
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN a: BEGIN VALUES (1); END a; a: BEGIN VALUES (2); END a; END
+    note: "Two sibling blocks may use one label; a nested block may not reuse an enclosing label."
+  - id: compound-stmt.end-label-case-insensitive
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN lbl: BEGIN VALUES (1); END LBL; END
+  - id: compound-stmt.without-end
     verdict: must-reject
     anchor: "#syntax"
     from: compound-stmt.atomic
-    omits: "SQL_statement"
+    omits: "END"
     sql: |
-      BEGIN ATOMIC END
+      BEGIN ATOMIC VALUES (1);
