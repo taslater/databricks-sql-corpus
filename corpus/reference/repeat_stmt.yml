@@ -1,5 +1,5 @@
-# REPEAT statement. Scripting is unsupported by the databricks dialect, so
-# the documented form is a gap.
+# REPEAT statement. Cases added on 2026-11-06 were each run on a Databricks
+# SQL warehouse (databricks-sql-quickcheck#11).
 statement: REPEAT statement
 doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/repeat-stmt
 checked: 2026-09-20
@@ -21,3 +21,20 @@ cases:
     omits: "UNTIL"
     sql: |
       BEGIN REPEAT SET a = 1; END REPEAT; END
+  - id: repeat-stmt.until-with-case-expression
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN DECLARE n INT DEFAULT 0; REPEAT SET n = n + 1; UNTIL CASE WHEN n > 1 THEN true ELSE false END END REPEAT; END
+  - id: repeat-stmt.string-function-is-not-a-statement
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN SELECT repeat('x', 3); END
+  - id: repeat-stmt.without-end-repeat
+    verdict: must-reject
+    anchor: "#syntax"
+    from: repeat-stmt.basic
+    omits: "END REPEAT"
+    sql: |
+      BEGIN REPEAT VALUES (1); UNTIL true END; END

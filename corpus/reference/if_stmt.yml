@@ -1,5 +1,5 @@
-# IF THEN ELSE statement. Scripting is unsupported by the databricks dialect,
-# so the documented form is a gap.
+# IF THEN ELSE statement. Cases added on 2026-11-06 were each run on a
+# Databricks SQL warehouse (databricks-sql-quickcheck#11).
 statement: IF THEN ELSE statement
 doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/if-stmt
 checked: 2026-09-20
@@ -22,3 +22,53 @@ cases:
     omits: "condition"
     sql: |
       BEGIN IF THEN VALUES (1); END IF; END
+  - id: if-stmt.nested
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN IF 1 = 1 THEN IF 2 = 2 THEN VALUES (1); END IF; END IF; END
+  - id: if-stmt.condition-with-case-expression
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN IF CASE WHEN 1 = 1 THEN true ELSE false END THEN VALUES (1); END IF; END
+    note: "The THEN and END of a CASE expression are not the statement's."
+  - id: if-stmt.if-function-in-condition
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN IF if(1 = 1, true, false) THEN VALUES (1); END IF; END
+  - id: if-stmt.condition-with-subquery
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN IF EXISTS (SELECT 1) THEN VALUES (1); END IF; END
+  - id: if-stmt.without-then
+    verdict: must-reject
+    anchor: "#syntax"
+    from: if-stmt.basic
+    omits: "THEN"
+    sql: |
+      BEGIN IF 1 = 1 VALUES (1); END IF; END
+  - id: if-stmt.without-end-if
+    verdict: must-reject
+    anchor: "#syntax"
+    from: if-stmt.basic
+    omits: "END IF"
+    sql: |
+      BEGIN IF 1 = 1 THEN VALUES (1); END
+  - id: if-stmt.elseif-without-then
+    verdict: must-reject
+    anchor: "#syntax"
+    from: if-stmt.basic
+    omits: "THEN"
+    sql: |
+      BEGIN IF 1 = 2 THEN VALUES (1); ELSEIF 1 = 1 VALUES (2); END IF; END
+  - id: if-stmt.two-else
+    verdict: must-reject
+    anchor: "#syntax"
+    from: if-stmt.basic
+    reason: extra
+    extra: "ELSE"
+    sql: |
+      BEGIN IF 1 = 2 THEN VALUES (1); ELSE VALUES (2); ELSE VALUES (3); END IF; END

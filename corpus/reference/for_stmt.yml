@@ -1,5 +1,5 @@
-# FOR statement. Scripting is unsupported by the databricks dialect, so the
-# documented form is a gap.
+# FOR statement. Cases added on 2026-11-06 were each run on a Databricks SQL
+# warehouse (databricks-sql-quickcheck#11).
 statement: FOR statement
 doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/for-stmt
 checked: 2026-09-20
@@ -21,3 +21,10 @@ cases:
     omits: "DO"
     sql: |
       BEGIN FOR row AS SELECT 1 DO END FOR; END
+  - id: for-stmt.without-end-for
+    verdict: must-reject
+    anchor: "#syntax"
+    from: for-stmt.basic
+    omits: "END FOR"
+    sql: |
+      BEGIN FOR r AS SELECT 1 AS n DO VALUES (r.n); END; END

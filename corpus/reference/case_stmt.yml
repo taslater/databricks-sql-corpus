@@ -1,5 +1,5 @@
-# CASE statement. Scripting is unsupported by the databricks dialect, so the
-# documented forms are gaps.
+# CASE statement. Cases added on 2026-11-06 were each run on a
+# Databricks SQL warehouse (databricks-sql-quickcheck#11).
 statement: CASE statement
 doc: https://docs.databricks.com/aws/en/sql/language-manual/control-flow/case-stmt
 checked: 2026-09-20
@@ -30,3 +30,15 @@ cases:
     omits: "END CASE"
     sql: |
       BEGIN CASE 1 WHEN 1 THEN VALUES (1);
+  - id: case-stmt.case-expression-in-branch
+    verdict: must-parse
+    anchor: "#syntax"
+    sql: |
+      BEGIN CASE 1 WHEN 1 THEN SELECT CASE WHEN 1 = 1 THEN 'a' END; END CASE; END
+  - id: case-stmt.without-then
+    verdict: must-reject
+    anchor: "#syntax"
+    from: case-stmt.simple
+    omits: "THEN"
+    sql: |
+      BEGIN CASE 1 WHEN 1 VALUES (1); END CASE; END
